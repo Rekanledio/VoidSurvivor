@@ -33,3 +33,8 @@
 **Decision:** Player movement uses Rigidbody2D.MovePosition with normalized input (diagonal speed == cardinal speed) and a configurable bounds clamp; the existing InputSystem_Actions asset is reused for the Move action; the camera uses a custom frame-rate-independent exponential follow instead of Cinemachine.
 **Reason:** MovePosition preserves physics compatibility for later collisions/enemies/weapons without Transform hacks; reusing the default actions asset avoids duplicated input config; a small custom follow script keeps dependencies minimal for a 2D orthographic camera.
 **Scope:** M3 only. Damage uses simple flat armor reduction (`max(0, damage - Armor)`); crits/elemental/status effects are deferred to their owning milestones.
+
+## D009 — Input Serialization, Physics Smoothing, Camera Viewport (M3 bug fix)
+**Decision:** (1) PlayerController references the InputActionAsset by serializable asset reference and resolves the Move action by name in Awake, instead of a runtime-created InputActionReference (which was not persisted to scene/prefab files). (2) Rigidbody2D interpolation = Interpolate to smooth physics stepping against the per-frame camera follow. (3) Main Camera orthographicSize raised 5 → 8 so the placeholder arena (±20) is comfortably visible.
+**Reason:** Asset references serialize reliably across sessions; Interpolate is the standard Unity mechanism to remove render jitter without Cinemachine; a larger viewport matches the placeholder arena scale and removes the "small movement range" perception.
+**Scope:** Player/camera only. No architecture change; no other systems touched.

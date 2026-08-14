@@ -86,3 +86,31 @@ M3 — Player System
 
 ### Next
 M4 — Enemy System: enemy base framework, Chaser/Runner/Shooter/Tank AI, minimal spawn entry (wave logic stays in M8).
+
+## 2026-08-14
+### Milestone
+M3 Bug Fix — player movement boundary & camera jitter
+
+### Reported Issues (manual play test)
+1. Player seemed to move only in a small range, then returned toward the center near the edge.
+2. Holding WASD caused visible jitter / blur.
+
+### Root Causes (verified, not guessed)
+- **Issue 2 (jitter) — confirmed code-level defect:** `Rigidbody2D.interpolation = None`. Physics position stepped at FixedUpdate rate with no rendering interpolation, while CameraFollow smoothed every frame → relative jitter/trailing. Fixed with the standard mechanism: `RigidbodyInterpolation2D.Interpolate` (no Cinemachine).
+- **Issue 1 (small range / pull-back perception):** No code anywhere pulls the player back toward the center (verified in play: position holds with no input, stops at bounds, A/D covered the full -20..20 range through the center). The perceived "small range + return to center" came from the combination of (a) the jitter (issue 2) making movement feel unstable, and (b) a small camera viewport (orthographicSize 5 → visible height 10 units) so the player quickly left the visible area; after releasing the key the camera's exponential smoothing converged to the player, reading as "pulled back to center". Fixed by widening the viewport to orthographicSize 8 and removing the jitter.
+- **Latent serialization defect found while investigating:** `PlayerController` originally took an `InputActionReference` assigned via `InputActionReference.Create()`, which is a runtime (non-asset) object — the reference was NOT persisted to the scene/prefab files (verified: no `moveAction` key in YAML). It only worked within the current editor session; after reopening the project the player would not move at all. Reworked to `[SerializeField] InputActionAsset inputActions` + `FindAction("Move")` at Awake (asset reference persists; verified `inputActions:` present in Player.prefab YAML).
+
+### Changes
+- `PlayerController.cs`: InputActionReference → InputActionAsset (serializable); Move resolved by name in Awake.
+- `Rigidbody2D.interpolation = Interpolate` (scene instance + Player.prefab).
+- `Camera.orthographicSize` 5 → 8 (scene; Camera is not part of the prefab).
+- No architecture changes; no other systems touched.
+
+### Verification (Unity MCP + play)
+- Confirmed all settings applied and persisted: rb interpolation=Interpolate, cam size 8, `inputActions` asset reference in Player.prefab YAML, `m_Interpolate: 1`, camera `orthographic size: 8`.
+- Play tests (simulated WASD): W moved to +20 (north bound, stayed, no pull-back); A moved to -20; D covered -20 → +20 through center (full range, no pull-back); camera followed throughout.
+- Console after play/stop: 0 errors, 0 warnings.
+- Note: simulated keyboard events in a background editor have unstable event retention, so per-step distance is not representative; direction, bounds and full-range traversal are.
+
+### Next
+M4 — Enemy System.

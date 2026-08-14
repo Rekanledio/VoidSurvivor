@@ -12,7 +12,8 @@ namespace VoidSurvivor.Player
     public class PlayerController : MonoBehaviour
     {
         [Header("Input")]
-        [SerializeField] private InputActionReference moveAction;
+        [Tooltip("InputSystem_Actions asset. The Move action is resolved by name at runtime.")]
+        [SerializeField] private InputActionAsset inputActions;
 
         [Header("Movement Bounds (placeholder arena, M3)")]
         [Tooltip("If true, clamps the player to arenaBoundsHalfExtents around the origin.")]
@@ -22,6 +23,7 @@ namespace VoidSurvivor.Player
         private PlayerStats _stats;
         private PlayerHealth _health;
         private Rigidbody2D _body;
+        private InputAction _moveAction;
 
         public Vector2 LastMoveInput { get; private set; }
 
@@ -33,24 +35,36 @@ namespace VoidSurvivor.Player
 
             if (_stats == null) Debug.LogError($"[PlayerController] Missing PlayerStats on '{gameObject.name}'.");
             if (_body == null) Debug.LogError($"[PlayerController] Missing Rigidbody2D on '{gameObject.name}'.");
+
+            // Resolve the Move action from the asset. Using the asset reference
+            // (instead of an InputActionReference) keeps serialization reliable.
+            if (inputActions != null)
+            {
+                _moveAction = inputActions.FindAction("Move");
+                if (_moveAction == null) Debug.LogError("[PlayerController] Move action not found in input asset.");
+            }
+            else
+            {
+                Debug.LogError("[PlayerController] No inputActions asset assigned.");
+            }
         }
 
         private void OnEnable()
         {
             // Idempotent: enabling an already-enabled action is a no-op.
-            moveAction?.action?.Enable();
+            _moveAction?.Enable();
         }
 
         private void OnDisable()
         {
-            moveAction?.action?.Disable();
+            _moveAction?.Disable();
         }
 
         private void FixedUpdate()
         {
             if (_stats == null || _body == null || (_health != null && _health.IsDead)) return;
 
-            Vector2 raw = moveAction != null ? moveAction.action.ReadValue<Vector2>() : Vector2.zero;
+            Vector2 raw = _moveAction != null ? _moveAction.ReadValue<Vector2>() : Vector2.zero;
             LastMoveInput = NormalizeMoveInput(raw);
 
             Vector2 velocity = LastMoveInput * _stats.MoveSpeed;

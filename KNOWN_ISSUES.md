@@ -8,12 +8,15 @@
    - Impact: Web is a first-class deliverable; late discovery of Web-only issues would be costly.
    - Status: Open. Plan: first Web build smoke test during M2 or M3, earlier than M16.
 
-## Resolved (M1 / M2 / M3)
+## Resolved (M1 / M2 / M3 / M3-bugfix)
 - Unity project not yet created → Created (Unity 6000.3.21f1).
 - Actual repository path not recorded → Recorded in PROJECT_CONTEXT.md (D:\Work\UnityProject\VoidSurvivor).
 - Unity MCP connection unverified → Verified 2026-08-14 (CoplayDev unity-mcp via WorkBuddy).
 - Core framework missing → Implemented in M2 (GameManager state machine, EventBus, GameEvents, SceneFlow).
 - Player system missing → Implemented in M3 (PlayerController/PlayerStats/PlayerHealth/CameraFollow, Player prefab in SC_Main).
+- Player jitter while moving → Fixed (Rigidbody2D interpolation = Interpolate; see DEVELOPMENT_LOG).
+- InputActionReference not persisted in scene/prefab (would break movement after reopening the project) → Fixed by switching PlayerController to a serializable InputActionAsset reference.
+- Small movement-range perception / apparent pull-back → No code pulled the player back; fixed by removing jitter and widening the camera viewport (orthographicSize 5 → 8).
 
 ## Observations (no action needed now)
 1. Transient "The referenced script (Unknown) on this Behaviour is missing!" console pairs appear during script recompile cycles (observed M1–M3 right after script changes/removals).

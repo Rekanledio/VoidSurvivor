@@ -45,6 +45,7 @@
 - [x] CameraFollow: smooth exponential orthographic follow (no Cinemachine), offset, optional bounds
 - [x] Player prefab + placeholder sprite placed in SC_Main
 - [x] Verified: in-play smoke test 29 checks / 0 failures; dynamic play checks (camera convergence, bounds, component state); temp test code removed
+- [x] Bug fix (2026-08-14): Rigidbody2D interpolation = Interpolate (removes movement jitter); Camera orthographicSize 5 → 8 (viewport matches arena); PlayerController input switched to serializable InputActionAsset reference (fixes non-persisted InputActionReference). Verified: full -20..+20 traversal, bounds hold, no pull-back, camera follows, 0 console errors.
 
 ## Current Milestone: M4 — Enemy System
 - [ ] Enemy base framework (stats/health shared with player pattern)

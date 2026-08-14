@@ -1,7 +1,7 @@
 # Void Survivor — Save Context
 
 ## Last Updated
-2026-08-14 (M3 complete)
+2026-08-14 (M3 complete + M3 bug fix)
 
 ## Current Phase
 Phase 1 — Core framework development
@@ -23,7 +23,19 @@ M4 — Enemy System
 - M3 verification: in-play smoke test (temporary PlayerSmokeTest.cs) — 29 checks, 0 failures (stats read, TakeDamage/Heal/FullHeal, HP clamps, single death + event count, movement math, bounds math). Dynamic play checks via MCP: camera converged smoothly to a teleported target (30,30 → target (5,5) → cam (5,5) after 2s, no teleport snap), full component set verified on Player GO and prefab, clean session shows hp=100/100, dead=False, moveInput=(0,0). Temp test code deleted.
 
 ## In Progress
-- Nothing. M3 is fully complete.
+- Nothing. M3 (incl. bug fix) is fully complete.
+
+## M3 Bug Fix (2026-08-14)
+- Reported: (1) small movement range + apparent pull-back near edges; (2) jitter/blur when holding WASD.
+- Root causes (verified): (2) Rigidbody2D.interpolation was None → physics-stepped positions vs per-frame camera smoothing. (1) no pull-back code exists (verified in play); perception came from jitter + small viewport (orthographicSize 5). Latent defect found: InputActionReference created at runtime was NOT persisted to scene/prefab (would break movement after editor restart).
+- Fixed: Rigidbody2D.interpolation = Interpolate; Camera orthographicSize 5 → 8; PlayerController switched to serializable `InputActionAsset` + `FindAction("Move")`.
+- Verified: W/A/D covered -20..+20 through center (no pull-back), bounds hold, camera follows; 0 console errors/warnings. Files: PlayerController.cs, Player.prefab, SC_Main.unity.
+
+## Modified / Added Files (M3 bug fix)
+- Assets/Scripts/Player/PlayerController.cs (InputActionAsset reference)
+- Assets/Prefabs/Player.prefab (interpolation + inputActions persisted)
+- Assets/Scenes/SC_Main.unity (camera size 8)
+- PROJECT_CONTEXT.md / TASKS.md / SAVE_CONTEXT.md / DEVELOPMENT_LOG.md / KNOWN_ISSUES.md / DECISIONS.md (D009) (synced)
 
 ## Modified / Added Files (M3)
 - Assets/Scripts/Player/PlayerController.cs (new)
