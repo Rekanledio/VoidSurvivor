@@ -53,7 +53,11 @@
 - [x] M4.3 Runner AI (2026-08-14): RunnerAI — faster pursuer (RunnerData moveSpeed 6 vs Chaser 3.5), same pursuit pattern as ChaserAI (MovePosition, EnemyController refs, stops when dead). RunnerData.asset + Runner.prefab (base + RunnerAI). Verified: 20/20 probe checks PASS (speed 6.00 exact over fixed physics frames, re-target, chase, physics hold near player, death stop 0.000, Chaser unaffected, player intact), 0 errors/warnings.
 - [x] M4.4 Shooter AI (2026-08-14): ShooterAI — approaches only outside AttackRange, stops inside it, fires a minimal Projectile at the player when in range and off cooldown (Time.time-based). Minimal M4.4 Projectile (kinematic, velocity, lifetime, contact damage via PlayerHealth.TakeDamage — flagged as temporary until M5). ShooterData.asset (speed 2.5 / range 6 / cooldown 1.5 / dmg 8 / HP 25) + ShooterProjectile.prefab + Shooter.prefab. Verified: 27/27 probe checks PASS (approach/stops at range edge, fire→hit→damage via player HP, cooldown window, fires after cooldown, out-of-range silence, death stops move+attack, Chaser/Runner regression, no projectile residue), 0 errors/warnings.
 - [x] M4.5 Tank AI (2026-08-14): TankAI — slow, high-HP pursuer (same pursuit pattern as ChaserAI; MovePosition + EnemyController refs; stops when dead; no special attack). TankData.asset (moveSpeed 2 < Chaser 3.5, maxHP 120 > others 30) + Tank.prefab (base + TankAI). Verified: 23/23 probe checks PASS (speed 2.00 exact over fixed physics frames, re-target on player move/crossing, TakeDamage→90, clamp 0, single EnemyDied, death stop, Chaser/Runner/Shooter regression), 0 errors/warnings.
-- [ ] Enemy spawning entry (minimal, full wave logic stays in M8)
+- [x] M4.6 Minimal spawn entry (2026-08-14): EnemySpawner — Start-time single spawn of one instance per configured prefab at fixed cardinal offsets (10 units) around the player; no wave/timer/loop logic (M8 owns waves). EnemySpawner object in SC_Main wired to Chaser/Runner/Shooter/Tank prefabs. Verified: 22/22 probe checks PASS (4 enemies spawned at ~10, count == 4, components + target resolved, Chaser/Runner/Tank AI moving, no duplicate spawning) + manual observation of all 4 enemies in-play (Chaser/Runner/Tank pursue, Shooter fires projectiles), 0 errors/warnings.
+
+## M4 — Enemy System: COMPLETE (2026-08-14)
+
+## Next Milestone: M5 — Combat System
 
 ## Rules
 - Only mark a task complete after actual verification.

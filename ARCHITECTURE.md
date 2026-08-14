@@ -41,7 +41,8 @@
 - `ShooterAI` (M4.4) — ranged attacker: approaches only outside AttackRange, stops inside it; fires a minimal `Projectile` at the player when in range and off cooldown (Time.time). ShooterData.asset (speed 2.5 / range 6 / cd 1.5 / dmg 8 / HP 25) + Shooter.prefab.
 - `Projectile` (M4.4) — MINIMAL ranged-attack proof: kinematic body, fixed velocity, lifetime, contact damage via PlayerHealth.TakeDamage. Explicitly temporary: M5 Combat System replaces it with the unified damage/projectile pipeline (no pool, no generic weapon framework).
 - `TankAI` (M4.5) — slow, high-HP pursuer; same pursuit pattern as ChaserAI, identity from TankData (moveSpeed 2, maxHP 120). TankData.asset + Tank.prefab.
-- Minimal spawn entry lands in M4.6; full wave logic stays in M8.
+- `EnemySpawner` (M4.6) — minimal spawn entry: Start-time single spawn of one instance per configured prefab at fixed cardinal offsets around the player; no wave/timer/loop (M8 owns waves, M7 owns pooling).
+- Wave logic stays in M8; the M4.4 minimal `Projectile` remains temporary until M5 unifies combat.
 
 ## Data Layer
 Use ScriptableObject for static configuration:

@@ -251,3 +251,20 @@ M4.5 — Tank AI (part of M4 — Enemy System)
 
 ### Next
 M4.6 — minimal enemy spawn entry (wave logic stays in M8).
+
+## 2026-08-14
+### Milestone
+M4.6 — Minimal Spawn Entry (M4 — Enemy System COMPLETE)
+
+### Completed
+- EnemySpawner (Assets/Scripts/Enemy/EnemySpawner.cs): minimal spawn entry — holds a List<GameObject> of enemy prefabs and a spawnDistance; Start() spawns one instance of each prefab at fixed cardinal offsets (left/right/up/down, 10 units) around the player. Only instantiates; enemies run their own AI via EnemyController. No wave logic, no timers, no loops, no object pool (M8 owns waves, M7 owns pooling).
+- SC_Main: added EnemySpawner GameObject wired to Chaser/Runner/Shooter/Tank prefabs (spawnDistance 10).
+
+### Verification
+- Compilation: 0 errors.
+- In-play probe (temporary SpawnProbe, deleted): 22/22 PASS, 0 FAILURES — EnemySpawner present + component; Player present; all 4 enemy prefabs spawned (Chaser/Runner/Shooter/Tank); total count == 4; each spawned at ~9.3-9.8 units from the player (not overlapping); base components + PlayerHealth target resolved on all; Chaser/Runner/Tank AI moving; Shooter active (fires when in range); no duplicate spawning after additional time.
+- Manual observation (in-play scene query): all four enemies visible as Chaser(Clone)/Runner(Clone)/Shooter(Clone)/Tank(Clone), converging on the player; Shooter spawned projectiles (ShooterProjectile(Clone) present) — confirms the "run SC_Main and see enemies" goal.
+- Final clean play/stop twice: 0 errors, 0 warnings (enemies spawned correctly on both runs).
+
+### Next
+M5 — Combat System (damage, death, pickups). Wave logic remains in M8.

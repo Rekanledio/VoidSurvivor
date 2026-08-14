@@ -43,24 +43,20 @@
 Phase 1 — Core framework development
 
 ## Current Milestone
-M4 — Enemy System (4 enemy types and AI)
+M5 — Combat System (damage, death, pickups)
 
 ## Completed Milestones
 - M0 — Project Documentation Initialization
 - M1 — Unity Project Initialization (2026-08-14): Git initialized, folder structure created, SC_Main scene with orthographic camera, minimal Core entry (GameManager / GameBootstrap / GameState), Unity MCP verified, clean play-mode test.
 - M2 — Core Framework (2026-08-14): GameState transition API with legal-transition table, type-safe generic EventBus, GameStateChanged event, SceneFlow/SceneIds scene-flow base, lifecycle documented in GameBootstrap. Verified via in-play smoke test (33 checks, 0 failures); test code removed after verification.
 - M3 — Player System (2026-08-14): PlayerController (Input System Move/WASD, 8-way, diagonal-consistent, bounds clamp via Rigidbody2D.MovePosition), PlayerStats (10 MVP stats), PlayerHealth (TakeDamage with flat armor, Heal/FullHeal, HP clamped 0..Max, single death + PlayerDied event), CameraFollow (smooth exponential orthographic follow, no Cinemachine). Player prefab + placeholder sprite in SC_Main. Verified via in-play smoke test (29 checks, 0 failures) + dynamic play checks; test code removed. Follow-up fixes: Rigidbody2D interpolation = Interpolate (jitter), Camera orthographicSize 5 → 8, PlayerController input switched to serializable InputActionAsset reference, ground reference added (empty-scene movement was visually imperceptible — the "return to center" report was a visual-reference issue; world coordinates never actually reset, verified via in-assembly probe).
-- M4.1 — Enemy Base Framework (2026-08-14): EnemyData (ScriptableObject static config), EnemyStats (runtime read-only view), EnemyHealth (HP/TakeDamage/clamp/single death + EnemyDied event), EnemyController (common refs + PlayerHealth target, AI extension point), EnemyBase prefab + EnemyPlaceholder sprite + EnemyBase.asset. Verified 27/27 probe PASS, 0 errors/warnings. No AI behavior yet (M4.2+).
-- M4.2 — Chaser AI (2026-08-14): ChaserAI pursues the player at EnemyData MoveSpeed via Rigidbody2D.MovePosition, reuses EnemyController refs, stops when dead. ChaserData.asset + Chaser.prefab. Verified 15/15 probe PASS, 0 errors/warnings.
-- M4.3 — Runner AI (2026-08-14): RunnerAI — faster pursuer (RunnerData moveSpeed 6 vs Chaser 3.5), same pursuit pattern as ChaserAI. RunnerData.asset + Runner.prefab. Verified 20/20 probe PASS (fixed-physics-frame speed measurement, re-target, physics hold near player, death stop), 0 errors/warnings.
-- M4.4 — Shooter AI (2026-08-14): ShooterAI — approach outside AttackRange, stop inside; fires a minimal M4.4 Projectile at the player when in range + off cooldown. Projectile applies damage via PlayerHealth.TakeDamage (temporary path, M5 unifies combat). ShooterData.asset + ShooterProjectile.prefab + Shooter.prefab. Verified 27/27 probe PASS (fire→hit→damage via player HP, cooldown, range, death stop, Chaser/Runner regression), 0 errors/warnings.
-- M4.5 — Tank AI (2026-08-14): TankAI — slow, high-HP pursuer (ChaserAI pattern, no special attack). TankData.asset (moveSpeed 2, maxHP 120) + Tank.prefab. Verified 23/23 probe PASS, 0 errors/warnings.
+- M4 — Enemy System (2026-08-14, COMPLETE): M4.1 Enemy base framework (EnemyData/EnemyStats/EnemyHealth/EnemyController/EnemyDied/EnemyBase); M4.2 Chaser AI (pursue, speed 3.5); M4.3 Runner AI (faster pursue, speed 6); M4.4 Shooter AI (approach/stay in AttackRange, fire minimal Projectile, speed 2.5/range 6/cd 1.5/dmg 8/HP 25); M4.5 Tank AI (slow high-HP pursue, speed 2/HP 120); M4.6 minimal spawn entry (EnemySpawner spawns one of each type around the player). Verified per subtask (27/15/20/27/23/22 probe checks all PASS), 0 errors/warnings; manual in-play observation confirms all four enemies spawn and run their AI.
 
 ## Next Milestone
-M4 — Enemy System
+M5 — Combat System (damage, death, pickups)
 
 ## Current Task
-Begin M4: enemy types and AI per ARCHITECTURE.md. Player foundation from M3 is stable.
+Begin M5: unified damage/death/pickup pipeline. M4 enemy framework (all 4 AI types + minimal spawn) is stable.
 
 ## Important Decisions
 - Do not add special differentiation mechanics for MVP.

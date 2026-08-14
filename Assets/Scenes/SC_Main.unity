@@ -119,6 +119,56 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &899764439
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 899764441}
+  - component: {fileID: 899764440}
+  m_Layer: 0
+  m_Name: EnemySpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &899764440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 899764439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 132ecd4a526b8464e9f34093b1980acc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VoidSurvivor.Enemy.EnemySpawner
+  enemyPrefabs:
+  - {fileID: 4543277034052463413, guid: e2379f27024bb8b4bb51c94ddd85a993, type: 3}
+  - {fileID: 1586864351200871551, guid: caadb99ac7a438b4e99fa0c270f42d26, type: 3}
+  - {fileID: 5520667191089851027, guid: ceefeb8c652c2d546a9d8e9f452ba7fd, type: 3}
+  - {fileID: 8711936010245797425, guid: 78ef61ec2a2e3fb49b6cd97ba9d31530, type: 3}
+  spawnDistance: 10
+--- !u!4 &899764441
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 899764439}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1185434204
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -464,3 +514,4 @@ SceneRoots:
   - {fileID: 1234121046}
   - {fileID: 4353819866880962496}
   - {fileID: 1863370429}
+  - {fileID: 899764441}

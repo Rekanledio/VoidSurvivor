@@ -118,3 +118,9 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - TankData.asset: moveSpeed 2 (below Chaser 3.5), maxHP 120 (above others 30). Tank.prefab (base + TankAI, data = TankData).
 - Verified: 23/23 probe PASS (speed 2.00 exact; re-target; TakeDamage->90; clamp 0; single EnemyDied; death stop; Chaser/Runner/Shooter regression). Final play/stop twice: 0 errors / 0 warnings.
 - Next: M4.6 minimal spawn entry.
+
+## M4.6 — Minimal Spawn Entry (2026-08-14) — M4 COMPLETE
+- EnemySpawner.cs: Start-time single spawn of one instance per configured prefab at fixed cardinal offsets (10) around the player; no wave/timer/loop; M8 owns waves.
+- SC_Main: EnemySpawner GameObject wired to Chaser/Runner/Shooter/Tank prefabs.
+- Verified: 22/22 probe PASS + manual in-play observation (all 4 enemies visible, Chaser/Runner/Tank pursue, Shooter fires projectiles). Final play/stop twice: 0 errors / 0 warnings.
+- **M4 — Enemy System: COMPLETE.** Next: M5 — Combat System (wave logic stays in M8).
