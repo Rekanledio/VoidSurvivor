@@ -268,3 +268,32 @@ M4.6 — Minimal Spawn Entry (M4 — Enemy System COMPLETE)
 
 ### Next
 M5 — Combat System (damage, death, pickups). Wave logic remains in M8.
+
+## 2026-08-14
+### Milestone
+M5.1 — Combat Base Framework (part of M5 — Combat System)
+
+### Completed
+- Assets/Scripts/Combat/IDamageable.cs: minimal damage-target abstraction (IsDead + TakeDamage); implemented by PlayerHealth and EnemyHealth (no responsibility changes — they keep owning HP/death state).
+- Assets/Scripts/Combat/DamageRequest.cs: struct — Source (may be null), Target (must expose IDamageable), Damage.
+- Assets/Scripts/Combat/DamageResult.cs: struct — Applied / Damage / TargetDead (minimal outcome).
+- Assets/Scripts/Combat/CombatSystem.cs: static unified entry — ApplyDamage validates target/damage, rejects dead targets, routes to IDamageable.TakeDamage, publishes DamageApplied, returns DamageResult. No Player/Enemy branches; no per-frame allocations.
+- Assets/Scripts/Core/GameEvents.cs: added DamageApplied (Source/Target/Damage). Kill attribution / XP / Gold events still deferred.
+- PlayerHealth / EnemyHealth: now implement IDamageable (signatures unchanged).
+- Projectile (migration): no longer calls PlayerHealth.TakeDamage directly — on contact routes DamageRequest through CombatSystem to any IDamageable; carries an optional source (ShooterAI now passes its gameObject). M4.4 temporary path fully replaced; temporary comments updated.
+- ShooterAI: Init(direction, damage, source) call updated (movement/attack logic untouched).
+
+### Why this cross-cutting change (per PROJECT_RULES.md 5.6 / ARCHITECTURE.md)
+- M4.4's Projectile → PlayerHealth.TakeDamage() was a minimal temporary path (documented then). M5.1 replaces it with a unified damage entry so Player/Enemy/Projectile/Weapon share one pipeline and health classes stay decoupled from "what attacked them".
+
+### Verification
+- Compilation: 0 errors.
+- In-play probe (temporary CombatProbe, deleted): 23/23 PASS, 0 FAILURES — Spawner regression (4 enemies moving); player damaged via combat (HP 100→90, DamageApplied once); enemy damaged via combat with source (HP 30→20); enemy death via combat (EnemyDied once); damage to dead enemy rejected; projectile fly→hit→combat→damage (player HP 90→82) →destroy; projectile DamageApplied (probe source); player death via combat (PlayerDied once); damage to dead player rejected.
+- Decoupling check: Projectile.cs has zero PlayerHealth code references.
+- Final clean play/stop twice: 0 errors, 0 warnings.
+
+### Known behavior (recorded, not a defect)
+- Projectile hits any IDamageable, including other enemies (no friendly-fire filter). This is the minimal M5.1 unified-target design; faction/team filtering is left to a later combat refinement.
+
+### Next
+M5.2 (per TASKS.md split).

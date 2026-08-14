@@ -42,4 +42,23 @@ namespace VoidSurvivor.Core
             Enemy = enemy;
         }
     }
+
+    /// <summary>
+    /// Published by <see cref="VoidSurvivor.Combat.CombatSystem"/> for every
+    /// applied damage request (M5.1). Carries source (may be null), target and
+    /// nominal damage. Kill attribution / XP / Gold events come later.
+    /// </summary>
+    public readonly struct DamageApplied
+    {
+        public GameObject Source { get; }
+        public GameObject Target { get; }
+        public float Damage { get; }
+
+        public DamageApplied(GameObject source, GameObject target, float damage)
+        {
+            Source = source;
+            Target = target;
+            Damage = damage;
+        }
+    }
 }

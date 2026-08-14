@@ -56,7 +56,7 @@ namespace VoidSurvivor.Enemy
             var comp = projectile.GetComponent<Projectile>();
             if (comp != null)
             {
-                comp.Init(direction, _controller.Stats.Damage);
+                comp.Init(direction, _controller.Stats.Damage, gameObject);
             }
         }
     }

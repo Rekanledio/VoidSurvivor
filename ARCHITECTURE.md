@@ -39,20 +39,17 @@
 - `ChaserAI` (M4.2) — pursues the player's current position at the configured MoveSpeed via Rigidbody2D.MovePosition; reuses EnemyController's resolved refs (Target/Stats/Health/Body); stops when dead. ChaserData.asset + Chaser.prefab.
 - `RunnerAI` (M4.3) — faster pursuer; same pursuit pattern as ChaserAI, speed driven by RunnerData (moveSpeed 6). RunnerData.asset + Runner.prefab.
 - `ShooterAI` (M4.4) — ranged attacker: approaches only outside AttackRange, stops inside it; fires a minimal `Projectile` at the player when in range and off cooldown (Time.time). ShooterData.asset (speed 2.5 / range 6 / cd 1.5 / dmg 8 / HP 25) + Shooter.prefab.
-- `Projectile` (M4.4) — MINIMAL ranged-attack proof: kinematic body, fixed velocity, lifetime, contact damage via PlayerHealth.TakeDamage. Explicitly temporary: M5 Combat System replaces it with the unified damage/projectile pipeline (no pool, no generic weapon framework).
+- `Projectile` (M5.1 migration) — flies at fixed velocity, expires after lifetime, on contact routes a `DamageRequest` through CombatSystem to any `IDamageable` (source carried from the firer). No direct health coupling. Known: hits any IDamageable including other enemies (no faction filter yet — later refinement).
 - `TankAI` (M4.5) — slow, high-HP pursuer; same pursuit pattern as ChaserAI, identity from TankData (moveSpeed 2, maxHP 120). TankData.asset + Tank.prefab.
 - `EnemySpawner` (M4.6) — minimal spawn entry: Start-time single spawn of one instance per configured prefab at fixed cardinal offsets around the player; no wave/timer/loop (M8 owns waves, M7 owns pooling).
-- Wave logic stays in M8; the M4.4 minimal `Projectile` remains temporary until M5 unifies combat.
+- Wave logic stays in M8.
 
-## Data Layer
-Use ScriptableObject for static configuration:
-- CharacterData
-- WeaponData
-- EnemyData
-- UpgradeData
-- WaveData
-- ShopItemData
-- GameConfig
+## Combat System (M5, in progress)
+- `IDamageable` (M5.1) — minimal damage-target abstraction (IsDead + TakeDamage); implemented by PlayerHealth and EnemyHealth.
+- `DamageRequest` / `DamageResult` (M5.1) — structs carrying Source/Target/Damage and the minimal outcome (Applied / Damage / TargetDead).
+- `CombatSystem.ApplyDamage` (M5.1) — static unified damage entry: validates target/damage, rejects dead targets, routes to the target's IDamageable, publishes `DamageApplied`, returns DamageResult. No Player/Enemy branches; health classes keep owning HP/death state.
+- `DamageApplied` (M5.1) — event (Source/Target/Damage). Kill attribution / XP / Gold events come later.
+- Remaining M5 work per TASKS.md; weapons (M6), pool (M7), waves (M8).
 
 ## Runtime Layer
 Runtime objects consume configuration assets and maintain mutable state at runtime.

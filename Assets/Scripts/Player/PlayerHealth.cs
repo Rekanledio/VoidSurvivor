@@ -1,4 +1,5 @@
 using UnityEngine;
+using VoidSurvivor.Combat;
 using VoidSurvivor.Core;
 
 namespace VoidSurvivor.Player
@@ -7,9 +8,10 @@ namespace VoidSurvivor.Player
     /// Player hit points. Owns CurrentHP, clamps it to [0, MaxHP] and
     /// publishes <see cref="PlayerDied"/> exactly once via the EventBus.
     /// Armor comes from PlayerStats and is applied as simple flat reduction (M3 minimal form).
+    /// Implements <see cref="IDamageable"/> so combat can address it uniformly (M5.1).
     /// </summary>
     [DisallowMultipleComponent]
-    public class PlayerHealth : MonoBehaviour
+    public class PlayerHealth : MonoBehaviour, IDamageable
     {
         private PlayerStats _stats;
         private float _currentHP;

@@ -1,13 +1,14 @@
 using UnityEngine;
-using VoidSurvivor.Player;
+using VoidSurvivor.Combat;
 
 namespace VoidSurvivor.Enemy
 {
     /// <summary>
-    /// Minimal M4.4 projectile used only to prove the Shooter's ranged attack.
-    /// Flies in a fixed direction at a fixed speed, expires after a lifetime,
-    /// and applies its damage to the player on contact. This is NOT the M5
-    /// Combat/Projectile system — M5 will replace it with the unified pipeline.
+    /// Projectile (M5.1): flies in a fixed direction at a fixed speed, expires
+    /// after a lifetime, and on contact routes a damage request through
+    /// <see cref="CombatSystem"/> to whatever <see cref="IDamageable"/> the hit
+    /// object exposes. No direct PlayerHealth coupling and no damage logic of
+    /// its own. The unified combat pipeline owns damage application.
     /// </summary>
     [DisallowMultipleComponent]
     public class Projectile : MonoBehaviour
@@ -17,6 +18,7 @@ namespace VoidSurvivor.Enemy
 
         private Rigidbody2D _body;
         private float _damage;
+        private GameObject _source;
         private bool _initialized;
 
         private void Awake()
@@ -24,10 +26,11 @@ namespace VoidSurvivor.Enemy
             _body = GetComponent<Rigidbody2D>();
         }
 
-        /// <summary>Sets flight direction and damage; called once right after spawn.</summary>
-        public void Init(Vector2 direction, float damage)
+        /// <summary>Sets flight direction, damage and source; called once right after spawn.</summary>
+        public void Init(Vector2 direction, float damage, GameObject source)
         {
             _damage = damage;
+            _source = source;
             _body.linearVelocity = direction.normalized * Speed;
             _initialized = true;
         }
@@ -46,12 +49,10 @@ namespace VoidSurvivor.Enemy
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            // Contact damage against the player. Minimal M4.4 path — M5 Combat
-            // will own damage rules; GetComponent here is event-driven, not a hot path.
-            var health = other.GetComponent<PlayerHealth>();
-            if (health != null)
+            // Route damage through the unified combat entry (event-driven, not a hot path).
+            if (other.TryGetComponent(out IDamageable damageable))
             {
-                health.TakeDamage(_damage);
+                CombatSystem.ApplyDamage(new DamageRequest(_source, other.gameObject, _damage));
                 Destroy(gameObject);
             }
         }

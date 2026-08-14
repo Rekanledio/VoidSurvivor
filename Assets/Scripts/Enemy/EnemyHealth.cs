@@ -1,4 +1,5 @@
 using UnityEngine;
+using VoidSurvivor.Combat;
 using VoidSurvivor.Core;
 
 namespace VoidSurvivor.Enemy
@@ -6,10 +7,11 @@ namespace VoidSurvivor.Enemy
     /// <summary>
     /// Enemy hit points. Owns CurrentHP, clamps it to [0, MaxHP] and publishes
     /// <see cref="EnemyDied"/> exactly once via the EventBus (mirrors PlayerHealth).
-    /// The combat system (M5) will drive TakeDamage; no combat logic here.
+    /// Implements <see cref="IDamageable"/> so combat can address it uniformly (M5.1);
+    /// no combat logic here.
     /// </summary>
     [DisallowMultipleComponent]
-    public class EnemyHealth : MonoBehaviour
+    public class EnemyHealth : MonoBehaviour, IDamageable
     {
         private EnemyStats _stats;
         private float _currentHP;

@@ -124,3 +124,10 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - SC_Main: EnemySpawner GameObject wired to Chaser/Runner/Shooter/Tank prefabs.
 - Verified: 22/22 probe PASS + manual in-play observation (all 4 enemies visible, Chaser/Runner/Tank pursue, Shooter fires projectiles). Final play/stop twice: 0 errors / 0 warnings.
 - **M4 — Enemy System: COMPLETE.** Next: M5 — Combat System (wave logic stays in M8).
+
+## M5.1 — Combat Base Framework (2026-08-14)
+- Combat pipeline: IDamageable (PlayerHealth/EnemyHealth implement), DamageRequest/DamageResult, CombatSystem.ApplyDamage static unified entry, DamageApplied event.
+- Projectile migrated: contact routes damage through CombatSystem to any IDamageable (carries source from ShooterAI); no PlayerHealth coupling.
+- Verified: 23/23 probe PASS; final play/stop twice: 0 errors / 0 warnings.
+- Known behavior: projectile hits any IDamageable (no friendly-fire filter yet) — recorded for a later combat refinement.
+- Next: M5.2 (per TASKS.md split).

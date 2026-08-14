@@ -38,3 +38,8 @@
 **Decision:** (1) PlayerController references the InputActionAsset by serializable asset reference and resolves the Move action by name in Awake, instead of a runtime-created InputActionReference (which was not persisted to scene/prefab files). (2) Rigidbody2D interpolation = Interpolate to smooth physics stepping against the per-frame camera follow. (3) Main Camera orthographicSize raised 5 → 8 so the placeholder arena (±20) is comfortably visible.
 **Reason:** Asset references serialize reliably across sessions; Interpolate is the standard Unity mechanism to remove render jitter without Cinemachine; a larger viewport matches the placeholder arena scale and removes the "small movement range" perception.
 **Scope:** Player/camera only. No architecture change; no other systems touched.
+
+## D010 — Unified Combat Damage Entry (M5.1)
+**Decision:** Damage is applied through a single unified entry: `CombatSystem.ApplyDamage(DamageRequest)` resolves the target's `IDamageable` (implemented by PlayerHealth and EnemyHealth), rejects dead/invalid targets, routes damage, publishes `DamageApplied`, and returns a minimal `DamageResult`. Projectiles no longer call health classes directly.
+**Reason:** M4.4's Projectile → PlayerHealth.TakeDamage() was a documented temporary path. A single type-safe pipeline (with Source/Target/Damage) lets Player/Enemy/Projectile/Weapon share one damage path, keeps health classes decoupled from "what attacked them", and stays allocation-free and third-party-free.
+**Scope:** M5.1 only. No crits/elements/status/knockback; no friendly-fire filtering yet (projectile hits any IDamageable — recorded as known behavior for a later refinement). Weapons (M6), pooling (M7), waves (M8) unchanged.

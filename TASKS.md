@@ -57,7 +57,8 @@
 
 ## M4 — Enemy System: COMPLETE (2026-08-14)
 
-## Next Milestone: M5 — Combat System
+## Current Milestone: M5 — Combat System
+- [x] M5.1 Combat Base Framework (2026-08-14): IDamageable (PlayerHealth/EnemyHealth implement), DamageRequest/DamageResult structs, CombatSystem static unified ApplyDamage entry, DamageApplied event; Projectile migrated off direct PlayerHealth coupling to the combat entry (with source). Verified: 23/23 probe checks PASS (player/enemy damage via combat, death + rejection of dead targets, projectile fly→hit→combat→damage→destroy, DamageApplied events, Chaser/Runner/Tank/Shooter/Spawner regression), 0 errors/warnings.
 
 ## Rules
 - Only mark a task complete after actual verification.
