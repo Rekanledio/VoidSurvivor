@@ -342,3 +342,21 @@ M5.3 — Pickup System (part of M5 — Combat System)
 
 ### Next
 M5.4+ per the official task split (to be confirmed by the next task prompt).
+
+## 2026-08-14
+### Milestone
+M5.4 — Player Attack Path (part of M5 — Combat System)
+
+### Completed
+- Assets/Scripts/Player/PlayerAttack.cs: formal Player → Enemy attack entry. Attack(target) validates stats/target, builds a DamageRequest with this player as Source and PlayerStats.Damage as base damage, and routes it through CombatSystem.ApplyDamage, returning the DamageResult. No auto-attack loop, no weapon/projectile/targeting framework (M6 owns weapon cycles and target selection).
+- Assets/Prefabs/Player.prefab: Player prefab gains PlayerAttack (scene instance synced).
+
+### Verification
+- Compilation: 0 errors.
+- In-play probe (temporary PlayerCombatProbe, deleted): 23/23 PASS, 0 FAILURES — component present; PlayerStats.Damage = 10 readable; PlayerHealth/PlayerProgress intact; static EnemyBase target; non-lethal attack (30 → 20, DamageApplied once, no EnemyKilled); repeated player attacks kill (EnemyKilled once, EnemyDied, Enemy reference correct, Killer == Player, attributed to player); dead enemy destroyed; attack on dead enemy rejected with no duplicate events; PickupSystem dropped XP+Gold at the killed enemy's position (0 → 2); Spawner all 4 enemy types present.
+- Note: one probe assert initially counted pickups after the kill (PickupSystem spawns synchronously), so before/after were equal — moved the baseline capture before the kill. Assertion timing, not an implementation bug.
+- Manual play: full Player → CombatSystem → Enemy → EnemyKilled(Killer=Player) → Pickup chain observed via the in-play probe run.
+- Final clean play/stop twice: 0 errors, 0 warnings.
+
+### Next
+M5 completion per the official task split; weapons in M6.

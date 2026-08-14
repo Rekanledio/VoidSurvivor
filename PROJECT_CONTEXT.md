@@ -54,6 +54,7 @@ M5 — Combat System (damage, death, pickups)
 - M5.1 — Combat Base Framework (2026-08-14): IDamageable + DamageRequest/DamageResult + CombatSystem unified ApplyDamage + DamageApplied event; Projectile migrated off direct PlayerHealth coupling. Verified 23/23 probe PASS, 0 errors/warnings.
 - M5.2 — Enemy Death & Kill Attribution (2026-08-14): EnemyKilled (Enemy/Killer) published once per lethal hit on EnemyHealth with valid Source; EnemyController destroys dead enemies (pool in M7). Verified 28/28 probe PASS, 0 errors/warnings.
 - M5.3 — Pickup System (2026-08-14): PlayerProgress (XP/Gold) + PickupType/PickupData + Pickup collect + PickupSystem (EnemyKilled → drop XP+Gold at death position). XPPickup/GoldPickup prefabs; Player gains PlayerProgress; SC_Main gains PickupSystem. Verified 25/25 probe PASS + manual play, 0 errors/warnings.
+- M5.4 — Player Attack Path (2026-08-14): PlayerAttack.Attack(target) → DamageRequest(Source=Player, PlayerStats.Damage) → CombatSystem; no auto-attack/weapon logic (M6 owns weapons). Player prefab gains PlayerAttack. Verified 23/23 probe PASS, 0 errors/warnings.
 
 ## Next Milestone
 M5 — Combat System (damage, death, pickups)

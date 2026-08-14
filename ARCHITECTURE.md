@@ -60,6 +60,9 @@
 - `PickupSystem` — event subscriber to EnemyKilled: spawns 1 XP + 1 Gold at the enemy's death position immediately (before frame-end destroy). Deterministic MVP drop rule (XP 10 / Gold 5).
 - `PickupCollected` — event (Type/Amount/Collector).
 
+## Player Attack (M5.4)
+- `PlayerAttack` — formal Player → Enemy entry: Attack(target) builds a DamageRequest (Source = Player, damage from PlayerStats.Damage) and routes it through CombatSystem.ApplyDamage, returning DamageResult. No auto-attack loop, no weapon/projectile/targeting framework (M6 owns weapon cycles and target selection).
+
 ## Runtime Layer
 Runtime objects consume configuration assets and maintain mutable state at runtime.
 

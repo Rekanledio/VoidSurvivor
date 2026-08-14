@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 2145947146284087826}
   - component: {fileID: 8317592221636206053}
   - component: {fileID: -3100791534797533529}
+  - component: {fileID: -2510963651235710188}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -221,3 +222,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f8e7ad6095ec9040b2d2e96de0ff6e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VoidSurvivor.Player.PlayerProgress
+--- !u!114 &-2510963651235710188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2734891605708252962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc725b01917fbef44bde910235b7da7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VoidSurvivor.Player.PlayerAttack
