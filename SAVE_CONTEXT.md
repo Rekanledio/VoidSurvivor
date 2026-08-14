@@ -73,3 +73,11 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - GitHub remote repository URL not yet configured (local-only Git for now).
 - Web build not yet tested.
 - "Referenced script (Unknown) missing" console pairs appear transiently during script recompile cycles; stable states are clean. See KNOWN_ISSUES.md.
+
+## M3 Bug Fix #2 (2026-08-14) — final root cause
+- Reported: "small movement range + return to center on release" (jitter already fixed).
+- Verified (deterministic, in-assembly probe): player world coordinates never returned to center — W/A/D exact 5 u/s, position kept after release, crossing center OK, camera follows perfectly (player (-2.5,5) ↔ cam (-2.5,5,-10)).
+- Root cause: SC_Main was an empty scene (no visual reference). With camera-follow, movement is invisible on screen → perceived as small range + return to center.
+- Fix: added Ground reference (Assets/Art/GroundPlaceholder.png, grid, sortingOrder -10, scale 50). No player/camera logic changed.
+- Files: SC_Main.unity (+Ground), Assets/Art/GroundPlaceholder.png (+meta). Temp AutoProbe deleted.
+- Verification: probe identical across 3 Play/Stop cycles; final clean play/stop 0 errors / 0 warnings.

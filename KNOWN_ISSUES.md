@@ -16,7 +16,7 @@
 - Player system missing → Implemented in M3 (PlayerController/PlayerStats/PlayerHealth/CameraFollow, Player prefab in SC_Main).
 - Player jitter while moving → Fixed (Rigidbody2D interpolation = Interpolate; see DEVELOPMENT_LOG).
 - InputActionReference not persisted in scene/prefab (would break movement after reopening the project) → Fixed by switching PlayerController to a serializable InputActionAsset reference.
-- Small movement-range perception / apparent pull-back → No code pulled the player back; fixed by removing jitter and widening the camera viewport (orthographicSize 5 → 8).
+- Small movement-range perception / apparent pull-back → Root-caused as a visual-reference issue: SC_Main was an empty scene, so camera-follow movement was invisible. Fixed by adding a ground reference (GroundPlaceholder grid); player world coordinates were never actually returning to the center (verified by in-assembly runtime probe).
 
 ## Observations (no action needed now)
 1. Transient "The referenced script (Unknown) on this Behaviour is missing!" console pairs appear during script recompile cycles (observed M1–M3 right after script changes/removals).

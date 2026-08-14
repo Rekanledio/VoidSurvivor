@@ -58,3 +58,11 @@
 ## Rules
 - Only mark a task complete after actual verification.
 - When tasks change, keep this document synchronized with the current project state.
+
+## M3 Bug Fix #2 (2026-08-14) — "return to center" investigation
+- [x] Full-project audit of all position writes (only CameraFollow→Camera, PlayerController→MovePosition; no reset code)
+- [x] In-assembly runtime probe (temporary AutoProbe): W/A/D movement exact (5 u/s), position kept after release across 3 Play/Stop cycles
+- [x] Camera follow verified (player ↔ camera aligned)
+- [x] Root cause: empty scene = no visual reference; camera-follow movement invisible → perceived "small range + return to center" (world coordinates never reset)
+- [x] Fix: added Ground reference (GroundPlaceholder grid, sortingOrder -10); no player/camera logic changed
+- [x] Final clean play/stop: 0 errors / 0 warnings; temp probe removed

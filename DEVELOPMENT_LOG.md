@@ -114,3 +114,28 @@ M3 Bug Fix — player movement boundary & camera jitter
 
 ### Next
 M4 — Enemy System.
+
+## 2026-08-14
+### Milestone
+M3 Bug Fix #2 — player position "return to center" investigation (final root cause)
+
+### User report (manual play test)
+1. Player seemed to move only in a small range.
+2. After releasing W/A/S/D the player seemed to return to the center.
+3. Jitter was confirmed fixed.
+
+### Investigation (deterministic, not simulated-keyboard guessing)
+- Full-project search: only two scripts ever write positions — CameraFollow writes only the Camera transform; PlayerController writes only via Rigidbody2D.MovePosition. No code resets the player to the origin.
+- Runtime probe inside the real game assembly (temporary AutoProbe, drove the Input System in-process, deleted after): W hold 1s -> (0,0)->(0,5); release 1.5s -> (0,5) KEPT; A hold -> (-5,5); release -> KEPT; D crossed -10 -> -2.5 through the center; release -> KEPT. Speed exact 5 u/s. Identical across 3 separate Play sessions (Stop->Play).
+- Camera verified following perfectly: player (-2.5,5) <-> camera (-2.5,5,-10); CameraFollow enabled.
+- Console: 0 errors/warnings throughout; InputActionAsset input reference confirmed persisted and working across Play restarts.
+- ROOT CAUSE — visual reference, not position logic: SC_Main was an empty scene (only Camera + Player). With the camera following the player, the player stays centered on screen and the empty background gives no visual reference, so movement is invisible; the always-centered player reads as "small range" and "returns to center" after release. Player world coordinates never actually returned to the center.
+
+### Fix
+- Added a simple ground reference (Assets/Art/GroundPlaceholder.png grid texture, SpriteRenderer sortingOrder -10, scale 50) so movement is visually observable. No player/camera logic changed (previous fixes: interpolation=Interpolate, camera size 8, InputActionAsset reference remain).
+
+### Verification
+- Probe sequence identical across Play/Stop cycles; camera follows; console 0/0 after final clean play/stop.
+
+### Next
+M4 — Enemy System.
