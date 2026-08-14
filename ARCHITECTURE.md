@@ -37,7 +37,8 @@
 - `EnemyController` (M4.1) — common control base: caches EnemyStats/EnemyHealth/Rigidbody2D in Awake, resolves the PlayerHealth target once in Start; read-only Stats/Health/Body/Target; per-type AI (M4.2+) composes or derives from it. No AI behavior in the base.
 - Placeholder: Assets/Art/EnemyPlaceholder.png; base prefab: Assets/Prefabs/Enemies/EnemyBase.prefab.
 - `ChaserAI` (M4.2) — pursues the player's current position at the configured MoveSpeed via Rigidbody2D.MovePosition; reuses EnemyController's resolved refs (Target/Stats/Health/Body); stops when dead. ChaserData.asset + Chaser.prefab.
-- Per-type prefabs and AI (Runner/Shooter/Tank) land in M4.3–M4.5; minimal spawn entry in M4.6; full wave logic stays in M8.
+- `RunnerAI` (M4.3) — faster pursuer; same pursuit pattern as ChaserAI, speed driven by RunnerData (moveSpeed 6). RunnerData.asset + Runner.prefab.
+- Per-type prefabs and AI (Shooter/Tank) land in M4.4–M4.5; minimal spawn entry in M4.6; full wave logic stays in M8.
 
 ## Data Layer
 Use ScriptableObject for static configuration:

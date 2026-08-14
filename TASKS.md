@@ -50,7 +50,7 @@
 ## Current Milestone: M4 — Enemy System
 - [x] M4.1 Enemy base framework (2026-08-14): EnemyData (ScriptableObject static config), EnemyStats (read-only runtime view), EnemyHealth (CurrentHP/TakeDamage/clamp/single death + EnemyDied event), EnemyController (common refs + Player target), EnemyBase prefab + EnemyPlaceholder sprite + EnemyBase.asset. Verified: 27/27 probe checks PASS, 0 errors/warnings.
 - [x] M4.2 Chaser AI (2026-08-14): ChaserAI pursues the player at EnemyData MoveSpeed via Rigidbody2D.MovePosition, reuses EnemyController references (no per-frame GetComponent/Find), stops when dead. ChaserData.asset (moveSpeed 3.5) + Chaser.prefab (base + ChaserAI). Verified: 15/15 probe checks PASS (instantiation, HP, target resolve, speed 3.5 exact, approach, re-target, continuous chase, death stop, player intact), 0 errors/warnings.
-- [ ] Runner AI (fast approach)
+- [x] M4.3 Runner AI (2026-08-14): RunnerAI — faster pursuer (RunnerData moveSpeed 6 vs Chaser 3.5), same pursuit pattern as ChaserAI (MovePosition, EnemyController refs, stops when dead). RunnerData.asset + Runner.prefab (base + RunnerAI). Verified: 20/20 probe checks PASS (speed 6.00 exact over fixed physics frames, re-target, chase, physics hold near player, death stop 0.000, Chaser unaffected, player intact), 0 errors/warnings.
 - [ ] Shooter AI (ranged attack)
 - [ ] Tank AI (slow, high HP)
 - [ ] Enemy spawning entry (minimal, full wave logic stays in M8)

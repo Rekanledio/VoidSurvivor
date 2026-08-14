@@ -99,3 +99,9 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - ChaserData.asset (moveSpeed 3.5) + Chaser.prefab (EnemyBase + ChaserAI, data = ChaserData).
 - Verified: 15/15 probe PASS (speed exact 3.5, approach/re-target/chase, death stop, player intact); final play/stop 0 errors / 0 warnings. Temp probe deleted.
 - Next: M4.3 Runner AI.
+
+## M4.3 — Runner AI (2026-08-14)
+- RunnerAI.cs: faster pursuer (same pattern as ChaserAI; MovePosition + EnemyController refs; stops when dead; no extra mechanics).
+- RunnerData.asset moveSpeed 6 (vs Chaser 3.5; docs give no explicit value — recorded choice). Runner.prefab (base + RunnerAI, data = RunnerData).
+- Verified: 20/20 probe PASS (speed 6.00 exact via fixed-physics-frame measure; re-target; chase; physics hold near player ~1.07; death stop 0.000; Chaser regression intact; player intact). Final play/stop twice: 0 errors / 0 warnings. Temp probe deleted.
+- Next: M4.4 Shooter AI.

@@ -196,3 +196,21 @@ M4.2 — Chaser AI (part of M4 — Enemy System)
 
 ### Next
 M4.3 — Runner AI (fast approach).
+
+## 2026-08-14
+### Milestone
+M4.3 — Runner AI (part of M4 — Enemy System)
+
+### Completed
+- RunnerAI (Assets/Scripts/Enemy/RunnerAI.cs): faster pursuer. Same pattern as ChaserAI — FixedUpdate + Rigidbody2D.MovePosition toward the player's current world position at the configured MoveSpeed; reuses EnemyController refs (no per-frame GetComponent/Find); stops when dead. No extra mechanics (no dash/turn/collision skill).
+- RunnerData.asset (Assets/ScriptableObjects/Enemies/RunnerData.asset): moveSpeed 6 (clearly higher than Chaser 3.5; project docs give no explicit Runner value, so a simple fixed value was chosen and recorded here). Other values match base (maxHP 30, damage 10, range 1.5, cooldown 1).
+- Runner.prefab (Assets/Prefabs/Enemies/Runner.prefab): based on EnemyBase + RunnerAI, EnemyStats.data = RunnerData.
+
+### Verification
+- Compilation: 0 errors.
+- In-play probe (temporary RunnerProbe, deleted): 20/20 PASS, 0 FAILURES — prefab load; HP 30/30; target resolve; RunnerData MoveSpeed 6; speed 6.00 over 50 fixed physics frames (both segments, exact); moves toward player; re-targets after player teleports; chases across teleports; physics holds runner near player (dist ~1.07, expected contact behavior); death stops movement completely (0.000); Chaser regression intact (3.5 exact); player components intact.
+- Note: fixed-physics-frame counting (WaitForFixedUpdate) was used instead of WaitForSeconds because background-editor frame timing is unreliable; also, when a runner reaches the player, the two colliders contact and physics holds it near the player — expected M4 behavior (contact damage arrives with M5 Combat).
+- Final clean play/stop twice: 0 errors, 0 warnings.
+
+### Next
+M4.4 — Shooter AI (ranged attack).
