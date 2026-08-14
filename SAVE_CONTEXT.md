@@ -112,3 +112,9 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - ShooterData.asset (speed 2.5 / range 6 / cd 1.5 / dmg 8 / HP 25) + ShooterProjectile.prefab + Shooter.prefab (data + projectilePrefab wired).
 - Verified: 27/27 probe PASS (fire->hit->damage via player HP 84->68->60, cooldown window, out-of-range silence, death stop, Chaser/Runner regression, no residue). Final play/stop twice: 0 errors / 0 warnings.
 - Next: M4.5 Tank AI.
+
+## M4.5 — Tank AI (2026-08-14)
+- TankAI.cs: slow high-HP pursuer (ChaserAI pattern; MovePosition + EnemyController refs; stops when dead; no special attack).
+- TankData.asset: moveSpeed 2 (below Chaser 3.5), maxHP 120 (above others 30). Tank.prefab (base + TankAI, data = TankData).
+- Verified: 23/23 probe PASS (speed 2.00 exact; re-target; TakeDamage->90; clamp 0; single EnemyDied; death stop; Chaser/Runner/Shooter regression). Final play/stop twice: 0 errors / 0 warnings.
+- Next: M4.6 minimal spawn entry.

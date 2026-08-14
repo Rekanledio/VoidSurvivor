@@ -54,6 +54,7 @@ M4 — Enemy System (4 enemy types and AI)
 - M4.2 — Chaser AI (2026-08-14): ChaserAI pursues the player at EnemyData MoveSpeed via Rigidbody2D.MovePosition, reuses EnemyController refs, stops when dead. ChaserData.asset + Chaser.prefab. Verified 15/15 probe PASS, 0 errors/warnings.
 - M4.3 — Runner AI (2026-08-14): RunnerAI — faster pursuer (RunnerData moveSpeed 6 vs Chaser 3.5), same pursuit pattern as ChaserAI. RunnerData.asset + Runner.prefab. Verified 20/20 probe PASS (fixed-physics-frame speed measurement, re-target, physics hold near player, death stop), 0 errors/warnings.
 - M4.4 — Shooter AI (2026-08-14): ShooterAI — approach outside AttackRange, stop inside; fires a minimal M4.4 Projectile at the player when in range + off cooldown. Projectile applies damage via PlayerHealth.TakeDamage (temporary path, M5 unifies combat). ShooterData.asset + ShooterProjectile.prefab + Shooter.prefab. Verified 27/27 probe PASS (fire→hit→damage via player HP, cooldown, range, death stop, Chaser/Runner regression), 0 errors/warnings.
+- M4.5 — Tank AI (2026-08-14): TankAI — slow, high-HP pursuer (ChaserAI pattern, no special attack). TankData.asset (moveSpeed 2, maxHP 120) + Tank.prefab. Verified 23/23 probe PASS, 0 errors/warnings.
 
 ## Next Milestone
 M4 — Enemy System

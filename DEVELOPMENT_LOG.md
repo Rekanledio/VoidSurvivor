@@ -234,3 +234,20 @@ M4.4 — Shooter AI (part of M4 — Enemy System)
 
 ### Next
 M4.5 — Tank AI (slow, high HP).
+
+## 2026-08-14
+### Milestone
+M4.5 — Tank AI (part of M4 — Enemy System)
+
+### Completed
+- TankAI (Assets/Scripts/Enemy/TankAI.cs): slow, high-HP pursuer. Same pursuit pattern as ChaserAI — FixedUpdate + Rigidbody2D.MovePosition toward the player at the configured MoveSpeed; reuses EnemyController refs; stops when dead. No special attack / dash / knockback / area skills — type identity comes purely from data.
+- TankData.asset: moveSpeed 2 (clearly below Chaser 3.5; docs give no explicit value — simple fixed value chosen for type differentiation, recorded here), maxHP 120 (clearly above the other enemies' 30), damage 10 / range 1.5 / cooldown 1 (base).
+- Tank.prefab (Assets/Prefabs/Enemies/Tank.prefab): EnemyBase + TankAI, EnemyStats.data = TankData.
+
+### Verification
+- Compilation: 0 errors.
+- In-play probe (temporary TankProbe, deleted): 23/23 PASS, 0 FAILURES — HP 120/120; target resolve; MoveSpeed 2 / MaxHP 120 from data; Tank speed 2 < Chaser 3.5; Tank MaxHP 120 > others max 30; pursuit speed 2.00 exact over 50 fixed physics frames (stable); moves toward player; re-targets on player move (delta y) and after the player crosses the tank; TakeDamage(30) -> 90; clamp to 0; IsDead; EnemyDied fired once with enemy reference; stops moving after death; Chaser/Runner/Shooter prefabs intact.
+- Final clean play/stop twice: 0 errors, 0 warnings.
+
+### Next
+M4.6 — minimal enemy spawn entry (wave logic stays in M8).
