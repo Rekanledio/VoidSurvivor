@@ -179,3 +179,20 @@ M4.1 — Enemy Base Framework (part of M4 — Enemy System)
 
 ### Next
 M4.2 — Chaser AI (approach player). Wave logic stays in M8.
+
+## 2026-08-14
+### Milestone
+M4.2 — Chaser AI (part of M4 — Enemy System)
+
+### Completed
+- ChaserAI (Assets/Scripts/Enemy/ChaserAI.cs): chases the player's current world position at the configured MoveSpeed using Rigidbody2D.MovePosition (physics-compatible, no Transform writes). Reuses the references resolved by EnemyController (Target/Stats/Health/Body) — no per-frame GetComponent/Find. Stops when EnemyHealth.IsDead. No attack/damage/projectile logic.
+- ChaserData.asset (Assets/ScriptableObjects/Enemies/ChaserData.asset): EnemyData asset, moveSpeed 3.5 (maxHP 30, damage 10, range 1.5, cooldown 1).
+- Chaser.prefab (Assets/Prefabs/Enemies/Chaser.prefab): based on EnemyBase + ChaserAI component, EnemyStats.data = ChaserData.
+
+### Verification
+- Compilation: 0 errors.
+- In-play probe (temporary ChaserProbe, deleted): 15/15 PASS, 0 FAILURES — prefab instantiation; HP 30/30; player target resolved; MoveSpeed 3.5 from data; moved 3.50 in 1s (exact); approaches player; speed stays ~3.5 across segments (no abnormal acceleration); re-targets after player teleport; continues chasing when player moves back; stops completely after death (moved 0.000); player components intact.
+- Final clean play/stop after probe removal: 0 errors, 0 warnings.
+
+### Next
+M4.3 — Runner AI (fast approach).

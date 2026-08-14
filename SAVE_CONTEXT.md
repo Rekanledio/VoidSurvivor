@@ -93,3 +93,9 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - Assets: EnemyPlaceholder.png (red square), ScriptableObjects/Enemies/EnemyBase.asset, Prefabs/Enemies/EnemyBase.prefab (7 components, data ref persisted).
 - Verified: 27/27 probe PASS; final play/stop 0 errors / 0 warnings. Temp probe deleted.
 - Next: M4.2 Chaser AI. Wave logic in M8.
+
+## M4.2 — Chaser AI (2026-08-14)
+- ChaserAI.cs: pursues player at EnemyData MoveSpeed via Rigidbody2D.MovePosition; reuses EnemyController refs; stops when dead; no attack logic.
+- ChaserData.asset (moveSpeed 3.5) + Chaser.prefab (EnemyBase + ChaserAI, data = ChaserData).
+- Verified: 15/15 probe PASS (speed exact 3.5, approach/re-target/chase, death stop, player intact); final play/stop 0 errors / 0 warnings. Temp probe deleted.
+- Next: M4.3 Runner AI.

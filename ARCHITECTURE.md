@@ -36,7 +36,8 @@
 - `EnemyHealth` (M4.1) — CurrentHP/MaxHP/IsDead; TakeDamage clamps HP to [0, MaxHP]; death fires once and publishes `EnemyDied` (carries the enemy GameObject). Combat attribution (EnemyKilled) is added by M5.
 - `EnemyController` (M4.1) — common control base: caches EnemyStats/EnemyHealth/Rigidbody2D in Awake, resolves the PlayerHealth target once in Start; read-only Stats/Health/Body/Target; per-type AI (M4.2+) composes or derives from it. No AI behavior in the base.
 - Placeholder: Assets/Art/EnemyPlaceholder.png; base prefab: Assets/Prefabs/Enemies/EnemyBase.prefab.
-- Per-type prefabs and AI (Chaser/Runner/Shooter/Tank) land in M4.2–M4.5; minimal spawn entry in M4.6; full wave logic stays in M8.
+- `ChaserAI` (M4.2) — pursues the player's current position at the configured MoveSpeed via Rigidbody2D.MovePosition; reuses EnemyController's resolved refs (Target/Stats/Health/Body); stops when dead. ChaserData.asset + Chaser.prefab.
+- Per-type prefabs and AI (Runner/Shooter/Tank) land in M4.3–M4.5; minimal spawn entry in M4.6; full wave logic stays in M8.
 
 ## Data Layer
 Use ScriptableObject for static configuration:
