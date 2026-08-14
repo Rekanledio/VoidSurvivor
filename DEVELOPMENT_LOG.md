@@ -139,3 +139,23 @@ M3 Bug Fix #2 — player position "return to center" investigation (final root c
 
 ### Next
 M4 — Enemy System.
+
+## 2026-08-14
+### Milestone
+M3 Full Review + visual scale adjustment
+
+### Review results
+- Player code (PlayerController/PlayerStats/PlayerHealth/CameraFollow): clean — no temp/debug/test code, no high-frequency GetComponent, refs cached in Awake, InputActionAsset persisted, death fires once. No required fixes.
+- Core (GameManager/EventBus/GameBootstrap/GameEvents/SceneFlow): M2 architecture intact; M3 added only PlayerDied event. No regression. Note (Post-MVP): EventBus static handlers rely on domain reload for reset; revisit if domain reload is disabled.
+- Scene/Prefab: no missing components (Player 7/7, Camera 4/4), no null refs, prefab instance consistent, inputActions reference present in both prefab and scene, Rigidbody2D Interpolate + no constraints, single active Player, no stray GameObjects.
+- Temp residue scan: zero matches (no SmokeTest/AutoProbe/TestRunner/TEMP); all 10 project scripts are formal code.
+- Assets/GUIDs: GroundPlaceholder & PlayerPlaceholder imported as Sprite; prefab/scene GUID refs intact.
+
+### Visual scale adjustment (final values)
+- Camera orthographicSize: 8 -> 7 (view height 14 units)
+- Player placeholder visual scale: 1 -> 1.5 (0.64 -> 0.96 units, clearly visible)
+- Ground: scale 50 kept (covers +-32), texture regenerated with 8px grid -> 4-unit grid spacing (~3.5 cells on screen at size 7)
+- Movement bounds (+-20) and MoveSpeed (5) unchanged; CameraFollow algorithm unchanged.
+
+### Regression (temporary MiniRegress probe, deleted after)
+15/15 PASS, 0 FAILURES: W/S/A/D direction+speed (5 u/s), diagonal speed consistency, bounds stop at 20, release keeps position, camera follows, HP full, TakeDamage(30)->70, death once, no second event. Final clean play/stop: 0 errors / 0 warnings.

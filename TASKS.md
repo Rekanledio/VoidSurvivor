@@ -66,3 +66,11 @@
 - [x] Root cause: empty scene = no visual reference; camera-follow movement invisible → perceived "small range + return to center" (world coordinates never reset)
 - [x] Fix: added Ground reference (GroundPlaceholder grid, sortingOrder -10); no player/camera logic changed
 - [x] Final clean play/stop: 0 errors / 0 warnings; temp probe removed
+
+## M3 Full Review + Visual Scale (2026-08-14)
+- [x] Full code review (Player 4 scripts + Core 6 scripts): clean, no temp/debug residue, no required fixes
+- [x] Scene/Prefab review: no missing components, inputActions persisted, single Player, Rigidbody2D Interpolate
+- [x] Temp residue scan: zero matches; all 10 scripts are formal
+- [x] Regression 15/15 PASS (temporary probe, removed)
+- [x] Visual scale: Camera size 7, Player scale 1.5, Ground 8px grid (4-unit spacing); bounds/speed unchanged
+- [x] Final play/stop: 0 errors / 0 warnings

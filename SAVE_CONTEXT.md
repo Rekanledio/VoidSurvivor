@@ -81,3 +81,8 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - Fix: added Ground reference (Assets/Art/GroundPlaceholder.png, grid, sortingOrder -10, scale 50). No player/camera logic changed.
 - Files: SC_Main.unity (+Ground), Assets/Art/GroundPlaceholder.png (+meta). Temp AutoProbe deleted.
 - Verification: probe identical across 3 Play/Stop cycles; final clean play/stop 0 errors / 0 warnings.
+
+## M3 Full Review + Visual Scale (2026-08-14)
+- Review: Player/Core/Scene/Prefab/Assets all clean; no temp residue; 0 required fixes (Post-MVP note: EventBus static reset relies on domain reload).
+- Visual scale: Camera orthographicSize 7, Player scale 1.5, Ground scale 50 with 8px grid (4-unit spacing); bounds +-20 & MoveSpeed 5 unchanged.
+- Regression: 15/15 PASS (movement/speed/diagonal/bounds/release-keep/camera/health/damage/death); final play/stop 0 errors / 0 warnings.
