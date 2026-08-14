@@ -1,6 +1,9 @@
 # Void Survivor - Unity .gitignore
 # Based on the standard Unity .gitignore (github/gitignore)
 
+# Local tool data (WorkBuddy project memory etc.)
+.workbuddy/
+
 # Unity generated directories
 [Ll]ibrary/
 [Tt]emp/

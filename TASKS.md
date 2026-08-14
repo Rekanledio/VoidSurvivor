@@ -26,11 +26,19 @@
 - [x] Verify WorkBuddy can read and modify project (scene created and modified via MCP)
 - [x] Run first successful build/test (play mode test passed, no console errors)
 
-## Current Milestone: M2 — Core Framework
-- [ ] GameState transition API on GameManager
-- [ ] Core event bus for cross-system communication
-- [ ] Scene flow entry for MainMenu / Battle
-- [ ] Shared utilities foundation (no gameplay systems yet)
+## Completed: M2 — Core Framework (2026-08-14)
+- [x] GameState transition API on GameManager (TryChangeState, legal-transition table, GameStateChanged broadcast)
+- [x] Core event bus for cross-system communication (EventBus: Subscribe/Unsubscribe/Publish/Clear, struct events)
+- [x] Scene flow entry for MainMenu / Gameplay / Result (SceneFlow + SceneIds, same-scene reload guard)
+- [x] Lifecycle documented (GameBootstrap → GameManager.Awake → scene Awake/Start; EventBus lazy static)
+- [x] No gameplay systems introduced (Player/Enemy/Weapon/Wave/Shop untouched)
+- [x] Verified: in-play smoke test 33 checks / 0 failures; GameManager, EventBus, SceneFlow covered; temp test code removed
+
+## Current Milestone: M3 — Player System
+- [ ] Player movement (Input System driven, 2D top-down)
+- [ ] Player stats foundation (per GAME_DESIGN.md stat list)
+- [ ] Player health
+- [ ] Camera follow
 
 ## Rules
 - Only mark a task complete after actual verification.

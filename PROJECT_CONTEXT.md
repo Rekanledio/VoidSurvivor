@@ -43,17 +43,18 @@
 Phase 1 — Core framework development
 
 ## Current Milestone
-M2 — Core Framework (GameManager, states, events, utilities)
+M3 — Player System (Movement, stats, health, camera)
 
 ## Completed Milestones
 - M0 — Project Documentation Initialization
 - M1 — Unity Project Initialization (2026-08-14): Git initialized, folder structure created, SC_Main scene with orthographic camera, minimal Core entry (GameManager / GameBootstrap / GameState), Unity MCP verified, clean play-mode test.
+- M2 — Core Framework (2026-08-14): GameState transition API with legal-transition table, type-safe generic EventBus, GameStateChanged event, SceneFlow/SceneIds scene-flow base, lifecycle documented in GameBootstrap. Verified via in-play smoke test (33 checks, 0 failures); test code removed after verification.
 
 ## Next Milestone
-M2 — Core Framework
+M3 — Player System
 
 ## Current Task
-Begin M2: centralized game state transitions, core event bus, and shared utilities per ARCHITECTURE.md.
+Begin M3: player movement, stats, health, camera per ARCHITECTURE.md. Core framework from M2 is stable and available as the foundation.
 
 ## Important Decisions
 - Do not add special differentiation mechanics for MVP.

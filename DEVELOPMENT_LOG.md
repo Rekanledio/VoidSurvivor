@@ -35,3 +35,28 @@ M1 — Unity Project Initialization
 
 ### Next
 M2 — Core Framework: GameState transitions, event bus, scene flow entry, utilities foundation.
+
+## 2026-08-14
+### Milestone
+M2 — Core Framework
+
+### Completed
+- GameManager upgraded to the centralized state owner: `TryChangeState` single entry, legal-transition table, same-state/illegal transitions rejected with warning, `GameStateChanged` broadcast.
+- EventBus added: type-safe generic static bus (Subscribe/Unsubscribe/Publish/Clear), struct events, no third-party dependency.
+- GameEvents added: `GameStateChanged` (only core event in M2; gameplay events deferred to their milestones).
+- SceneFlow + SceneIds added: minimal scene-load wrapper (MainMenu/Gameplay/Result constants, same-scene reload guard). No scene assets created.
+- Lifecycle documented in GameBootstrap: GameBootstrap (BeforeSceneLoad) → GameManager.Awake → scene Awake/Start; EventBus lazy static.
+- No gameplay systems introduced.
+
+### Verification
+- MCP validate_script (standard level): 0 errors / 0 warnings for all new/modified scripts.
+- In-play smoke test (temporary `CoreSmokeTest.cs`): 33 checks, 0 failures — full state flow, illegal/redundant transition rejection, GameStateChanged event ordering + unsubscribe, EventBus subscribe/publish/unsubscribe/duplicate/Clear, SceneFlow constants + same-scene guard.
+- After deleting the temp test: clean play/stop — 0 errors, 0 warnings; GameManager verified in DontDestroyOnLoad with CurrentState=MainMenu via MCP execute_code.
+- Compile re-check after test removal: no errors.
+
+### Issues Encountered
+- Once, right after deleting the temp test script, the next play session still ran the old assembly (compile pending), so CurrentState was observed as Playing. Re-verified after compile completed: clean MainMenu. Lesson: always confirm compilation finished before verifying state after removing scripts.
+- The transient "referenced script (Unknown) missing" console pair reappeared during the recompile cycle after test removal; stable states are clean. Updated KNOWN_ISSUES.md (it correlates with script recompile cycles, not play itself).
+
+### Next
+M3 — Player System: movement, stats, health, camera follow.

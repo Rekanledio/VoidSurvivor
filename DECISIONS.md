@@ -23,3 +23,8 @@
 ## D006 — Repository as Shared Long-Term Memory
 **Decision:** Markdown documents in the repository are the persistent project memory shared by ChatGPT and WorkBuddy.
 **Reason:** Chat sessions are not a reliable single source of long-term project state.
+
+## D007 — Core Communication Mechanism (M2)
+**Decision:** Cross-system communication uses a type-safe generic static EventBus (struct events), and game state changes are centralized in GameManager with a validated legal-transition table broadcast as `GameStateChanged`.
+**Reason:** Keeps systems decoupled without a DI framework or third-party dependency; struct events avoid boxing allocations; centralized state prevents systems from mutating global state arbitrarily.
+**Scope:** Framework only — gameplay events are defined by their owning milestones, not pre-created in M2.

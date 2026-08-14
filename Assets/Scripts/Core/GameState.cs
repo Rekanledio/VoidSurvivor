@@ -2,7 +2,8 @@ namespace VoidSurvivor.Core
 {
     /// <summary>
     /// Centralized game states, aligned with ARCHITECTURE.md.
-    /// State transition logic and events are implemented in M2 (Core Framework).
+    /// Transitions are validated and broadcast by <see cref="GameManager"/>.
+    /// Only GameManager may change the current state.
     /// </summary>
     public enum GameState
     {
