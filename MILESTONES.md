@@ -5,7 +5,7 @@
 | M0 | Project Documentation | Shared project memory and rules | Completed |
 | M1 | Unity Initialization | Working Unity + Git + MCP baseline | Completed |
 | M2 | Core Framework | GameManager, states, events, utilities | Completed |
-| M3 | Player System | Movement, stats, health, camera | Pending |
+| M3 | Player System | Movement, stats, health, camera | Completed |
 | M4 | Enemy System | 4 enemy types and AI | Pending |
 | M5 | Combat System | Damage, death, pickups | Pending |
 | M6 | Weapon System | 4 weapons and slots | Pending |

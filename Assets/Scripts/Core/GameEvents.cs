@@ -17,4 +17,12 @@ namespace VoidSurvivor.Core
 
         public override string ToString() => $"{From} -> {To}";
     }
+
+    /// <summary>
+    /// Published once when the player dies (M3). Payload intentionally empty:
+    /// the singleton player is implied. Extended by later milestones if needed.
+    /// </summary>
+    public readonly struct PlayerDied
+    {
+    }
 }

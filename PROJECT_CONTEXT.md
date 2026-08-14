@@ -43,18 +43,19 @@
 Phase 1 — Core framework development
 
 ## Current Milestone
-M3 — Player System (Movement, stats, health, camera)
+M4 — Enemy System (4 enemy types and AI)
 
 ## Completed Milestones
 - M0 — Project Documentation Initialization
 - M1 — Unity Project Initialization (2026-08-14): Git initialized, folder structure created, SC_Main scene with orthographic camera, minimal Core entry (GameManager / GameBootstrap / GameState), Unity MCP verified, clean play-mode test.
 - M2 — Core Framework (2026-08-14): GameState transition API with legal-transition table, type-safe generic EventBus, GameStateChanged event, SceneFlow/SceneIds scene-flow base, lifecycle documented in GameBootstrap. Verified via in-play smoke test (33 checks, 0 failures); test code removed after verification.
+- M3 — Player System (2026-08-14): PlayerController (Input System Move/WASD, 8-way, diagonal-consistent, bounds clamp via Rigidbody2D.MovePosition), PlayerStats (10 MVP stats), PlayerHealth (TakeDamage with flat armor, Heal/FullHeal, HP clamped 0..Max, single death + PlayerDied event), CameraFollow (smooth exponential orthographic follow, no Cinemachine). Player prefab + placeholder sprite in SC_Main. Verified via in-play smoke test (29 checks, 0 failures) + dynamic play checks; test code removed.
 
 ## Next Milestone
-M3 — Player System
+M4 — Enemy System
 
 ## Current Task
-Begin M3: player movement, stats, health, camera per ARCHITECTURE.md. Core framework from M2 is stable and available as the foundation.
+Begin M4: enemy types and AI per ARCHITECTURE.md. Player foundation from M3 is stable.
 
 ## Important Decisions
 - Do not add special differentiation mechanics for MVP.

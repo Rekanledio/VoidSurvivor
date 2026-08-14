@@ -34,11 +34,25 @@
 - [x] No gameplay systems introduced (Player/Enemy/Weapon/Wave/Shop untouched)
 - [x] Verified: in-play smoke test 33 checks / 0 failures; GameManager, EventBus, SceneFlow covered; temp test code removed
 
-## Current Milestone: M3 — Player System
-- [ ] Player movement (Input System driven, 2D top-down)
-- [ ] Player stats foundation (per GAME_DESIGN.md stat list)
-- [ ] Player health
-- [ ] Camera follow
+## Completed: M3 — Player System (2026-08-14)
+- [x] Player movement via Input System (reused existing InputSystem_Actions Player/Move, WASD + arrows + gamepad)
+- [x] 8-way movement with consistent diagonal speed (input normalized, magnitude capped at 1)
+- [x] Rigidbody2D.MovePosition physics-based movement (no Transform hack), configurable MoveSpeed
+- [x] Configurable arena bounds clamp (placeholder, no real map)
+- [x] PlayerStats with all 10 MVP stats (GAME_DESIGN.md), plain base values + read accessors
+- [x] PlayerHealth: TakeDamage (flat armor reduction) / Heal / FullHeal / IsDead, HP clamped to [0, MaxHP]
+- [x] Death: single trigger, IsDead flag, PlayerDied event via EventBus (no Game Over flow)
+- [x] CameraFollow: smooth exponential orthographic follow (no Cinemachine), offset, optional bounds
+- [x] Player prefab + placeholder sprite placed in SC_Main
+- [x] Verified: in-play smoke test 29 checks / 0 failures; dynamic play checks (camera convergence, bounds, component state); temp test code removed
+
+## Current Milestone: M4 — Enemy System
+- [ ] Enemy base framework (stats/health shared with player pattern)
+- [ ] Chaser AI (approach player)
+- [ ] Runner AI (fast approach)
+- [ ] Shooter AI (ranged attack)
+- [ ] Tank AI (slow, high HP)
+- [ ] Enemy spawning entry (minimal, full wave logic stays in M8)
 
 ## Rules
 - Only mark a task complete after actual verification.

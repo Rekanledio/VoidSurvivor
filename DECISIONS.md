@@ -28,3 +28,8 @@
 **Decision:** Cross-system communication uses a type-safe generic static EventBus (struct events), and game state changes are centralized in GameManager with a validated legal-transition table broadcast as `GameStateChanged`.
 **Reason:** Keeps systems decoupled without a DI framework or third-party dependency; struct events avoid boxing allocations; centralized state prevents systems from mutating global state arbitrarily.
 **Scope:** Framework only — gameplay events are defined by their owning milestones, not pre-created in M2.
+
+## D008 — Player Physics, Input and Camera (M3)
+**Decision:** Player movement uses Rigidbody2D.MovePosition with normalized input (diagonal speed == cardinal speed) and a configurable bounds clamp; the existing InputSystem_Actions asset is reused for the Move action; the camera uses a custom frame-rate-independent exponential follow instead of Cinemachine.
+**Reason:** MovePosition preserves physics compatibility for later collisions/enemies/weapons without Transform hacks; reusing the default actions asset avoids duplicated input config; a small custom follow script keeps dependencies minimal for a 2D orthographic camera.
+**Scope:** M3 only. Damage uses simple flat armor reduction (`max(0, damage - Armor)`); crits/elemental/status effects are deferred to their owning milestones.

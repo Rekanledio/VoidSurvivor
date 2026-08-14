@@ -22,6 +22,14 @@
 - Save
 - Utilities / Pooling
 
+## Player System (M3, implemented)
+- `PlayerController` — Input System driven movement (reuses InputSystem_Actions Player/Move: WASD + arrows + gamepad). `Rigidbody2D.MovePosition` for physics-correct movement; normalized input keeps diagonal speed equal to cardinal; configurable arena bounds clamp. Exposes static math helpers (`NormalizeMoveInput`, `ClampToBounds`) shared with CameraFollow.
+- `PlayerStats` — base values + read accessors for the 10 MVP stats (GAME_DESIGN.md). Modifiers arrive with the Roguelite milestone (M9).
+- `PlayerHealth` — CurrentHP/MaxHP/IsDead; TakeDamage (flat armor reduction from PlayerStats.Armor), Heal/FullHeal; HP clamped [0, MaxHP]; death fires once and publishes `PlayerDied`.
+- `CameraFollow` — smooth exponential orthographic follow on the Main Camera; no Cinemachine; optional bounds reserved for the real arena.
+- Visual placeholder: Assets/Art/PlayerPlaceholder.png; prefab: Assets/Prefabs/Player.prefab.
+- Event: `PlayerDied` added to GameEvents (M3).
+
 ## Data Layer
 Use ScriptableObject for static configuration:
 - CharacterData
