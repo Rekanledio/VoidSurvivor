@@ -131,3 +131,10 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - Verified: 23/23 probe PASS; final play/stop twice: 0 errors / 0 warnings.
 - Known behavior: projectile hits any IDamageable (no friendly-fire filter yet) — recorded for a later combat refinement.
 - Next: M5.2 (per TASKS.md split).
+
+## M5.2 — Enemy Death & Kill Attribution (2026-08-14)
+- EnemyKilled (Enemy/Killer) published by CombatSystem once per lethal hit on EnemyHealth with valid Source; null-source deaths → EnemyDied only.
+- EnemyController = death/despawn layer: destroys its GameObject on its own EnemyDied (plain Destroy; pool in M7).
+- Event order: TakeDamage → EnemyDied → EnemyKilled → cleanup.
+- Verified: 28/28 probe PASS; final play/stop twice: 0 errors / 0 warnings.
+- Next: M5.3 (per TASKS.md split).

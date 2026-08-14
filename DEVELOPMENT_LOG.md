@@ -297,3 +297,24 @@ M5.1 — Combat Base Framework (part of M5 — Combat System)
 
 ### Next
 M5.2 (per TASKS.md split).
+
+## 2026-08-14
+### Milestone
+M5.2 — Enemy Death & Kill Attribution (part of M5 — Combat System)
+
+### Completed
+- Assets/Scripts/Core/GameEvents.cs: added EnemyKilled (Enemy + Killer). Semantics: EnemyDied = an enemy died; EnemyKilled = that death is attributed to a Source. XP/Gold/rewards still deferred.
+- Assets/Scripts/Combat/CombatSystem.cs: after routing damage, if the target died this hit AND the request carried a valid Source AND the target is an EnemyHealth, publishes EnemyKilled(target, source) exactly once. Null-source lethal deaths publish EnemyDied only. (Cross-system dependency Combat → Enemy added deliberately for kill attribution; documented here per PROJECT_RULES 5.6 / ARCHITECTURE.)
+- Assets/Scripts/Enemy/EnemyController.cs: now also the death/despawn layer — subscribes EnemyDied in Awake (unsubscribes in OnDestroy) and destroys its own GameObject on its own death. Plain Destroy; Object Pool is M7.
+
+### Event order (verified)
+CombatSystem.ApplyDamage → Target.TakeDamage (EnemyHealth) → EnemyDied published → CombatSystem publishes EnemyKilled (if source valid) → EnemyController destroys the GameObject (frame-end).
+
+### Verification
+- Compilation: 0 errors.
+- In-play probe (temporary KillProbe, deleted): 28/28 PASS, 0 FAILURES — non-lethal: HP 20, DamageApplied once, no EnemyKilled; lethal: IsDead + TargetDead, EnemyDied once, EnemyKilled once, Enemy reference correct, Killer == source; dead enemy destroyed (cleanup); dead-target damage rejected with no duplicate death/kill events; null-source lethal: EnemyDied only (no EnemyKilled), still cleaned up; projectile → combat → EnemyKilled chain (EnemyBase static target, source = probe) with correct attribution and cleanup; PlayerHealth/DamageApplied/PlayerDied regressions; Spawner + 4 enemy AI regressions.
+- Note: the first run's 3 projectile-chain FAILs were a test-methodology issue — a live Chaser target moves (AI pursues player) and dodges a straight shot; switching to the AI-free EnemyBase target made the hit deterministic. Not an implementation bug.
+- Final clean play/stop twice: 0 errors, 0 warnings.
+
+### Next
+M5.3 (per TASKS.md split).

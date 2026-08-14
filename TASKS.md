@@ -59,6 +59,7 @@
 
 ## Current Milestone: M5 — Combat System
 - [x] M5.1 Combat Base Framework (2026-08-14): IDamageable (PlayerHealth/EnemyHealth implement), DamageRequest/DamageResult structs, CombatSystem static unified ApplyDamage entry, DamageApplied event; Projectile migrated off direct PlayerHealth coupling to the combat entry (with source). Verified: 23/23 probe checks PASS (player/enemy damage via combat, death + rejection of dead targets, projectile fly→hit→combat→damage→destroy, DamageApplied events, Chaser/Runner/Tank/Shooter/Spawner regression), 0 errors/warnings.
+- [x] M5.2 Enemy Death & Kill Attribution (2026-08-14): EnemyKilled event (Enemy/Killer) published by CombatSystem exactly once when a lethal hit lands on EnemyHealth with a valid Source; null-source deaths publish EnemyDied only; EnemyController subscribes EnemyDied and destroys the enemy GameObject (plain Destroy, pool in M7). Event order: TakeDamage → EnemyDied → EnemyKilled → cleanup. Verified: 28/28 probe checks PASS (non-lethal → DamageApplied only; lethal → EnemyDied+EnemyKilled once each with correct refs; dead-target rejection + no duplicate events; null-source → EnemyDied only; projectile→combat→EnemyKilled chain with attribution; death cleanup; Player/DamageApplied/PlayerDied/Spawner/4-enemy regression), 0 errors/warnings.
 
 ## Rules
 - Only mark a task complete after actual verification.

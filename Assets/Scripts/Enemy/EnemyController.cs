@@ -1,4 +1,5 @@
 using UnityEngine;
+using VoidSurvivor.Core;
 using VoidSurvivor.Player;
 
 namespace VoidSurvivor.Enemy
@@ -7,6 +8,10 @@ namespace VoidSurvivor.Enemy
     /// Common control base for every enemy (M4.1). Owns the runtime references
     /// shared by all enemy types (stats, health, physics body, player target)
     /// and provides the extension point for per-type AI (M4.2+).
+    ///
+    /// M5.2: also acts as the enemy death/despawn layer — on its own
+    /// <see cref="EnemyDied"/> it destroys the enemy GameObject (plain Destroy;
+    /// Object Pool arrives in M7).
     ///
     /// No AI behavior is implemented here — Chaser / Runner / Shooter / Tank
     /// derive from or compose this component in later M4 subtasks.
@@ -33,6 +38,21 @@ namespace VoidSurvivor.Enemy
             if (_stats == null) Debug.LogError($"[EnemyController] Missing EnemyStats on '{gameObject.name}'.");
             if (_health == null) Debug.LogError($"[EnemyController] Missing EnemyHealth on '{gameObject.name}'.");
             if (_body == null) Debug.LogError($"[EnemyController] Missing Rigidbody2D on '{gameObject.name}'.");
+
+            EventBus.Subscribe<EnemyDied>(OnEnemyDied);
+        }
+
+        private void OnDestroy()
+        {
+            EventBus.Unsubscribe<EnemyDied>(OnEnemyDied);
+        }
+
+        private void OnEnemyDied(EnemyDied e)
+        {
+            if (e.Enemy == gameObject)
+            {
+                Destroy(gameObject);
+            }
         }
 
         private void Start()

@@ -48,8 +48,10 @@
 - `IDamageable` (M5.1) — minimal damage-target abstraction (IsDead + TakeDamage); implemented by PlayerHealth and EnemyHealth.
 - `DamageRequest` / `DamageResult` (M5.1) — structs carrying Source/Target/Damage and the minimal outcome (Applied / Damage / TargetDead).
 - `CombatSystem.ApplyDamage` (M5.1) — static unified damage entry: validates target/damage, rejects dead targets, routes to the target's IDamageable, publishes `DamageApplied`, returns DamageResult. No Player/Enemy branches; health classes keep owning HP/death state.
-- `DamageApplied` (M5.1) — event (Source/Target/Damage). Kill attribution / XP / Gold events come later.
-- Remaining M5 work per TASKS.md; weapons (M6), pool (M7), waves (M8).
+- `DamageApplied` (M5.1) — event (Source/Target/Damage). 
+- `EnemyKilled` (M5.2) — event (Enemy/Killer); published by CombatSystem exactly once when a lethal hit on EnemyHealth carries a valid Source. EnemyDied (from EnemyHealth) says an enemy died; EnemyKilled attributes it to a Source. Null-source deaths publish EnemyDied only.
+- `EnemyController` (M4.1 + M5.2) — common control base; since M5.2 also the death/despawn layer: destroys its GameObject on its own EnemyDied (plain Destroy; Object Pool is M7).
+- Kill attribution / XP / Gold events come later; weapons (M6), pool (M7), waves (M8).
 
 ## Runtime Layer
 Runtime objects consume configuration assets and maintain mutable state at runtime.

@@ -61,4 +61,23 @@ namespace VoidSurvivor.Core
             Damage = damage;
         }
     }
+
+    /// <summary>
+    /// Published by <see cref="VoidSurvivor.Combat.CombatSystem"/> exactly once
+    /// when an enemy dies and the lethal DamageRequest carried a valid Killer
+    /// (M5.2). Distinct from EnemyDied: EnemyDied says an enemy died; EnemyKilled
+    /// attributes that death to a source. Null-source deaths publish EnemyDied
+    /// only. XP / Gold / rewards come with later milestones.
+    /// </summary>
+    public readonly struct EnemyKilled
+    {
+        public GameObject Enemy { get; }
+        public GameObject Killer { get; }
+
+        public EnemyKilled(GameObject enemy, GameObject killer)
+        {
+            Enemy = enemy;
+            Killer = killer;
+        }
+    }
 }
