@@ -159,3 +159,23 @@ M3 Full Review + visual scale adjustment
 
 ### Regression (temporary MiniRegress probe, deleted after)
 15/15 PASS, 0 FAILURES: W/S/A/D direction+speed (5 u/s), diagonal speed consistency, bounds stop at 20, release keeps position, camera follows, HP full, TakeDamage(30)->70, death once, no second event. Final clean play/stop: 0 errors / 0 warnings.
+
+## 2026-08-14
+### Milestone
+M4.1 — Enemy Base Framework (part of M4 — Enemy System)
+
+### Completed
+- EnemyData (Assets/Scripts/Enemy/EnemyData.cs): ScriptableObject static configuration per enemy type (MaxHP/Damage/AttackRange/AttackCooldown/MoveSpeed), CreateAssetMenu, read-only accessors. One asset per type later (Chaser/Runner/Shooter/Tank/Boss).
+- EnemyStats (EnemyStats.cs): MonoBehaviour read-only runtime view over an EnemyData asset; runtime state never mutates configuration assets (mirrors PlayerStats pattern).
+- EnemyHealth (EnemyHealth.cs): CurrentHP/MaxHP/IsDead; TakeDamage clamps HP to [0, MaxHP]; death fires exactly once and publishes EnemyDied via EventBus (mirrors PlayerHealth pattern; no combat logic).
+- EnemyController (EnemyController.cs): common control base — caches EnemyStats/EnemyHealth/Rigidbody2D in Awake; resolves PlayerHealth target once in Start; exposes Stats/Health/Body/Target read-only; extension point for per-type AI (M4.2+). No AI behavior implemented.
+- GameEvents (Core): added EnemyDied (struct, carries the enemy GameObject) — leaves EnemyKilled/attribution to the Combat milestone (M5).
+- Assets: Assets/Art/EnemyPlaceholder.png (64px red square, Python-generated); Assets/ScriptableObjects/Enemies/EnemyBase.asset (default values); Assets/Prefabs/Enemies/EnemyBase.prefab (SpriteRenderer + Rigidbody2D Dynamic/gravity 0/Interpolate + BoxCollider2D 0.64 + EnemyStats/EnemyHealth/EnemyController, data reference persisted).
+
+### Verification
+- Compilation: 0 errors.
+- In-play probe (temporary EnemyProbe, deleted): 27/27 PASS, 0 FAILURES — prefab loaded; 3 components present; Stats values (30/10/1.5/1/3); HP init 30/30; TakeDamage(10) -> 20; clamp to 0; IsDead; EnemyDied published once with enemy reference; no second death; Controller refs resolved; Target resolves to PlayerHealth.
+- Final clean play/stop after probe removal: 0 errors, 0 warnings.
+
+### Next
+M4.2 — Chaser AI (approach player). Wave logic stays in M8.

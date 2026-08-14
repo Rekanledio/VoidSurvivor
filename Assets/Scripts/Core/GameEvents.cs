@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace VoidSurvivor.Core
 {
     /// <summary>
@@ -24,5 +26,20 @@ namespace VoidSurvivor.Core
     /// </summary>
     public readonly struct PlayerDied
     {
+    }
+
+    /// <summary>
+    /// Published once when an enemy dies (M4.1). Carries the enemy GameObject so
+    /// multiple enemies can be distinguished. Combat/XP/Gold (M5/M9) will listen;
+    /// the kill attribution event is added by the Combat milestone.
+    /// </summary>
+    public readonly struct EnemyDied
+    {
+        public GameObject Enemy { get; }
+
+        public EnemyDied(GameObject enemy)
+        {
+            Enemy = enemy;
+        }
     }
 }

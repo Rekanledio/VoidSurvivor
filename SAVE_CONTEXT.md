@@ -86,3 +86,10 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - Review: Player/Core/Scene/Prefab/Assets all clean; no temp residue; 0 required fixes (Post-MVP note: EventBus static reset relies on domain reload).
 - Visual scale: Camera orthographicSize 7, Player scale 1.5, Ground scale 50 with 8px grid (4-unit spacing); bounds +-20 & MoveSpeed 5 unchanged.
 - Regression: 15/15 PASS (movement/speed/diagonal/bounds/release-keep/camera/health/damage/death); final play/stop 0 errors / 0 warnings.
+
+## M4.1 — Enemy Base Framework (2026-08-14)
+- EnemyData (SO static config: MaxHP/Damage/AttackRange/AttackCooldown/MoveSpeed), EnemyStats (runtime read-only view), EnemyHealth (HP/TakeDamage/clamp/single death + EnemyDied), EnemyController (cached refs + PlayerHealth target, AI extension point). No AI behavior yet.
+- GameEvents: added EnemyDied (carries enemy GameObject). EnemyKilled/attribution deferred to M5 Combat.
+- Assets: EnemyPlaceholder.png (red square), ScriptableObjects/Enemies/EnemyBase.asset, Prefabs/Enemies/EnemyBase.prefab (7 components, data ref persisted).
+- Verified: 27/27 probe PASS; final play/stop 0 errors / 0 warnings. Temp probe deleted.
+- Next: M4.2 Chaser AI. Wave logic in M8.

@@ -48,7 +48,7 @@
 - [x] Bug fix (2026-08-14): Rigidbody2D interpolation = Interpolate (removes movement jitter); Camera orthographicSize 5 → 8 (viewport matches arena); PlayerController input switched to serializable InputActionAsset reference (fixes non-persisted InputActionReference). Verified: full -20..+20 traversal, bounds hold, no pull-back, camera follows, 0 console errors.
 
 ## Current Milestone: M4 — Enemy System
-- [ ] Enemy base framework (stats/health shared with player pattern)
+- [x] M4.1 Enemy base framework (2026-08-14): EnemyData (ScriptableObject static config), EnemyStats (read-only runtime view), EnemyHealth (CurrentHP/TakeDamage/clamp/single death + EnemyDied event), EnemyController (common refs + Player target), EnemyBase prefab + EnemyPlaceholder sprite + EnemyBase.asset. Verified: 27/27 probe checks PASS, 0 errors/warnings.
 - [ ] Chaser AI (approach player)
 - [ ] Runner AI (fast approach)
 - [ ] Shooter AI (ranged attack)
