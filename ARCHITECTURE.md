@@ -51,7 +51,14 @@
 - `DamageApplied` (M5.1) — event (Source/Target/Damage). 
 - `EnemyKilled` (M5.2) — event (Enemy/Killer); published by CombatSystem exactly once when a lethal hit on EnemyHealth carries a valid Source. EnemyDied (from EnemyHealth) says an enemy died; EnemyKilled attributes it to a Source. Null-source deaths publish EnemyDied only.
 - `EnemyController` (M4.1 + M5.2) — common control base; since M5.2 also the death/despawn layer: destroys its GameObject on its own EnemyDied (plain Destroy; Object Pool is M7).
-- Kill attribution / XP / Gold events come later; weapons (M6), pool (M7), waves (M8).
+- Kill attribution events done (M5.2); weapons (M6), pool (M7), waves (M8).
+
+## Pickup System (M5.3)
+- `PlayerProgress` — runtime XP/Gold resources (AddXP/AddGold, negative-safe); no level/threshold/upgrade logic (Roguelite later). Separate from PlayerStats (character attributes).
+- `PickupType` (XP/Gold) + `PickupData` (ScriptableObject, read-only at runtime).
+- `Pickup` — trigger collect: on player contact credits PlayerProgress, publishes PickupCollected, destroys itself (Instantiate/Destroy; pool in M7).
+- `PickupSystem` — event subscriber to EnemyKilled: spawns 1 XP + 1 Gold at the enemy's death position immediately (before frame-end destroy). Deterministic MVP drop rule (XP 10 / Gold 5).
+- `PickupCollected` — event (Type/Amount/Collector).
 
 ## Runtime Layer
 Runtime objects consume configuration assets and maintain mutable state at runtime.

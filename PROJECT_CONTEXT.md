@@ -53,6 +53,7 @@ M5 — Combat System (damage, death, pickups)
 - M4 — Enemy System (2026-08-14, COMPLETE): M4.1 Enemy base framework (EnemyData/EnemyStats/EnemyHealth/EnemyController/EnemyDied/EnemyBase); M4.2 Chaser AI (pursue, speed 3.5); M4.3 Runner AI (faster pursue, speed 6); M4.4 Shooter AI (approach/stay in AttackRange, fire minimal Projectile, speed 2.5/range 6/cd 1.5/dmg 8/HP 25); M4.5 Tank AI (slow high-HP pursue, speed 2/HP 120); M4.6 minimal spawn entry (EnemySpawner spawns one of each type around the player). Verified per subtask (27/15/20/27/23/22 probe checks all PASS), 0 errors/warnings; manual in-play observation confirms all four enemies spawn and run their AI.
 - M5.1 — Combat Base Framework (2026-08-14): IDamageable + DamageRequest/DamageResult + CombatSystem unified ApplyDamage + DamageApplied event; Projectile migrated off direct PlayerHealth coupling. Verified 23/23 probe PASS, 0 errors/warnings.
 - M5.2 — Enemy Death & Kill Attribution (2026-08-14): EnemyKilled (Enemy/Killer) published once per lethal hit on EnemyHealth with valid Source; EnemyController destroys dead enemies (pool in M7). Verified 28/28 probe PASS, 0 errors/warnings.
+- M5.3 — Pickup System (2026-08-14): PlayerProgress (XP/Gold) + PickupType/PickupData + Pickup collect + PickupSystem (EnemyKilled → drop XP+Gold at death position). XPPickup/GoldPickup prefabs; Player gains PlayerProgress; SC_Main gains PickupSystem. Verified 25/25 probe PASS + manual play, 0 errors/warnings.
 
 ## Next Milestone
 M5 — Combat System (damage, death, pickups)

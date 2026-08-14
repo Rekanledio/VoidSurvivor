@@ -6,8 +6,8 @@
 | M1 | Unity Initialization | Working Unity + Git + MCP baseline | Completed |
 | M2 | Core Framework | GameManager, states, events, utilities | Completed |
 | M3 | Player System | Movement, stats, health, camera | Completed |
-| M4 | Enemy System | 4 enemy types and AI | Pending |
-| M5 | Combat System | Damage, death, pickups | Pending |
+| M4 | Enemy System | 4 enemy types and AI | Completed (2026-08-14) |
+| M5 | Combat System | Damage, death, pickups | In progress (M5.1–M5.3 done) |
 | M6 | Weapon System | 4 weapons and slots | Pending |
 | M7 | Object Pool | High-frequency object reuse | Pending |
 | M8 | Wave System | 10-wave combat progression | Pending |

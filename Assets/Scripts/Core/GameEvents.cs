@@ -80,4 +80,23 @@ namespace VoidSurvivor.Core
             Killer = killer;
         }
     }
+
+    /// <summary>
+    /// Published by <see cref="VoidSurvivor.Pickup.Pickup"/> when a pickup is
+    /// collected by the player (M5.3). Carries kind, amount and the collector.
+    /// Level-up / thresholds are NOT evaluated here (Roguelite system later).
+    /// </summary>
+    public readonly struct PickupCollected
+    {
+        public VoidSurvivor.Pickup.PickupType Type { get; }
+        public int Amount { get; }
+        public GameObject Collector { get; }
+
+        public PickupCollected(VoidSurvivor.Pickup.PickupType type, int amount, GameObject collector)
+        {
+            Type = type;
+            Amount = amount;
+            Collector = collector;
+        }
+    }
 }

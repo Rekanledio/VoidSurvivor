@@ -318,3 +318,27 @@ CombatSystem.ApplyDamage → Target.TakeDamage (EnemyHealth) → EnemyDied publi
 
 ### Next
 M5.3 (per TASKS.md split).
+
+## 2026-08-14
+### Milestone
+M5.3 — Pickup System (part of M5 — Combat System)
+
+### Completed
+- Assets/Scripts/Player/PlayerProgress.cs: runtime XP/Gold resources (CurrentXP/CurrentGold, AddXP/AddGold; negative/zero amounts ignored). No level/threshold/upgrade/shop logic. Separate from PlayerStats (character attributes) by design.
+- Assets/Scripts/Pickup/PickupType.cs: enum XP / Gold.
+- Assets/Scripts/Pickup/PickupData.cs: ScriptableObject (Type + Amount), read-only at runtime.
+- Assets/Scripts/Pickup/Pickup.cs: trigger collect — on player contact (TryGetComponent<PlayerProgress>) credits progress, publishes PickupCollected, destroys itself.
+- Assets/Scripts/Pickup/PickupSystem.cs: subscribes EnemyKilled; on each killed normal enemy spawns 1 XP + 1 Gold pickup at the enemy's position immediately (before frame-end destroy). Deterministic MVP rule (XP 10 / Gold 5); no drop rates/rarity/weights.
+- Assets/Scripts/Core/GameEvents.cs: added PickupCollected (Type/Amount/Collector). No level-up events.
+- Assets: XPPickupData.asset (XP 10), GoldPickupData.asset (Gold 5), XPPickup.prefab + GoldPickup.prefab (sprite + trigger collider + Pickup), placeholder art; Player.prefab gains PlayerProgress; SC_Main gains PickupSystem object (wired to both prefabs).
+- No level-up / upgrade / weapon / shop / wave / pool implemented.
+
+### Verification
+- Compilation: 0 errors.
+- In-play probe (temporary PickupProbe, deleted): 25/25 PASS, 0 FAILURES — progress adds (relative deltas) + negative rejection; pickup prefab config (component, trigger, data); XP/Gold collection on contact with correct deltas + PickupCollected + destroy; EnemyKilled → PickupSystem spawned XP+Gold at the death position; DamageApplied/EnemyDied/EnemyKilled normal; Spawner 4 enemy types present.
+- Manual play observation: scene enemies die (cross-fire), pickups drop at death positions, player auto-collects them (XP/Gold grow in real time).
+- Note: initial probe asserts assumed XP/Gold start at 0, but by the time the probe reads them the scene cross-fire has already produced drops the player auto-collected — switched to relative-delta asserts. Expected composition behavior, not a defect.
+- Final clean play/stop twice: 0 errors, 0 warnings.
+
+### Next
+M5.4+ per the official task split (to be confirmed by the next task prompt).

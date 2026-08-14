@@ -138,3 +138,9 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - Event order: TakeDamage → EnemyDied → EnemyKilled → cleanup.
 - Verified: 28/28 probe PASS; final play/stop twice: 0 errors / 0 warnings.
 - Next: M5.3 (per TASKS.md split).
+
+## M5.3 — Pickup System (2026-08-14)
+- PlayerProgress (XP/Gold runtime resources, negative-safe); PickupType (XP/Gold); PickupData (SO, read-only); Pickup (trigger collect → progress + PickupCollected → destroy); PickupSystem (EnemyKilled → spawn XP+Gold at death position).
+- XPPickup/GoldPickup prefabs + data (XP 10 / Gold 5); Player prefab gains PlayerProgress; SC_Main gains PickupSystem.
+- Verified: 25/25 probe PASS + manual play observation (drop → collect live). Final play/stop twice: 0 errors / 0 warnings.
+- Next: M5.4+ per the official task split (to be confirmed by the next task prompt).
