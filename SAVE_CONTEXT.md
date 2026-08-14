@@ -105,3 +105,10 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - RunnerData.asset moveSpeed 6 (vs Chaser 3.5; docs give no explicit value — recorded choice). Runner.prefab (base + RunnerAI, data = RunnerData).
 - Verified: 20/20 probe PASS (speed 6.00 exact via fixed-physics-frame measure; re-target; chase; physics hold near player ~1.07; death stop 0.000; Chaser regression intact; player intact). Final play/stop twice: 0 errors / 0 warnings. Temp probe deleted.
 - Next: M4.4 Shooter AI.
+
+## M4.4 — Shooter AI (2026-08-14)
+- ShooterAI.cs: approach only outside AttackRange, stop inside; fire minimal Projectile at player when in range + off cooldown (Time.time); reuses EnemyController refs; death stops move+attack.
+- Projectile.cs: MINIMAL M4.4 projectile (kinematic velocity, lifetime, OnTriggerEnter2D -> PlayerHealth.TakeDamage) — temporary until M5 Combat unifies damage.
+- ShooterData.asset (speed 2.5 / range 6 / cd 1.5 / dmg 8 / HP 25) + ShooterProjectile.prefab + Shooter.prefab (data + projectilePrefab wired).
+- Verified: 27/27 probe PASS (fire->hit->damage via player HP 84->68->60, cooldown window, out-of-range silence, death stop, Chaser/Runner regression, no residue). Final play/stop twice: 0 errors / 0 warnings.
+- Next: M4.5 Tank AI.

@@ -214,3 +214,23 @@ M4.3 — Runner AI (part of M4 — Enemy System)
 
 ### Next
 M4.4 — Shooter AI (ranged attack).
+
+## 2026-08-14
+### Milestone
+M4.4 — Shooter AI (part of M4 — Enemy System)
+
+### Completed
+- ShooterAI (Assets/Scripts/Enemy/ShooterAI.cs): ranged attacker. Movement: approaches only when farther than AttackRange, stops once inside it (no kiting/wall-hugging). Attack: when in range, player alive and off cooldown, fires a minimal Projectile at the player's current position; cooldown via Time.time (stable, testable clock) from AttackCooldown. Reuses EnemyController refs; stops moving/attacking when dead.
+- Projectile (Assets/Scripts/Enemy/Projectile.cs): MINIMAL M4.4 projectile to prove the ranged attack — fixed direction+speed (8), lifetime (3s), OnTriggerEnter2D applies damage to PlayerHealth then self-destroys. Flagged explicitly as a temporary minimal path: M5 Combat System will replace it with the unified pipeline (no pool, no generic weapon framework).
+- ShooterData.asset: moveSpeed 2.5 (slow, ranged), attackRange 6 (long), attackCooldown 1.5, damage 8, maxHP 25 (squishy). No explicit docs values → simple fixed values chosen for type differentiation, recorded here.
+- ShooterProjectile.prefab (kinematic RB, trigger collider 0.2, orange placeholder) + Shooter.prefab (EnemyBase + ShooterAI, data = ShooterData, projectilePrefab = ShooterProjectile).
+- Damage path: Projectile hits player and calls PlayerHealth.TakeDamage — the only existing damage API (no combat system yet). Recorded as M4.4-minimal; M5 will own damage rules.
+
+### Verification
+- Compilation: 0 errors.
+- In-play probe (temporary ShooterProbe, deleted): 27/27 PASS, 0 FAILURES — base stats (HP 25/25, speed 2.5, range 6, cd 1.5, dmg 8); approach speed 2.50 exact; stops at range edge (drift 0.00, dist 6.00); projectilePrefab resolved at runtime; fire→flight→hit→damage proven by player HP dropping (84 → 68 → 60); cooldown limits damage in short window; fires again after cooldown; no attack out of range (HP unchanged); re-approaches when player far; death stops movement and attacks (HP unchanged); Chaser (3.5) and Runner (6) regression intact; no projectile residue after lifetime.
+- Note: scene sampling misses a projectile because it lives ~0.7s before hitting the player — player HP delta is the reliable end-to-end signal (test-methodology lesson).
+- Final clean play/stop twice: 0 errors, 0 warnings.
+
+### Next
+M4.5 — Tank AI (slow, high HP).

@@ -38,7 +38,9 @@
 - Placeholder: Assets/Art/EnemyPlaceholder.png; base prefab: Assets/Prefabs/Enemies/EnemyBase.prefab.
 - `ChaserAI` (M4.2) — pursues the player's current position at the configured MoveSpeed via Rigidbody2D.MovePosition; reuses EnemyController's resolved refs (Target/Stats/Health/Body); stops when dead. ChaserData.asset + Chaser.prefab.
 - `RunnerAI` (M4.3) — faster pursuer; same pursuit pattern as ChaserAI, speed driven by RunnerData (moveSpeed 6). RunnerData.asset + Runner.prefab.
-- Per-type prefabs and AI (Shooter/Tank) land in M4.4–M4.5; minimal spawn entry in M4.6; full wave logic stays in M8.
+- `ShooterAI` (M4.4) — ranged attacker: approaches only outside AttackRange, stops inside it; fires a minimal `Projectile` at the player when in range and off cooldown (Time.time). ShooterData.asset (speed 2.5 / range 6 / cd 1.5 / dmg 8 / HP 25) + Shooter.prefab.
+- `Projectile` (M4.4) — MINIMAL ranged-attack proof: kinematic body, fixed velocity, lifetime, contact damage via PlayerHealth.TakeDamage. Explicitly temporary: M5 Combat System replaces it with the unified damage/projectile pipeline (no pool, no generic weapon framework).
+- Per-type prefab and AI (Tank) lands in M4.5; minimal spawn entry in M4.6; full wave logic stays in M8.
 
 ## Data Layer
 Use ScriptableObject for static configuration:
