@@ -802,3 +802,35 @@ LevelUpPanel NRE investigation & fix (M9.3 upgrade-chooser race)
 - Temporary M93LevelUpFinalProbe (deleted): 17/17 PASS, 0 FAILURES — panel hidden initially; 3 upgrade buttons + TMP Label children present; Playing -> LevelUp; panel visible; Button0 label is Chinese "+暴击伤害 0.25"-style (starts with +, no □); Button0 + Title meshes have vertices (Chinese actually rendered via NotoSansSC SDF); real `Button.onClick.Invoke()` -> UpgradeManager.Select -> PlayerStats bonus applied (e.g. CritDamage 1.50 -> 1.75) -> pending drained -> Playing -> panel hidden. No NRE anywhere.
 - Screenshot: D:/Work/ui_diag_levelup_cam.png (Camera-rendered capture) shows 升级！ title + 3 Chinese upgrade options, all glyphs correct, layout intact (a moving enemy projectile crosses one card — scene AI, not the panel).
 - Final clean play/stop twice: 0 errors, 0 warnings.
+
+## 2026-08-16
+### Milestone
+M9.4 ShopPanel Layout Fix (anchoredPosition 修复 — 纯布局修正)
+
+### Root cause (确诊于 21:11 only-read diagnostic)
+- M9.4 UIFixTool 的 `MakeRect(parent, anchor, anchoredPos, size)` 把 `anchoredPosition` 当成 "距父边缘 inset" 写入（按 edge-margin 语义），但 Unity 的 `RectTransform.anchoredPosition` 是 **pivot(0.5, 0.5) 距 anchor 参考点的偏移**。所有使用角点 anchor 的 ProductCard 子项整体偏移了 `(+w/2, +h/2)`。
+- 截图证据（修复前 3 个分辨率）：Name/Price 文字跑出卡片**左外**，Type 跑出卡片**右外**，BuyButton 从卡片右下探出。
+
+### Fix (2026-08-16 21:43)
+- 修改 SC_Main.unity 中 4 个 ProductCard 子节点的 anchoredPosition（pivot 0.5/0.5，按 inset 16/16 + BuyButton inset 14/14 推算）：
+  - Name: (16,-16) → **(196,-32)**
+  - Type: (-16,-16) → **(-91,-29)**
+  - Price: (16,16) → **(166,29)**
+  - BuyButton: (-14,14) → **(-74,37)**
+- **未改**：ProductCard 尺寸、Name/Type/Price/BuyButton size、ShopPanel 600×700、Canvas/CanvasScaler/EventSystem、TMP Font Asset、ShopPanel.cs、ShopManager.cs、ShopItemData、PlayerProgress/Stats、WeaponManager、WaveManager、GameManager。
+- 实现方式：单次 execute_code 调用（codedom，无局部函数、无中文字面量），直接赋值 RectTransform.anchoredPosition + EditorSceneManager.SaveScene。
+- 中途副发现：Play 期间 Unity 错误地写坏了 NotoSansSC SDF.asset（atlas 从 1024² 变成 1×1，删 1829 行）—— 这是 Editor Play 时 TMP Dynamic Font Asset 的已知问题（之前 CJK 任务遇到过的 atlasTexture 不持久化）。**`git checkout HEAD -- "Assets/Fonts/NotoSansSC SDF.asset"` 从 HEAD 恢复**（最终 commit 不包含字体 asset 改动，atlas 仍为 1024²、glyph 82 个、中文 missing 0/71）。
+
+### Verification (Play Mode 实测)
+- **布局**：4 个 ProductCard × 4 子节点全部 inside card rect（GetWorldCorners 验证 inside=True），Name 左上、Type 右上、Price 左下、BuyButton 右下，无重叠/越界。
+- **三分辨率实际截图**（GameView.position 反射切换，Unity Editor 窗口约束下实际尺寸略异）：
+  - 1920×1080 → screen 1280×933，scaleFactor 0.759
+  - 1280×720 → screen 1600×874，scaleFactor 0.821
+  - 1024×768 → screen 1280×934，scaleFactor 0.759
+  - 三张截图均呈现：Name 左上、Type 右上、Price 左下、BuyButton 右下、底部 Refresh/Continue 按钮完整可见。
+- **Shop 完整功能回归**（反射 OnWaveCompleted 私有方法触发）：gold=300 → W1 → state=Shop/products=4 → statIdx=2 购买成功 gold 300→280 (-20) → Refresh gold 280→260 (-20) → Continue state=Playing → publish WaveCompleted(10) 状态保持 Playing (W10 不进 Shop)。
+- **中文渲染**：4 张卡片的 Name/Type/Price/BuyButton TMP mesh.vertexCount 全部 > 0（实际字符顶点生成，字符 `散射爆能枪`、`回旋镖`、`+移动速度 0.5`、`+暴击率 0.02`、`武器`、`属性`、`价格：30 金币`、`价格：20 金币`、`购买` 全部正确）。
+- **最终 Play/Stop ×2**：0 errors / 0 warnings。
+
+### Next
+M9.5 — Weapon Upgrade。

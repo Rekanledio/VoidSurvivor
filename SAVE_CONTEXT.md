@@ -247,3 +247,9 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 
 ## TMP CJK Font Integration (2026-08-16)
 - Noto Sans SC static SDF font asset (Assets/Fonts/NotoSansSC SDF.asset + sub-asset atlas/material) baked from Assets/Fonts/NotoSansSC-Regular.otf (OFL-1.1) covering all 71 UI chars + punctuation (lookup=83, missing=0). All scene TMPs wired to NotoSansSC SDF directly (no fallback chain). Shop play-mode screenshot proves full Chinese rendering with NO □ placeholders. LevelUp NRE is a pre-existing UI bug, not font-related.
+
+## M9.4 ShopPanel Layout Fix (2026-08-16 21:43)
+- SC_Main.unity 4×ProductCard 子节点 anchoredPosition: Name (196,-32) / Type (-91,-29) / Price (166,29) / BuyButton (-74,37)。修复 anchoredPosition 当成 edge-margin 写入但 Unity 是 pivot 中心偏移的语义误用。
+- Verified Play Mode: 16 子节点全 inside card rect；3 分辨率（1920×1080/1280×720/1024×768）实际截图 Name 左上/Type 右上/Price 左下/BuyButton 右下；Shop 功能完整回归（W1→Shop/购买-20/Refresh-20/Continue/W10 不进 Shop）；中文渲染 mesh.verts>0。最终 Play/Stop×2 0/0。
+- 字体 asset 在 Play 期间被写坏（atlas 1×1），`git checkout HEAD` 从 HEAD 恢复。
+- 未改任何 Shop 玩法/逻辑/字体代码。
