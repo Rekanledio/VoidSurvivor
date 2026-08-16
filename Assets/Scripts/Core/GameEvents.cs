@@ -128,4 +128,35 @@ namespace VoidSurvivor.Core
             WaveIndex = waveIndex;
         }
     }
+
+    /// <summary>
+    /// Published by <see cref="VoidSurvivor.Enemy.WaveManager"/> when the Wave 10
+    /// boss is spawned (M8.3). Fact-only event.
+    /// </summary>
+    public readonly struct BossSpawned
+    {
+        public GameObject Boss { get; }
+
+        public BossSpawned(GameObject boss)
+        {
+            Boss = boss;
+        }
+    }
+
+    /// <summary>
+    /// Published by <see cref="VoidSurvivor.Enemy.WaveManager"/> once when the
+    /// Wave 10 boss is defeated by the player (M8.3), after which it enters
+    /// Victory. Fact-only event; existing EnemyKilled semantics unchanged.
+    /// </summary>
+    public readonly struct BossDefeated
+    {
+        public GameObject Boss { get; }
+        public GameObject Killer { get; }
+
+        public BossDefeated(GameObject boss, GameObject killer)
+        {
+            Boss = boss;
+            Killer = killer;
+        }
+    }
 }

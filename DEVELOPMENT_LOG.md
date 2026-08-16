@@ -617,3 +617,25 @@ M8.2 — Wave Difficulty Growth (part of M8 — Wave System)
 
 ### Next
 M8.3 — Boss (Wave 10).
+
+## 2026-08-16
+### Milestone
+M8.3 — Boss (Wave 10) (part of M8 — Wave System)
+
+### Completed
+- Assets/Scripts/Enemy/BossData.cs: minimal `BossData : EnemyData` subclass — all stats live in the asset.
+- Assets/Scripts/Enemy/BossAI.cs: MVP boss behavior — pursues the player via Rigidbody2D.MovePosition at Stats.MoveSpeed; CONTACT damage on OnTriggerEnter2D against PlayerHealth builds a DamageRequest (Source = boss, Damage = Stats.Damage) through CombatSystem (never PlayerHealth.TakeDamage directly); Time.time cooldown = Stats.AttackCooldown; player-only target; no projectiles/skills.
+- Assets/Scripts/Enemy/EnemySpawner.cs: added `bossPrefab` + public `SpawnBoss(position, multiplier)` — same `_pools` dictionary, no second pool system.
+- Assets/Scripts/Enemy/WaveManager.cs: Wave 10 = boss encounter — one boss spawned (W10 multiplier 1.45) instead of the normal spawn schedule (no normal spawns, no time-based WaveCompleted(10), no wave 11); subscribes EnemyKilled and on `EnemyKilled.Enemy == _activeBoss.gameObject` publishes BossDefeated and enters Victory via the existing legal Playing→Victory transition (GameManager untouched). StartWave/GameOver/Victory reset boss state.
+- Assets/Scripts/Core/GameEvents.cs: added `BossSpawned(GameObject boss)` and `BossDefeated(GameObject boss, GameObject killer)`.
+- Assets: BossData.asset (MaxHP 500 / Damage 20 / MoveSpeed 1.5 / AttackRange 1.5 / AttackCooldown 1.0 — M8.3 implementation parameters, not GAME_DESIGN values) + Boss.prefab (EnemyController + EnemyStats(data=BossData) + EnemyHealth + BossAI + Dynamic Rigidbody2D + trigger BoxCollider2D + red placeholder sprite) + SC_Main EnemySpawner bossPrefab wiring.
+- Boss death keeps the existing chain: EnemyHealth death → EnemyDied (EnemyController Release) + CombatSystem EnemyKilled (Killer == Player) → PickupSystem (1 XP + 1 Gold). No boss-only drops.
+
+### Verification
+- Compilation: 0 errors.
+- In-play probe (temporary M83BossProbe, deleted): 47/47 PASS, 0 FAILURES — Boss prefab/components/data; W10 multiplier 1.45; manual spawn MaxHP 725 / Damage 29 / MoveSpeed 2.175, Range 1.5 + Cooldown 1.0 unchanged; boss pursues player; non-player unaffected by contact; contact damage flows through CombatSystem (Source = boss) and reduces PlayerHealth; boss death → EnemyKilled exactly once + release; manual kill outside Wave 10 does NOT trigger Victory; Wave 10: BossSpawned exactly once, no additional normal enemies, no Victory while boss alive; boss defeat → BossDefeated exactly once + EnemyKilled once → GameState.Victory, not re-triggered, wave stopped, no more boss spawns; boss pickups dropped; pool reuse clean (IsDead/CurrentHP/velocity/multiplier reset, AI resumes); regressions (PlayerHealth/PlayerProgress/weapons/Boomerang ActiveCount/4 normal prefabs).
+- Debugging notes (methodology): probe asserted GetComponent<BossData>() — BossData is a ScriptableObject, so switched to a data-reference type check; boss instance name is "Boss(Clone)" so contact verification used a reference compare; GameOver from MainMenu is illegal — the probe walks Playing → GameOver → MainMenu → Playing; the pool stack reuses the most-recently-released instance, so reuse assertion accepts either released boss.
+- Final clean play/stop twice (normal waves run): 0 errors, 0 warnings.
+
+### Next
+M8 — Final Regression & Acceptance.

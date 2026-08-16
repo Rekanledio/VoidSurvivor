@@ -214,3 +214,8 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - EnemyStats.WaveMultiplier (runtime, non-serialized): MaxHP/Damage/MoveSpeed × multiplier; AttackRange/AttackCooldown unchanged. Chain: WaveManager (per-wave multiplier W1 1.00→W10 1.45 in WaveTable) → SpawnEnemy(prefab,pos,mult) → EnemyController.Spawn sets stats then ResetForSpawn (scaled HP). OnDespawn resets multiplier → no pool leak. EnemyData assets untouched.
 - Verified: 39/39 probe PASS (table, scaling per type, Range/Cooldown unchanged, injection order, pool reuse reset, W10 1.45, assets unchanged, regressions). Manual play: escalating difficulty visible. Final play/stop twice: 0/0.
 - Next: M8.3 Boss (Wave 10).
+
+## M8.3 — Boss (Wave 10) (2026-08-16)
+- BossData : EnemyData (MaxHP 500/Dmg 20/Speed 1.5/Range 1.5/Cd 1.0 — impl params); BossAI pursuit + contact damage via CombatSystem (player-only, cooldown); EnemySpawner.SpawnBoss (same pool); Wave 10 = boss encounter (1 boss, W10 mult 1.45, no normal spawns) → BossSpawned → BossDefeated (via EnemyKilled match) → Victory. Boss death keeps EnemyDied/EnemyKilled/Pickup chain.
+- Verified: 47/47 probe PASS. Final play/stop twice: 0/0.
+- M8 tasks complete; Next: M8 Final Regression & Acceptance.

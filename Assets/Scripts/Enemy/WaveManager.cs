@@ -14,8 +14,9 @@ namespace VoidSurvivor.Enemy
     /// GameState linkage: time only advances while Playing; Paused/LevelUp/Shop
     /// freeze it; GameOver/Victory stop it; re-entering Playing after GameOver/
     /// Victory starts a fresh run at wave 1. Difficulty grows via a per-wave
-    /// runtime multiplier (M8.2: scales enemy HP/Damage/MoveSpeed at spawn; the
-    /// boss is M8.3; no Victory/Boss logic).
+    /// runtime multiplier (M8.2). Wave 10 is the boss encounter (M8.3): one boss
+    /// spawns instead of the normal schedule, and its defeat publishes
+    /// BossDefeated and enters Victory.
     /// </summary>
     [DisallowMultipleComponent]
     [RequireComponent(typeof(EnemySpawner))]
@@ -64,22 +65,27 @@ namespace VoidSurvivor.Enemy
         private float _waveElapsed;
         private int _spawnedCount;
         private float _nextSpawnAt;
+        private bool _bossSpawned;
+        private EnemyController _activeBoss;
 
         public int CurrentWave { get; private set; } = 1;
         public bool IsWaveActive => _waveActive;
         public float WaveElapsed => _waveElapsed;
         public int SpawnedCount => _spawnedCount;
+        public EnemyController ActiveBoss => _activeBoss;
         public static WaveConfig ConfigFor(int waveIndex) => WaveTable[waveIndex - 1];
 
         private void Awake()
         {
             _spawner = GetComponent<EnemySpawner>();
             EventBus.Subscribe<GameStateChanged>(OnGameStateChanged);
+            EventBus.Subscribe<EnemyKilled>(OnEnemyKilled);
         }
 
         private void OnDestroy()
         {
             EventBus.Unsubscribe<GameStateChanged>(OnGameStateChanged);
+            EventBus.Unsubscribe<EnemyKilled>(OnEnemyKilled);
         }
 
         private void OnGameStateChanged(GameStateChanged e)
@@ -94,6 +100,25 @@ namespace VoidSurvivor.Enemy
             {
                 _waveActive = false;
                 _hasStartedRun = false; // next Playing starts a fresh run
+                _activeBoss = null;
+            }
+        }
+
+        /// <summary>
+        /// The boss is killed through the normal combat chain: CombatSystem still
+        /// publishes EnemyKilled; we match it against the active boss and then
+        /// publish BossDefeated and enter Victory. (GameObject reference compare
+        /// stays valid even if the boss was just released/inactive.)
+        /// </summary>
+        private void OnEnemyKilled(EnemyKilled e)
+        {
+            if (_activeBoss == null || e.Enemy != _activeBoss.gameObject) return;
+
+            _waveActive = false;
+            EventBus.Publish(new BossDefeated(e.Enemy, e.Killer));
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.TryChangeState(GameState.Victory);
             }
         }
 
@@ -110,6 +135,8 @@ namespace VoidSurvivor.Enemy
             _waveElapsed = 0f;
             _spawnedCount = 0;
             _nextSpawnAt = 0f;
+            _bossSpawned = false;
+            _activeBoss = null;
             _waveActive = true;
             EventBus.Publish(new WaveStarted(index));
         }
@@ -119,6 +146,18 @@ namespace VoidSurvivor.Enemy
             if (GameManager.Instance == null) return;
             if (GameManager.Instance.CurrentState != GameState.Playing) return; // paused/stopped
             if (!_waveActive) return;
+
+            // Wave 10 is the boss encounter: spawn exactly one boss and then run
+            // no normal spawn schedule / no time-based completion — it ends via
+            // BossDefeated (OnEnemyKilled).
+            if (CurrentWave == TotalWaves)
+            {
+                if (!_bossSpawned)
+                {
+                    SpawnBossNow();
+                }
+                return;
+            }
 
             _waveElapsed += Time.deltaTime;
             WaveConfig config = WaveTable[CurrentWave - 1];
@@ -134,6 +173,24 @@ namespace VoidSurvivor.Enemy
             if (_waveElapsed >= config.Duration)
             {
                 CompleteWave();
+            }
+        }
+
+        private void SpawnBossNow()
+        {
+            if (_spawner == null) return;
+
+            _bossSpawned = true;
+            Vector2 origin = Vector2.zero;
+            var player = GameObject.Find("Player");
+            if (player != null) origin = player.transform.position;
+
+            // Cardinal spawn point above the player (M4.6 rule), W10 multiplier.
+            var boss = _spawner.SpawnBoss(_spawner.GetSpawnPosition(2, origin), WaveTable[TotalWaves - 1].Multiplier);
+            _activeBoss = boss;
+            if (boss != null)
+            {
+                EventBus.Publish(new BossSpawned(boss.gameObject));
             }
         }
 

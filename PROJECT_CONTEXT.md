@@ -65,7 +65,7 @@ M8 — Wave System (spawn waves; uses the M7 pools)
 M8 — Wave System (spawn waves; uses the M7 pools)
 
 ## Current Task
-M8.3 — Boss (Wave 10) (M4–M8.2 complete: enemies, combat, pickups, 4 weapons, object pools, wave lifecycle + difficulty).
+M8 — Final Regression & Acceptance (M4–M8.3 complete: enemies, combat, pickups, 4 weapons, object pools, wave lifecycle + difficulty + boss).
 
 ## Important Decisions
 - Do not add special differentiation mechanics for MVP.

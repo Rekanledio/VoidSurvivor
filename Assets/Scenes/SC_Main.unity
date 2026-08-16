@@ -343,6 +343,7 @@ MonoBehaviour:
   - {fileID: 5520667191089851027, guid: ceefeb8c652c2d546a9d8e9f452ba7fd, type: 3}
   - {fileID: 8711936010245797425, guid: 78ef61ec2a2e3fb49b6cd97ba9d31530, type: 3}
   spawnDistance: 10
+  bossPrefab: {fileID: 1947110908198503397, guid: e2c927f84553caa43add9bce3ef5d596, type: 3}
 --- !u!4 &899764441
 Transform:
   m_ObjectHideFlags: 0

@@ -21,6 +21,9 @@ namespace VoidSurvivor.Enemy
         [SerializeField, Tooltip("Distance from the player at which enemies spawn.")]
         private float spawnDistance = 10f;
 
+        [SerializeField, Tooltip("Wave 10 boss prefab (M8.3); pooled via the same enemy pool dictionary.")]
+        private GameObject bossPrefab;
+
         private static readonly Vector2[] CardinalOffsets =
         {
             Vector2.left,
@@ -52,6 +55,13 @@ namespace VoidSurvivor.Enemy
         {
             if (prefab == null) return null;
             return EnemyController.Spawn(GetPool(prefab), position, multiplier);
+        }
+
+        /// <summary>Public pooled boss spawn entry (M8.3); same pool dictionary, no second pool system.</summary>
+        public EnemyController SpawnBoss(Vector2 position, float multiplier)
+        {
+            if (bossPrefab == null) return null;
+            return EnemyController.Spawn(GetPool(bossPrefab), position, multiplier);
         }
 
         private ObjectPool<EnemyController> GetPool(GameObject prefab)

@@ -43,7 +43,8 @@
 - `TankAI` (M4.5) — slow, high-HP pursuer; same pursuit pattern as ChaserAI, identity from TankData (moveSpeed 2, maxHP 120). TankData.asset + Tank.prefab.
 - `EnemySpawner` (M4.6, wave-driven since M8.1) — owns per-prefab enemy pools and the public `SpawnEnemy(prefab, position)` entry; no automatic spawn (M8.1 removed Start-time spawn).
 - `WaveManager` (M8.1) — wave lifecycle 1..10: Time.deltaTime-accumulated wave time advancing only while Playing; centralized per-wave config; deterministic type rotation; spawns via EnemySpawner.SpawnEnemy at M4.6 cardinal offsets; publishes WaveStarted/WaveCompleted; after wave 10 idle (Boss M8.3). Never touches ObjectPool directly.
-- Wave difficulty (M8.2) — `EnemyStats.WaveMultiplier` (runtime, non-serialized): MaxHP/Damage/MoveSpeed × per-wave multiplier (W1 1.00 → W10 1.45 in WaveTable); AttackRange/AttackCooldown unchanged. Injected per spawn (EnemyController.Spawn sets stats then ResetForSpawn); OnDespawn resets to 1 (no pool leak). EnemyData assets stay static.
+- Wave difficulty (M8.2) — `EnemyStats.WaveMultiplier` (runtime, non-serialized): MaxHP/Damage/MoveSpeed × per-wave multiplier (W1 1.00 → W10 1.45 in WaveTable); AttackRange/AttackCooldown unchanged. Injected per spawn; OnDespawn resets to 1 (no pool leak). EnemyData assets stay static.
+- Boss (M8.3) — `BossData : EnemyData` (Minimal subclass; asset stats). `BossAI` pursues the player and deals CONTACT damage via CombatSystem (player-only, AttackCooldown timer; no projectile/skills). `EnemySpawner.SpawnBoss` uses the same pool dictionary. Wave 10 is the boss encounter (one boss, W10 multiplier, no normal spawns) → `BossSpawned` → boss defeat matches EnemyKilled → `BossDefeated` → Victory (existing legal transition). Boss death keeps the EnemyDied/EnemyKilled/Pickup chain.
 - Wave logic stays in M8.
 
 ## Combat System (M5, in progress)
