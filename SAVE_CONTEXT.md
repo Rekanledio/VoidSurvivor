@@ -229,3 +229,8 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - PlayerProgress: Level (1) + XPToNextLevel placeholder (100×level, non-design) + AddXP carry-over + multi-level + PlayerLevelUp event (once per level). PlayerLevelSystem (on Player): Playing → LevelUp on level-up; non-Playing protected. WaveManager untouched (LevelUp freezes/resumes wave automatically).
 - Verified: 41/41 probe PASS. Final play/stop twice: 0/0.
 - Next: M9.2 Upgrade Chooser (3 random options).
+
+## M9.2 — Upgrade Chooser Logic (2026-08-16)
+- UpgradeData : SO (UpgradeId/DisplayName/StatType(10)/Amount additive) + 10 assets (placeholders: MaxHP+10, HPRegen+0.5, MoveSpeed+0.5, Damage+1, AttackSpeed+0.1, CritChance+0.02, CritDamage+0.25, Range+0.5, PickupRange+0.5, Armor+1 — non-design). PlayerStats runtime bonus layer (base + bonus; ApplyUpgrade; ResetForRun; base untouched). UpgradeManager (on Player, pool 10): pending queue, 3 unique random options, SetForcedOptions hook, Select guards + apply once + UpgradeSelected(upgrade,level) + Playing when drained; LevelUp freezes/resumes wave (WaveManager untouched).
+- Verified: 58/58 probe PASS. Final play/stop twice: 0/0.
+- Next: M9.3 LevelUp UI Panel.

@@ -688,3 +688,24 @@ M9.1 — XP Level Up (part of M9 — Roguelite / Upgrade)
 
 ### Next
 M9.2 — Upgrade Chooser (3 random options).
+
+## 2026-08-16
+### Milestone
+M9.2 — Upgrade Chooser Logic (part of M9 — Roguelite / Upgrade)
+
+### Completed
+- Assets/Scripts/Player/UpgradeData.cs: `UpgradeData : ScriptableObject` (UpgradeId, DisplayName, StatType enum — the 10 GAME_DESIGN stats, Amount additive) with CreateAssetMenu.
+- Assets/ScriptableObjects/Upgrades/: 10 assets (MaxHP +10, HPRegen +0.5, MoveSpeed +0.5, Damage +1, AttackSpeed +0.1, CritChance +0.02, CritDamage +0.25, Range +0.5, PickupRange +0.5, Armor +1) — M9.2 implementation placeholders, explicitly NOT GAME_DESIGN balance.
+- Assets/Scripts/Player/PlayerStats.cs: runtime bonus layer — per-stat private bonus fields; every accessor returns base + bonus; ApplyUpgrade(UpgradeData) adds the amount to the matching bonus; ResetForRun() zeroes all bonuses. Serialized base fields are never modified.
+- Assets/Scripts/Player/UpgradeManager.cs (new, on Player scene + prefab with the 10-upgrade pool): listens for PlayerLevelUp, keeps a pending level-up queue (one AddXP crossing levels queues each level), enters LevelUp only while Playing (no re-entry), GenerateOptions() draws 3 UNIQUE options (no weights/rarity; repeats across level-ups allowed), SetForcedOptions(...) test hook, Select(index) guards (waiting + LevelUp + valid index) and applies the chosen upgrade once, publishes UpgradeSelected, then either stays LevelUp with the next options (pending > 0) or returns to Playing (pending == 0).
+- Assets/Scripts/Core/GameEvents.cs: added UpgradeSelected(upgrade, level).
+- WaveManager untouched — LevelUp still freezes wave time/spawns and resume continues the same wave.
+
+### Verification
+- Compilation: 0 errors.
+- In-play probe (temporary M92UpgradeProbe, deleted): 58/58 PASS, 0 FAILURES — assets (10, one per stat, valid amounts); base stats 100/5/0/10; ApplyUpgrade MaxHP +10 → 110, MoveSpeed +0.5 → 5.5, Armor +1 → 1; ResetForRun clears; XP basics (0/negative ignored, 90 no level-up, no event); Level 2 + PlayerLevelUp(2) once + pending 1 + Playing → LevelUp; wave elapsed frozen + no duplicate WaveStarted; 3 options non-null + unique; Select(0) applies only the chosen one + UpgradeSelected once + returns to Playing + wave resumes; double-select / invalid index / non-LevelUp select ignored; GameOver → MainMenu → Playing protection (200 XP → Level 3 → options again); one AddXP crossing Level 3 → 5 (pending 2, two forced selects both applied, UpgradeSelected twice, stays LevelUp between, wave restored exactly once); regressions (PlayerHealth, Pulse Gun + WeaponManager, Boomerang ActiveCount).
+- Debugging notes (methodology): a scene XPPickup is collected on the very first physics frame — the probe now parks scene pickups in the AfterSceneLoad static hook (before any Start/contact); three probe fixes — the fresh-run check must account for the carried Level (threshold = 100 × level, so AddXP(200) at Level 2), the second consecutive selection must also SetForcedOptions (Select auto-regenerates random options when pending > 0), and the scene Player has no ArcBlade child (weapons checked via Pulse Gun + WeaponManager).
+- Final clean play/stop twice: 0 errors, 0 warnings.
+
+### Next
+M9.3 — LevelUp UI Panel.

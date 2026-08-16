@@ -776,6 +776,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2734891605708252962, guid: 71294eba75b0e294784da530597deb4e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4353819866880962507}
+    - targetCorrespondingSourceObject: {fileID: 2734891605708252962, guid: 71294eba75b0e294784da530597deb4e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4353819866880962508}
   m_SourcePrefab: {fileID: 100100000, guid: 71294eba75b0e294784da530597deb4e, type: 3}
 --- !u!4 &4353819866880962497 stripped
 Transform:
@@ -794,6 +797,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 277084ca487e26f4d976eb31f77c00fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VoidSurvivor.Player.PlayerLevelSystem
+--- !u!114 &4353819866880962508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 520726470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 210481085532e6d4a8b464d25bf960cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VoidSurvivor.Player.UpgradeManager
+  upgradePool:
+  - {fileID: 11400000, guid: 3f099ce55095fe341a08a74bcc467aef, type: 2}
+  - {fileID: 11400000, guid: 091ad9142a80446418846243b2252ae6, type: 2}
+  - {fileID: 11400000, guid: a2d4692dc40b6584fa8a54aff3edfa7a, type: 2}
+  - {fileID: 11400000, guid: ee2eb02e4c049af42ad5f820bffb93ae, type: 2}
+  - {fileID: 11400000, guid: bc32e4d93cf581c4e8cf6b36d8a5e357, type: 2}
+  - {fileID: 11400000, guid: 69b9493bd4274df48aca66e2010a3a52, type: 2}
+  - {fileID: 11400000, guid: 6307836e251d7f34a8baa691410f9982, type: 2}
+  - {fileID: 11400000, guid: 560f70eecff49ea49964554d020baa45, type: 2}
+  - {fileID: 11400000, guid: 1ce2c432a07fe32459e6b0a5c6c53aff, type: 2}
+  - {fileID: 11400000, guid: eda132d2e21c04a4d8587d0d6ffdade8, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

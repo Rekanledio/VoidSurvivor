@@ -49,6 +49,7 @@
 
 ## Roguelite / Upgrade (M9, in progress)
 - M9.1 — XP Level Up: `PlayerProgress` Level state (start 1) + `XPToNextLevel` (PLACEHOLDER 100 × level, non-design) + AddXP carry-over + multi-level; `PlayerLevelUp(level)` event once per level. `PlayerLevelSystem` (on Player) transitions Playing → LevelUp only while Playing (non-Playing protected); WaveManager untouched (LevelUp freezes/resumes the wave).
+- M9.2 — Upgrade chooser logic: `UpgradeData : ScriptableObject` (StatType enum + additive Amount; 10 assets with placeholder values). `PlayerStats` gained a runtime bonus layer (accessors = base + bonus; ApplyUpgrade / ResetForRun; serialized base never modified). `UpgradeManager` (on Player): pending level-up queue, 3 unique random options (SetForcedOptions test hook), Select guards + applies chosen once → `UpgradeSelected(upgrade, level)` → Playing when queue drains (stays LevelUp for consecutive level-ups). WaveManager untouched.
 - Wave logic stays in M8.
 
 ## Combat System (M5, in progress)

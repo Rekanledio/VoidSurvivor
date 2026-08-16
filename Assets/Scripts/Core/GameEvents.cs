@@ -174,4 +174,21 @@ namespace VoidSurvivor.Core
             Level = level;
         }
     }
+
+    /// <summary>
+    /// Published by <see cref="VoidSurvivor.Player.UpgradeManager"/> after an
+    /// upgrade has been applied to PlayerStats (M9.2). Carries the chosen
+    /// upgrade and the player's level at selection time. Fact-only event.
+    /// </summary>
+    public readonly struct UpgradeSelected
+    {
+        public VoidSurvivor.Player.UpgradeData Upgrade { get; }
+        public int Level { get; }
+
+        public UpgradeSelected(VoidSurvivor.Player.UpgradeData upgrade, int level)
+        {
+            Upgrade = upgrade;
+            Level = level;
+        }
+    }
 }
