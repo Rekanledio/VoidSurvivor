@@ -23,13 +23,13 @@ namespace VoidSurvivor.Weapons
             if (Time.time < _nextAttackTime) return;
 
             Strike();
-            _nextAttackTime = Time.time + Data.AttackCooldown;
+            _nextAttackTime = Time.time + EffectiveAttackCooldown;
         }
 
         /// <summary>One area strike: query once, hit every in-range live enemy once.</summary>
         private void Strike()
         {
-            var hits = Physics2D.OverlapCircleAll(transform.position, Data.Range);
+            var hits = Physics2D.OverlapCircleAll(transform.position, EffectiveRange);
             if (hits.Length == 0) return;
 
             var targets = new List<GameObject>();
@@ -45,7 +45,7 @@ namespace VoidSurvivor.Weapons
 
             for (int i = 0; i < targets.Count; i++)
             {
-                Attack(targets[i], Data.BaseDamage);
+                Attack(targets[i], EffectiveDamage);
             }
         }
     }

@@ -35,14 +35,14 @@ namespace VoidSurvivor.Weapons
             if (_target == null || Time.time < _nextAttackTime) return;
 
             ThrowAt(_target, boom);
-            _nextAttackTime = Time.time + boom.AttackCooldown;
+            _nextAttackTime = Time.time + EffectiveAttackCooldown;
         }
 
         private bool HasValidTarget()
         {
             if (_target == null) return false;
             if (_target.GetComponent<EnemyHealth>() == null || _target.GetComponent<EnemyHealth>().IsDead) return false;
-            if (Vector2.Distance(transform.position, _target.position) > Data.Range) return false;
+            if (Vector2.Distance(transform.position, _target.position) > EffectiveRange) return false;
             return true;
         }
 
@@ -51,7 +51,7 @@ namespace VoidSurvivor.Weapons
         {
             _target = null;
 
-            var hits = Physics2D.OverlapCircleAll(transform.position, Data.Range);
+            var hits = Physics2D.OverlapCircleAll(transform.position, EffectiveRange);
             float bestDistance = float.MaxValue;
             for (int i = 0; i < hits.Length; i++)
             {
@@ -73,7 +73,7 @@ namespace VoidSurvivor.Weapons
             Vector2 direction = (Vector2)(target.position - transform.position);
             BoomerangProjectile.Spawn(projectilePrefab, transform.position, Owner,
                 Owner != null ? Owner.transform : transform, direction,
-                boom.OutSpeed, boom.ReturnSpeed, boom.MaxDistance, boom.BaseDamage);
+                boom.OutSpeed, boom.ReturnSpeed, boom.MaxDistance, EffectiveDamage);
         }
     }
 }

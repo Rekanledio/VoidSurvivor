@@ -267,3 +267,12 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - ShopManager.TryPurchaseWeapon：Instantiate 后加 `instance.transform.SetParent(_weaponManager.transform, false)` —— 修复武器挂 Scene Root → Owner=null → 无法攻击的缺陷。parent 用 WeaponManager（Player 组件）transform，无全局查找。
 - Verified Play：51/51 PASS（四武器 parent==Player / Owner==Player / DamageApplied source==Player / 已拥有+无空槽拒绝 / wave-resume 攻击）。
 - M9.5 尚未开始。
+
+## M9.5 — Weapon Upgrade (2026-08-16)
+- WeaponController runtime layer: WeaponLevel(1) + Damage/AttackCooldown/Range bonus(0); EffectiveDamage/EffectiveAttackCooldown(max 0.05 floor)/EffectiveRange; ApplyWeaponUpgrade (TargetWeapon match + additive + level++); ResetWeaponUpgrades. WeaponData never mutated.
+- WeaponUpgradeData SO (UpgradeId/DisplayName/TargetWeapon/StatType{Damage,AttackCooldown,Range}/Amount) + 12 assets (PulseGun/ScatterBlaster/Boomerang/ArcBlade x Damage+1/Cooldown-0.05/Range+0.5 — IMPLEMENTATION values).
+- ShopItemType += WeaponUpgrade; ShopItemData += weaponUpgrade ref; 10 legacy StatBonus assets migrated itemType 1->2 (enum reorder).
+- ShopManager: TryPurchaseWeaponUpgrade (equipped.Data == TargetWeapon, gold check->apply->spend, fail spends nothing); GenerateProducts 1 Weapon + 1 WeaponUpgrade (owned-only, else stat fallback) + 2 StatBonus; LevelOfEquipped.
+- ShopPanel: WeaponUpgrade multi-line 武器名/升级：属性/等级：Lv.X→Lv.X+1/价格.
+- 12 ShopItemData WeaponUpgrade products (price 30) added to pool (26 total). No level cap (design未规定).
+- Verified: M95WeaponUpgradeProbe 42/42 PASS; final play/stop x2 0/0.

@@ -132,6 +132,15 @@ namespace VoidSurvivor.UI
             ["ArcBlade"] = "弧刃",
         };
 
+        /// <summary>Maps a WeaponData asset name (e.g. "PulseGunData") to Chinese (UI display only).</summary>
+        private static readonly Dictionary<string, string> WeaponDataNames = new()
+        {
+            ["PulseGunData"] = "脉冲枪",
+            ["ScatterBlasterData"] = "散射爆能枪",
+            ["BoomerangData"] = "回旋镖",
+            ["ArcBladeData"] = "弧刃",
+        };
+
         private static string ProductName(ShopItemData item)
         {
             if (item.ItemType == ShopItemType.Weapon)
@@ -142,6 +151,11 @@ namespace VoidSurvivor.UI
                 return key;
             }
 
+            if (item.ItemType == ShopItemType.WeaponUpgrade)
+            {
+                return WeaponUpgradeName(item);
+            }
+
             // Stat bonus: "+属性名 数值" using the mapped stat name.
             if (item.Upgrade != null)
             {
@@ -150,9 +164,44 @@ namespace VoidSurvivor.UI
             return item.DisplayName;
         }
 
+        /// <summary>
+        /// Multi-line label for a WeaponUpgrade product (M9.5):
+        /// weapon name / 升级：stat / 等级：Lv.X → Lv.X+1 (X from the equipped weapon).
+        /// </summary>
+        private static string WeaponUpgradeName(ShopItemData item)
+        {
+            var upgrade = item.WeaponUpgrade;
+            if (upgrade == null || upgrade.TargetWeapon == null) return item.DisplayName;
+
+            string weaponZh = upgrade.TargetWeapon.name;
+            if (WeaponDataNames.TryGetValue(upgrade.TargetWeapon.name, out string zn)) weaponZh = zn;
+            else if (WeaponNames.TryGetValue(upgrade.TargetWeapon.name, out zn)) weaponZh = zn;
+            string statZh = WeaponUpgradeStatName(upgrade.StatType);
+            int level = FindFirstObjectByType<ShopManager>() is { } sm
+                ? sm.LevelOfEquipped(upgrade.TargetWeapon)
+                : 1;
+            return $"{weaponZh}\n升级：{statZh}\n等级：Lv.{level} → Lv.{level + 1}";
+        }
+
         private static string ProductTypeName(ShopItemData item)
         {
-            return item.ItemType == ShopItemType.Weapon ? "武器" : "属性";
+            return item.ItemType switch
+            {
+                ShopItemType.Weapon => "武器",
+                ShopItemType.WeaponUpgrade => "武器升级",
+                _ => "属性",
+            };
+        }
+
+        private static string WeaponUpgradeStatName(Weapons.WeaponUpgradeStat stat)
+        {
+            return stat switch
+            {
+                Weapons.WeaponUpgradeStat.Damage => "伤害",
+                Weapons.WeaponUpgradeStat.AttackCooldown => "攻击速度",
+                Weapons.WeaponUpgradeStat.Range => "攻击范围",
+                _ => stat.ToString(),
+            };
         }
 
         public static string StatName(UpgradeStat stat)

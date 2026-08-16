@@ -37,14 +37,14 @@ namespace VoidSurvivor.Weapons
             if (_target == null || Time.time < _nextAttackTime) return;
 
             FireFanAt(_target, scatter);
-            _nextAttackTime = Time.time + scatter.AttackCooldown;
+            _nextAttackTime = Time.time + EffectiveAttackCooldown;
         }
 
         private bool HasValidTarget()
         {
             if (_target == null) return false;
             if (_target.GetComponent<EnemyHealth>() == null || _target.GetComponent<EnemyHealth>().IsDead) return false;
-            if (Vector2.Distance(transform.position, _target.position) > Data.Range) return false;
+            if (Vector2.Distance(transform.position, _target.position) > EffectiveRange) return false;
             return true;
         }
 
@@ -53,7 +53,7 @@ namespace VoidSurvivor.Weapons
         {
             _target = null;
 
-            var hits = Physics2D.OverlapCircleAll(transform.position, Data.Range);
+            var hits = Physics2D.OverlapCircleAll(transform.position, EffectiveRange);
             float bestDistance = float.MaxValue;
             for (int i = 0; i < hits.Length; i++)
             {
@@ -105,7 +105,7 @@ namespace VoidSurvivor.Weapons
         {
             // M7.2.1: pooled spawn — shares the same static PulseProjectile pool
             // as Pulse Gun.
-            PulseProjectile.Spawn(projectilePrefab, transform.position, Owner, direction, projectileSpeed, scatter.BaseDamage);
+            PulseProjectile.Spawn(projectilePrefab, transform.position, Owner, direction, projectileSpeed, EffectiveDamage);
         }
     }
 }

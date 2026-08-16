@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45a883fbd5aa96043ab79a056d5f13b9, type: 3}
   m_Name: ShopStatDamage1
   m_EditorClassIdentifier: Assembly-CSharp::VoidSurvivor.Shop.ShopItemData
-  itemType: 1
+  itemType: 2
   displayName: 'Stat: Damage1'
   price: 20
   weaponPrefab: {fileID: 0}
+  weaponUpgrade: {fileID: 0}
   upgrade: {fileID: 11400000, guid: bc32e4d93cf581c4e8cf6b36d8a5e357, type: 2}

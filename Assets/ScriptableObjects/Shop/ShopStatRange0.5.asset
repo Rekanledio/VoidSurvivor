@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45a883fbd5aa96043ab79a056d5f13b9, type: 3}
   m_Name: ShopStatRange0.5
   m_EditorClassIdentifier: Assembly-CSharp::VoidSurvivor.Shop.ShopItemData
-  itemType: 1
+  itemType: 2
   displayName: 'Stat: Range0.5'
   price: 20
   weaponPrefab: {fileID: 0}
+  weaponUpgrade: {fileID: 0}
   upgrade: {fileID: 11400000, guid: eda132d2e21c04a4d8587d0d6ffdade8, type: 2}

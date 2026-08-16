@@ -81,29 +81,49 @@ namespace VoidSurvivor.Shop
         }
 
         /// <summary>
-        /// Draws 2 weapons + 2 stat bonuses, unique within this shop.
-        /// M9.4 implementation rule (not GAME_DESIGN): fixed 2/2 mix, no
+        /// Generates this shop's products (M9.4 → M9.5 rule): 1 Weapon + 1
+        /// WeaponUpgrade + 2 StatBonus, unique within this shop. M9.5
+        /// implementation rule (not GAME_DESIGN): WeaponUpgrade products are
+        /// drawn ONLY for weapons the player already owns; if no owned weapon
+        /// has an upgrade available, that slot falls back to a StatBonus. No
         /// weights/rarity; different shops may repeat products.
         /// </summary>
         public void GenerateProducts()
         {
+            ResolveRefs();
             _products.Clear();
             _purchased.Clear();
 
             var weapons = new List<ShopItemData>();
+            var upgrades = new List<ShopItemData>();
             var stats = new List<ShopItemData>();
             if (productPool != null)
             {
                 foreach (var item in productPool)
                 {
                     if (item == null) continue;
-                    if (item.ItemType == ShopItemType.Weapon) weapons.Add(item);
-                    else stats.Add(item);
+                    if (item.ItemType == ShopItemType.Weapon)
+                    {
+                        weapons.Add(item);
+                    }
+                    else if (item.ItemType == ShopItemType.WeaponUpgrade)
+                    {
+                        // Only include upgrades whose target weapon is owned.
+                        if (item.WeaponUpgrade != null && IsWeaponEquipped(item.WeaponUpgrade.TargetWeapon))
+                        {
+                            upgrades.Add(item);
+                        }
+                    }
+                    else
+                    {
+                        stats.Add(item);
+                    }
                 }
             }
 
-            DrawUnique(weapons, 2);
-            DrawUnique(stats, 2);
+            DrawUnique(weapons, 1);
+            int upgradesDrawn = DrawUnique(upgrades, 1);
+            DrawUnique(stats, 2 + (1 - upgradesDrawn)); // fallback: no upgrade → extra stat
 
             for (int i = _products.Count; i < ProductCount; i++) _products.Add(null); // pad
             _purchased.Clear();
@@ -112,7 +132,34 @@ namespace VoidSurvivor.Shop
             PublishProducts();
         }
 
-        private void DrawUnique(List<ShopItemData> pool, int count)
+        /// <summary>True when a weapon whose Data matches target is equipped.</summary>
+        private bool IsWeaponEquipped(WeaponData target)
+        {
+            if (_weaponManager == null || target == null) return false;
+            for (int i = 0; i < _weaponManager.SlotCount; i++)
+            {
+                var equipped = _weaponManager.GetWeapon(i);
+                if (equipped != null && equipped.Data == target) return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Current upgrade level of the equipped weapon matching target (M9.5;
+        /// UI display only). Returns 1 when not found / not equipped.
+        /// </summary>
+        public int LevelOfEquipped(WeaponData target)
+        {
+            if (_weaponManager == null || target == null) return 1;
+            for (int i = 0; i < _weaponManager.SlotCount; i++)
+            {
+                var w = _weaponManager.GetWeapon(i);
+                if (w != null && w.Data == target) return w.WeaponLevel;
+            }
+            return 1;
+        }
+
+        private int DrawUnique(List<ShopItemData> pool, int count)
         {
             int drawn = 0;
             while (drawn < count && pool.Count > 0)
@@ -122,6 +169,7 @@ namespace VoidSurvivor.Shop
                 pool.RemoveAt(idx);
                 drawn++;
             }
+            return drawn;
         }
 
         public bool IsPurchased(int index)
@@ -159,6 +207,10 @@ namespace VoidSurvivor.Shop
             {
                 if (!TryPurchaseWeapon(item)) return false;
             }
+            else if (item.ItemType == ShopItemType.WeaponUpgrade)
+            {
+                if (!TryPurchaseWeaponUpgrade(item)) return false;
+            }
             else
             {
                 if (item.Upgrade == null) return false;
@@ -168,6 +220,50 @@ namespace VoidSurvivor.Shop
 
             _purchased[index] = true;
             PublishProducts();
+            return true;
+        }
+
+        /// <summary>
+        /// Buys a weapon-upgrade product (M9.5): requires the target weapon to be
+        /// EQUIPPED (found via Data reference match, not name). Order: gold check
+        /// → apply upgrade → spend gold. Gold is spent ONLY after the upgrade was
+        /// successfully applied; any failure (no target weapon / not enough gold /
+        /// apply failed) leaves gold and level untouched.
+        /// </summary>
+        private bool TryPurchaseWeaponUpgrade(ShopItemData item)
+        {
+            if (item.WeaponUpgrade == null) return false;
+            if (_weaponManager == null || _progress == null) return false;
+
+            var target = item.WeaponUpgrade.TargetWeapon;
+            if (target == null) return false;
+
+            // Find the equipped weapon with matching Data.
+            WeaponController equipped = null;
+            for (int i = 0; i < _weaponManager.SlotCount; i++)
+            {
+                var w = _weaponManager.GetWeapon(i);
+                if (w != null && w.Data == target)
+                {
+                    equipped = w;
+                    break;
+                }
+            }
+            if (equipped == null) return false; // target weapon not owned → fail, no gold
+
+            // Gold check (spend happens after the upgrade is applied).
+            if (_progress.CurrentGold < item.Price) return false;
+
+            // Apply upgrade; only on success spend the gold.
+            if (!equipped.ApplyWeaponUpgrade(item.WeaponUpgrade)) return false;
+            if (!_progress.TrySpendGold(item.Price))
+            {
+                // Unreachable in practice (gold was checked above); keep the
+                // spent-nothing invariant by leaving the level applied — the
+                // check prevents entering this branch.
+                return false;
+            }
+
             return true;
         }
 

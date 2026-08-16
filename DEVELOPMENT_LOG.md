@@ -888,3 +888,24 @@ M9.4 Shop Weapon Purchase Owner Fix (购买武器 Parent 缺陷修复)
 
 ### Next
 M9.5 — Weapon Upgrade（尚未开始）。
+
+## 2026-08-16
+### Milestone
+M9.5 — Weapon Upgrade (Weapon runtime level/bonus + Shop WeaponUpgrade products)
+
+### Completed
+- `WeaponController` (M9.5 runtime layer): non-serialized `_weaponLevel=1` + `_damageBonus/_attackCooldownBonus/_rangeBonus=0`; `EffectiveDamage = Data.BaseDamage + DamageBonus`, `EffectiveAttackCooldown = max(0.05f, Data.AttackCooldown + CooldownBonus)` (0.05 = runtime safety floor, NOT a design value), `EffectiveRange = Data.Range + RangeBonus`; `ApplyWeaponUpgrade(WeaponUpgradeData)` validates upgrade + requires TargetWeapon == this.Data, then level++ and additive bonus; `ResetWeaponUpgrades()`; read-only getters for UI/shop. WeaponData and serialized base values NEVER mutated.
+- `WeaponUpgradeData.cs` (new ScriptableObject): UpgradeId / DisplayName / TargetWeapon / WeaponUpgradeStat (Damage, AttackCooldown, Range — first-version scope only) / Amount.
+- 4 weapons: read points switched from Data.X to EffectiveX — PulseGun (FireAt damage, cooldown, Range for acquire/valid), ScatterBlaster (SpawnProjectile damage, cooldown, Range), Boomerang (ThrowAt damage, cooldown, Range), ArcBlade (Strike damage, cooldown, Range). No changes to Projectile Pool / Init / CombatSystem / DamageRequest / Boomerang ActiveCount / ArcBlade OverlapCircleAll.
+- `ShopItemType` += WeaponUpgrade; `ShopItemData` += `weaponUpgrade` (WeaponUpgradeData ref). Legacy StatBonus assets migrated itemType 1 -> 2 (enum reorder).
+- `ShopManager`: Purchase WeaponUpgrade branch (`TryPurchaseWeaponUpgrade` — requires target weapon EQUIPPED via `equipped.Data == upgrade.TargetWeapon` (no name compare), gold check -> ApplyWeaponUpgrade -> TrySpendGold, any failure spends nothing); GenerateProducts M9.5 rule = 1 Weapon + 1 WeaponUpgrade + 2 StatBonus, upgrade drawn ONLY for owned weapons (else falls back to stat); `LevelOfEquipped(WeaponData)` for UI.
+- `ShopPanel`: WeaponUpgrade card shows multi-line 武器名/升级：属性（伤害/攻击速度/攻击范围）/等级：Lv.X → Lv.X+1/价格：XX 金币.
+- 12 WeaponUpgradeData assets (4 weapons x Damage+1 / AttackCooldown -0.05 / Range +0.5) + 12 ShopItemData WeaponUpgrade products (price 30) appended to scene ShopManager.productPool (total 26). **All amounts/prices are M9.5 IMPLEMENTATION parameters, NOT GAME_DESIGN values.**
+
+### Verification
+- Temporary M95WeaponUpgradeProbe (deleted): 42/42 PASS, 0 FAILURES — defaults Level=1/bonus=0 on all 4; 12 assets loadable+valid; direct upgrades (PulseGun/ArcBlade Damage+1/Cooldown-0.05/Range+0.5, level 1->4, additive stacking); Scatter/Boomerang EffectiveDamage/Range; cooldown clamped >= 0.05 after 10x -0.05; WeaponData asset unchanged; wrong-target and null upgrades rejected; fresh instance Level=1/bonus=0; GenerateProducts mix 1/1/2; upgrade product targets OWNED weapon only (PulseGun upgrade absent when PulseGun not owned, Boomerang upgrade present when owned); WeaponUpgrade purchase (-30 gold, Level+1, marked purchased); same product not double-bought; Continue -> Playing; upgraded weapon attacks after shop.
+- Probe debug notes: (a) initial FAILs were probe-side — a broken validity condition excluded Damage assets (StatType==0) and float `==` comparisons on cooldown; fixed to approx compare. (b) Enum reorder needed the legacy StatBonus asset migration (itemType 1->2) else stats were misread as WeaponUpgrade.
+- Final clean play/stop twice: 0 errors, 0 warnings.
+
+### Next
+M10 — Boss (per milestone list).
