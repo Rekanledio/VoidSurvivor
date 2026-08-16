@@ -470,3 +470,21 @@ M6 — Weapon System: COMPLETE (all 4 weapons: Pulse Gun, Scatter Blaster, Boome
 
 ### Next
 M7 — Object Pool (M7.1).
+
+## 2026-08-16
+### Milestone
+M7.1 — Object Pool Base Framework (part of M7 — Object Pool)
+
+### Completed
+- Assets/Scripts/Core/IPoolable.cs: optional lifecycle hook — OnSpawn() (after SetActive(true) on Get), OnDespawn() (before SetActive(false) on Release).
+- Assets/Scripts/Core/ObjectPool.cs: minimal generic pool (T : Component, namespace VoidSurvivor.Core, next to EventBus). Constructor pre-warms N instances (each goes through Release, so OnDespawn runs at warmup — documented). Get(): pops an available object (or creates one when empty — the pool GROWS on demand, never rejects), SetActive(true), OnSpawn(). Release(): guards double-release via an in-pool HashSet, adds unknown objects to the managed list, OnDespawn(), SetActive(false), pushes back. Clear(): destroys every managed object and empties all collections. No Update/FixedUpdate work, no per-frame allocation.
+- Scope: framework ONLY. EnemyController / EnemySpawner / PickupSystem / Pickup / PulseGun / ScatterBlaster / PulseProjectile / Boomerang / BoomerangProjectile / ShooterAI keep their Instantiate/Destroy — integration is M7.2. No prefab/scene/ScriptableObject/M8 changes.
+
+### Verification
+- Compilation: 0 errors.
+- In-play probe (temporary PoolProbe + PoolProbeItem, deleted): 19/19 PASS, 0 FAILURES — initial available/total 3; Get activates + OnSpawn once; Release deactivates + OnDespawn (4 = 3 warmup + 1); Get→Release→Get reuses the same instance; double-release ignored (available unchanged, no extra OnDespawn); exhaustion grows total 3 → 4 with a fresh instance; all released back (available 4); Clear empties pool (total 0) and destroys every pooled object (scene 4 → 0, FindObjectsInactive verified).
+- Debugging notes (methodology): three probe assert fixes — warmup Release counts toward OnDespawn (documented design), and FindObjectsByType default skips inactive objects (used FindObjectsInactive.Include for the residue check). Not framework bugs.
+- Final clean play/stop twice: 0 errors, 0 warnings.
+
+### Next
+M7.2 — Pool Integration (wire Enemy / Projectile / Pickup lifecycles into the pool).

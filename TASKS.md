@@ -71,7 +71,8 @@
 - [x] M6.5 Arc Blade (2026-08-16): close-range area weapon — ArcBladeData : WeaponData (reuses base fields; Range = attack radius), ArcBlade (auto-attack loop; each strike does ONE OverlapCircleAll centered on the player and hits every live EnemyHealth inside Range exactly once — deduped, dead skipped, self ignored; each hit via PlayerAttack → CombatSystem). ArcBladeData (dmg 8 / cd 0.9 / range 2.5 — close range, low-mid rate, high single-target presence) + ArcBlade.prefab (no projectile). Verified: 29/29 probe checks PASS (data, slot-0 equip, first strike hits near + edge once each (30→22), out-of-range untouched, player never hit, per-target once per strike (30→14 after 2 strikes), strike cooldown ≈ 0.9 (0.900s), kill → EnemyKilled Killer == Player, dead enemy destroyed, out-of-range still untouched after kill, pickups, Pulse/Scatter/Boomerang/PlayerAttack/PlayerHealth/PlayerProgress/Spawner regressions), 0 errors/warnings.
 
 ## Current Milestone: M7 — Object Pool
-- [ ] M7.1 Object Pool (pending)
+- [x] M7.1 Object Pool Base Framework (2026-08-16): `IPoolable` (OnSpawn/OnDespawn) + generic `ObjectPool<T>` in Core (namespace VoidSurvivor.Core). Pre-warms instances; Get() activates + OnSpawn, Release() OnDespawn + deactivates; grows on demand when exhausted (never rejects); double-release guarded via in-pool set; Clear() destroys all managed objects. SetActive lifecycle control; no Update/FixedUpdate allocations; standalone — NOT wired into Enemy/Pickup/Projectile lifecycles yet (M7.2). Verified: 19/19 probe checks PASS (capacity 3, Get activates + OnSpawn once, Release deactivates + OnDespawn, Get→Release→Get reuses same instance, double-release ignored + no double OnDespawn, exhaustion grows total 3→4, Clear empties pool + scene 4→0 no residue), 0 errors/warnings.
+- [ ] M7.2 Pool Integration (pending)
 - [ ] M6.3 Scatter Blaster
 - [ ] M6.4 Boomerang
 - [ ] M6.5 Arc Blade

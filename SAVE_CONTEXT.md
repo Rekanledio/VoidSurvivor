@@ -177,3 +177,8 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - Verified: 29/29 probe PASS (multi-target one strike, out-of-range untouched, player unharmed, per-target once, kill → Killer == Player, regressions). Final play/stop twice: 0 errors / 0 warnings.
 - M6 — Weapon System: COMPLETE (all 4 weapons).
 - Next: M7.1 Object Pool.
+
+## M7.1 — Object Pool Base Framework (2026-08-16)
+- IPoolable (OnSpawn/OnDespawn) + generic ObjectPool<T> in Core (VoidSurvivor.Core). Pre-warm, Get (activate+OnSpawn, grow-on-exhaust), Release (OnDespawn+deactivate, double-release guarded), Clear (destroy all). Standalone — not wired into game lifecycles (M7.2).
+- Verified: 19/19 probe PASS. Final play/stop twice: 0 errors / 0 warnings.
+- Next: M7.2 Pool Integration.
