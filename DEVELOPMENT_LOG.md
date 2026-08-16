@@ -788,3 +788,17 @@ TMP CJK Font Integration (Noto Sans SC static SDF + atlas persisted as sub-asset
 
 ### Next
 M9.5 — Weapon Upgrade (per previous M9.4 final report).
+
+## 2026-08-16
+### Milestone
+LevelUpPanel NRE investigation & fix (M9.3 upgrade-chooser race)
+
+### Root cause (verified in Play)
+- NO NullReferenceException in production code. The reported NRE came from test scripts reading `Button.GetComponent<TextMeshProUGUI>()` (the label TMP lives on the button's child "Label").
+- A REAL bug was found and fixed: PlayerLevelSystem and UpgradeManager BOTH subscribe to PlayerLevelUp. Depending on Awake order, PlayerLevelSystem could enter GameState.LevelUp FIRST, so UpgradeManager.OnPlayerLevelUp saw `CurrentState != Playing` and returned WITHOUT calling GenerateOptions -> UpgradeOptionsGenerated never published -> LevelUpPanel labels stayed "—" (this is why an earlier probe saw the panel show with no options; the order is unstable, so earlier test sessions happened to subscribe UpgradeManager first).
+- Fix (Assets/Scripts/Player/UpgradeManager.cs, minimal): OnPlayerLevelUp now generates options whenever state is Playing OR LevelUp (if already LevelUp from the other subscriber, still GenerateOptions; only enters LevelUp when Playing). Pending queue, Select, ApplyUpgrade, UpgradeSelected, LevelUp->Playing unchanged.
+
+### Verification
+- Temporary M93LevelUpFinalProbe (deleted): 17/17 PASS, 0 FAILURES — panel hidden initially; 3 upgrade buttons + TMP Label children present; Playing -> LevelUp; panel visible; Button0 label is Chinese "+暴击伤害 0.25"-style (starts with +, no □); Button0 + Title meshes have vertices (Chinese actually rendered via NotoSansSC SDF); real `Button.onClick.Invoke()` -> UpgradeManager.Select -> PlayerStats bonus applied (e.g. CritDamage 1.50 -> 1.75) -> pending drained -> Playing -> panel hidden. No NRE anywhere.
+- Screenshot: D:/Work/ui_diag_levelup_cam.png (Camera-rendered capture) shows 升级！ title + 3 Chinese upgrade options, all glyphs correct, layout intact (a moving enemy projectile crosses one card — scene AI, not the panel).
+- Final clean play/stop twice: 0 errors, 0 warnings.

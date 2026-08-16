@@ -46,12 +46,17 @@ namespace VoidSurvivor.Player
             _pendingLevelUps++;
 
             var gm = GameManager.Instance;
-            if (gm == null || gm.CurrentState != GameState.Playing) return;
+            if (gm == null) return;
+            if (gm.CurrentState != GameState.Playing && gm.CurrentState != GameState.LevelUp) return;
 
-            if (gm.TryChangeState(GameState.LevelUp))
+            // PlayerLevelSystem may have already entered LevelUp (subscription
+            // order race) — options must be generated regardless, otherwise the
+            // chooser UI never receives UpgradeOptionsGenerated.
+            if (gm.CurrentState == GameState.Playing)
             {
-                GenerateOptions();
+                gm.TryChangeState(GameState.LevelUp);
             }
+            GenerateOptions();
         }
 
         /// <summary>
