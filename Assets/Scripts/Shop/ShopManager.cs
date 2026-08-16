@@ -201,7 +201,11 @@ namespace VoidSurvivor.Shop
             // Only proceed when gold is sufficient.
             if (!_progress.TrySpendGold(item.Price)) return false;
 
-            // Instantiate + equip; on equip failure destroy and refund nothing (gold NOT yet spent on failure path).
+            // Instantiate + parent to the player's WeaponManager (fix: without
+            // SetParent the weapon lands at Scene Root and WeaponController.Owner
+            // (GetComponentInParent<PlayerAttack>) resolves null → attacks deal 0
+            // damage). Then equip; on equip failure destroy and refund the
+            // pre-spent gold.
             var instance = Instantiate(item.WeaponPrefab);
             var weapon = instance != null ? instance.GetComponent<WeaponController>() : null;
             if (weapon == null)
@@ -211,6 +215,8 @@ namespace VoidSurvivor.Shop
                 _progress.AddGold(item.Price);
                 return false;
             }
+
+            instance.transform.SetParent(_weaponManager.transform, false);
 
             if (!_weaponManager.Equip(emptySlot, weapon))
             {

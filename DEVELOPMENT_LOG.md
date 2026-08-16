@@ -864,3 +864,27 @@ M9.4 Shop Type/BuyButton Layout Fix v2 (消除右上/右下视觉重叠)
 
 ### Next
 M9.5 — Weapon Upgrade.
+
+## 2026-08-16
+### Milestone
+M9.4 Shop Weapon Purchase Owner Fix (购买武器 Parent 缺陷修复)
+
+### Root cause (Play 实测确认，22:25 只读核查)
+- ShopManager.TryPurchaseWeapon 的 `Instantiate(WeaponPrefab)` 后**没有 SetParent** → 武器实例挂在 Scene Root（transform.parent=null）→ WeaponController.Owner（`GetComponentInParent<PlayerAttack>()`）向上查找找不到 Player → Owner=null → `Attack()` 在 PlayerAttack 解析前短路返回 `DamageResult(false,0,false)` → **Shop 购买并装备的武器无法造成任何伤害**。
+- 四把武器（PulseGun/ScatterBlaster/Boomerang/ArcBlade）全部受影响；对照组（SetParent(Player) 后 Owner=Player、攻击 applied=True）证实根因。
+- M9.4 probe 未发现的原因：只断言了 Equip 成功 + 金币扣除，未验证购买武器的实际伤害。
+
+### Fix
+- `Assets/Scripts/Shop/ShopManager.cs` TryPurchaseWeapon：`Instantiate` 后、`Equip` 前加 `instance.transform.SetParent(_weaponManager.transform, false)`。
+- parent 来源：`_weaponManager`（挂在 Player 上的 WeaponManager 组件，ResolveRefs 从 Player 获取）——**不用全局 FindFirstObjectByType<PlayerAttack>**，符合"武器挂 Player 层级"的架构语义。
+- 购买语义保持不变：商品→空槽→已拥有拒绝→Gold→Instantiate→SetParent→Equip→(Equip 失败 Destroy+refund)→标记已购。
+
+### Verification
+- 临时 WeaponPurchaseRegressionProbe（已删除）：**51/51 PASS，0 FAILURES**。
+- 四武器各自验证：Purchase 成功 / gold -30 / equipped / **parent==Player** / **Owner==Player** / attack applied=True / damage=Data.BaseDamage（5/3/7/8）/ **DamageApplied 事件触发且 source==Player**（真实伤害管道）。
+- 拒绝路径：已拥有 PulseGun 拒绝且不扣 Gold；无空槽拒绝且不扣 Gold、槽数不变。
+- Wave resume：购买 Boomerang → Continue → Playing → 购买武器仍能攻击（applied=True）。
+- 最终 Play/Stop×2：0 errors / 0 warnings。
+
+### Next
+M9.5 — Weapon Upgrade（尚未开始）。

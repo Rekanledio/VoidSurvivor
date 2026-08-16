@@ -262,3 +262,8 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - fontSize 20→15 是为满足"Type textBounds 不超出 rect"验收（Noto Sans SC 行高 1.448×fontSize）。
 - Play 验证 4/4 PASS：rectGap=15 卡片 px、textBounds 21.72≤rect 22、textGap=11.7>0、无重叠。三分辨率实际截图确认 Type/BuyButton 明显分离。Shop 功能回归全通过。最终 Play/Stop×2 0/0。
 - 未改 Shop 玩法/逻辑/字体资源代码。
+
+## M9.4 Shop Weapon Purchase Owner Fix (2026-08-16 22:27)
+- ShopManager.TryPurchaseWeapon：Instantiate 后加 `instance.transform.SetParent(_weaponManager.transform, false)` —— 修复武器挂 Scene Root → Owner=null → 无法攻击的缺陷。parent 用 WeaponManager（Player 组件）transform，无全局查找。
+- Verified Play：51/51 PASS（四武器 parent==Player / Owner==Player / DamageApplied source==Player / 已拥有+无空槽拒绝 / wave-resume 攻击）。
+- M9.5 尚未开始。
