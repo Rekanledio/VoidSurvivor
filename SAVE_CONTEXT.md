@@ -182,3 +182,8 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - IPoolable (OnSpawn/OnDespawn) + generic ObjectPool<T> in Core (VoidSurvivor.Core). Pre-warm, Get (activate+OnSpawn, grow-on-exhaust), Release (OnDespawn+deactivate, double-release guarded), Clear (destroy all). Standalone — not wired into game lifecycles (M7.2).
 - Verified: 19/19 probe PASS. Final play/stop twice: 0 errors / 0 warnings.
 - Next: M7.2 Pool Integration.
+
+## M7.2.1 — Projectile Pool Integration (2026-08-16)
+- PulseProjectile / BoomerangProjectile / Shooter Projectile → ObjectPool (static shared per-type pool; PulseGun+ScatterBlaster share PulseProjectile pool). Spawn = Get+Init; lifetime/hit → Release. IPoolable OnDespawn clears runtime state. Boomerang ActiveCount via Spawn/DespawnSelf (not OnDestroy). Static reset on play start.
+- Verified: 38/38 probe PASS + regressions. Final play/stop twice: 0 errors / 0 warnings.
+- Next: M7.2.2 Enemy / Pickup Pool Integration.

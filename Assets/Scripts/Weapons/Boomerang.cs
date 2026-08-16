@@ -69,17 +69,11 @@ namespace VoidSurvivor.Weapons
 
         private void ThrowAt(Transform target, BoomerangData boom)
         {
-            var projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
-            if (projectile.TryGetComponent(out BoomerangProjectile comp))
-            {
-                Vector2 direction = (Vector2)(target.position - transform.position);
-                comp.Init(Owner, Owner != null ? Owner.transform : transform, direction,
-                    boom.OutSpeed, boom.ReturnSpeed, boom.MaxDistance, boom.BaseDamage);
-            }
-            else
-            {
-                Destroy(projectile);
-            }
+            // M7.2.1: pooled spawn — ActiveCount is maintained inside Spawn/DespawnSelf.
+            Vector2 direction = (Vector2)(target.position - transform.position);
+            BoomerangProjectile.Spawn(projectilePrefab, transform.position, Owner,
+                Owner != null ? Owner.transform : transform, direction,
+                boom.OutSpeed, boom.ReturnSpeed, boom.MaxDistance, boom.BaseDamage);
         }
     }
 }

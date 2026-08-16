@@ -52,12 +52,8 @@ namespace VoidSurvivor.Enemy
 
         private void Fire(Vector2 direction)
         {
-            var projectile = Instantiate(projectilePrefab, _controller.Body.position, Quaternion.identity);
-            var comp = projectile.GetComponent<Projectile>();
-            if (comp != null)
-            {
-                comp.Init(direction, _controller.Stats.Damage, gameObject);
-            }
+            // M7.2.1: pooled spawn — behavior (damage/speed/source) unchanged.
+            Projectile.Spawn(projectilePrefab, _controller.Body.position, direction, _controller.Stats.Damage, gameObject);
         }
     }
 }

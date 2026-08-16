@@ -82,16 +82,10 @@ namespace VoidSurvivor.Weapons
 
         private void FireAt(Transform target)
         {
-            var projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
-            if (projectile.TryGetComponent(out PulseProjectile comp))
-            {
-                Vector2 direction = (Vector2)(target.position - transform.position);
-                comp.Init(Owner, direction, projectileSpeed, Data.BaseDamage);
-            }
-            else
-            {
-                Destroy(projectile);
-            }
+            // M7.2.1: pooled spawn — Pulse Gun and Scatter Blaster share the
+            // same static PulseProjectile pool.
+            Vector2 direction = (Vector2)(target.position - transform.position);
+            PulseProjectile.Spawn(projectilePrefab, transform.position, Owner, direction, projectileSpeed, Data.BaseDamage);
         }
     }
 }

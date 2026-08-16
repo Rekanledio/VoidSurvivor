@@ -488,3 +488,22 @@ M7.1 — Object Pool Base Framework (part of M7 — Object Pool)
 
 ### Next
 M7.2 — Pool Integration (wire Enemy / Projectile / Pickup lifecycles into the pool).
+
+## 2026-08-16
+### Milestone
+M7.2.1 — Projectile Pool Integration (part of M7 — Object Pool)
+
+### Completed
+- PulseProjectile.cs: implements IPoolable. Static shared ObjectPool (Pulse Gun and Scatter Blaster call EnsurePool with the same prefab → one pool). Static Spawn(prefab, position, source, direction, speed, damage) = pool.Get + reposition + Init. Lifetime/hit → DespawnSelf → Release (fallback Destroy only if never pooled). OnDespawn: _initialized=false, velocity zero, source/damage/direction cleared, lifetime reset. Static pool reset on play start (SubsystemRegistration) since statics survive play sessions.
+- Enemy/Projectile.cs (Shooter): same pattern; Init(direction, damage, source) unchanged; damage/speed/lifetime semantics untouched.
+- BoomerangProjectile.cs: pooled with the same pattern. ActiveCount no longer uses OnDestroy (pool warmup also runs Release/OnDespawn, which would corrupt the counter) — now incremented in Spawn (entering active flight) and decremented in DespawnSelf (ending flight). OnDespawn clears EVERY runtime field (initialized/source/returnTarget/direction/origin/speeds/maxDistance/damage/phase/lifetime/hit HashSet) so Get→Init→Release→Get starts clean; single-flight rule and per-throw hit set preserved; Return still re-aims at the player's CURRENT position. Static pool + ActiveCount reset on play start.
+- Call sites: PulseGun.FireAt, ScatterBlaster.SpawnProjectile, Boomerang.ThrowAt, ShooterAI.Fire → static Spawn(...) (no more Instantiate + TryGetComponent fallback).
+
+### Verification
+- Compilation: 0 errors.
+- In-play probe (temporary PoolIntegrationProbe, deleted): 38/38 PASS, 0 FAILURES — shared pool (ReferenceEquals), pre-warmed 16, Spawn activates + flies, Release deactivates + zero velocity, Get-after-Release reuses same instance, new Spawn overwrites source/damage/initialized, hit → Release (inactive) + damage 25, lifetime → Release, released projectile never moves again, Shooter projectile pool + source + hit damage 24 via CombatSystem, Boomerang ActiveCount 0→2→0 across throws/flights, hit-once per throw (HP 23) + hit set resets per throw (HP 16), Return re-aims at moved player, all released; Pulse Gun (pooled) auto-kill → EnemyKilled Killer == Player, pickups 6, regressions (PlayerHealth/PlayerProgress/Spawner 4 types).
+- Debugging notes (methodology): probe asserted pool.Release directly on a boomerang, which bypasses the ActiveCount maintenance points (design: Spawn/DespawnSelf own the counter) — switched the probe to full flights; scene Pulse Gun auto-fire hit manual targets — disabled it during manual tests and re-enabled for the weapon regression.
+- Final clean play/stop twice: 0 errors, 0 warnings.
+
+### Next
+M7.2.2 — Enemy / Pickup Pool Integration.
