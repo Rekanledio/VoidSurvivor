@@ -99,4 +99,33 @@ namespace VoidSurvivor.Core
             Collector = collector;
         }
     }
+
+    /// <summary>
+    /// Published by <see cref="VoidSurvivor.Enemy.WaveManager"/> exactly once
+    /// when a wave officially starts (M8.1). Fact-only event; no UI logic here.
+    /// </summary>
+    public readonly struct WaveStarted
+    {
+        public int WaveIndex { get; }
+
+        public WaveStarted(int waveIndex)
+        {
+            WaveIndex = waveIndex;
+        }
+    }
+
+    /// <summary>
+    /// Published by <see cref="VoidSurvivor.Enemy.WaveManager"/> exactly once
+    /// when a wave officially ends (M8.1). Fact-only event; Boss/Victory logic
+    /// belongs to later M8 subtasks.
+    /// </summary>
+    public readonly struct WaveCompleted
+    {
+        public int WaveIndex { get; }
+
+        public WaveCompleted(int waveIndex)
+        {
+            WaveIndex = waveIndex;
+        }
+    }
 }

@@ -5,28 +5,53 @@ using VoidSurvivor.Core;
 namespace VoidSurvivor.Enemy
 {
     /// <summary>
-    /// Minimal spawn entry (M4.6, pooled since M7.2.2): gets enemies from
-    /// per-prefab <see cref="ObjectPool{T}"/>s around the player when the game
-    /// starts. Spawns exactly one of each prefab in the list at fixed offsets
-    /// around the player (no wave logic, no timers, no loops). Enemies run
-    /// their own AI via EnemyController. Full wave management belongs to M8.
+    /// Minimal spawn entry (M4.6, pooled since M7.2.2, wave-driven since M8.1).
+    /// Owns the per-prefab <see cref="ObjectPool{T}"/>s and exposes the public
+    /// spawn entry used by <see cref="WaveManager"/> (M8.1). No wave logic, no
+    /// timers, no loops here — the initial Start-time automatic spawn was
+    /// removed in M8.1; WaveManager now drives generation.
     /// </summary>
     [DisallowMultipleComponent]
     public class EnemySpawner : MonoBehaviour
     {
         [Header("Spawn Configuration (M4.6)")]
-        [SerializeField, Tooltip("Enemy prefabs to spawn, one each, in list order.")]
+        [SerializeField, Tooltip("Enemy prefabs available to waves, in list order.")]
         private List<GameObject> enemyPrefabs = new();
 
         [SerializeField, Tooltip("Distance from the player at which enemies spawn.")]
         private float spawnDistance = 10f;
 
+        private static readonly Vector2[] CardinalOffsets =
+        {
+            Vector2.left,
+            Vector2.right,
+            Vector2.up,
+            Vector2.down,
+        };
+
         // One pool per prefab, created lazily on first use (M7.2.2).
         private readonly Dictionary<GameObject, ObjectPool<EnemyController>> _pools = new();
 
-        private void Start()
+        public int EnemyPrefabCount => enemyPrefabs.Count;
+
+        /// <summary>Deterministic prefab selection (index cycles the list).</summary>
+        public GameObject GetEnemyPrefab(int index)
         {
-            SpawnOnce();
+            if (enemyPrefabs.Count == 0) return null;
+            return enemyPrefabs[((index % enemyPrefabs.Count) + enemyPrefabs.Count) % enemyPrefabs.Count];
+        }
+
+        /// <summary>Cardinal spawn point around the player (M4.6 rule), cycling offsets.</summary>
+        public Vector2 GetSpawnPosition(int offsetIndex, Vector2 playerPosition)
+        {
+            return playerPosition + CardinalOffsets[offsetIndex % CardinalOffsets.Length] * spawnDistance;
+        }
+
+        /// <summary>Public pooled spawn entry used by WaveManager (M8.1).</summary>
+        public EnemyController SpawnEnemy(GameObject prefab, Vector2 position)
+        {
+            if (prefab == null) return null;
+            return EnemyController.Spawn(GetPool(prefab), position);
         }
 
         private ObjectPool<EnemyController> GetPool(GameObject prefab)
@@ -38,38 +63,6 @@ namespace VoidSurvivor.Enemy
                 _pools.Add(prefab, pool);
             }
             return pool;
-        }
-
-        /// <summary>Spawns one instance of each configured prefab around the player (pooled).</summary>
-        private void SpawnOnce()
-        {
-            Vector2 origin = Vector2.zero;
-            var player = GameObject.Find("Player");
-            if (player != null)
-            {
-                origin = player.transform.position;
-            }
-
-            // Fixed cardinal offsets so enemies never spawn on the player.
-            Vector2[] offsets =
-            {
-                Vector2.left,
-                Vector2.right,
-                Vector2.up,
-                Vector2.down,
-            };
-
-            for (int i = 0; i < enemyPrefabs.Count && i < offsets.Length; i++)
-            {
-                GameObject prefab = enemyPrefabs[i];
-                if (prefab == null)
-                {
-                    Debug.LogWarning($"[EnemySpawner] Enemy prefab at index {i} is not assigned; skipped.");
-                    continue;
-                }
-
-                EnemyController.Spawn(GetPool(prefab), origin + offsets[i] * spawnDistance);
-            }
         }
     }
 }

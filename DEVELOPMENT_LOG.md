@@ -577,3 +577,23 @@ M7 — Object Pool: COMPLETE.
 
 ### Next
 M8 — Wave System (M8.1).
+
+## 2026-08-16
+### Milestone
+M8.1 — Wave Lifecycle & Spawn Scheduling (part of M8 — Wave System)
+
+### Completed
+- Assets/Scripts/Core/GameEvents.cs: added WaveStarted(waveIndex) + WaveCompleted(waveIndex) fact-only events.
+- Assets/Scripts/Enemy/WaveManager.cs (new): waves 1..10. Time advances via Time.deltaTime accumulation ONLY while GameState == Playing (Paused/LevelUp/Shop freeze; GameOver/Victory stop and reset for a fresh run; first Playing or re-Playing after GameOver/Victory starts wave 1 exactly once — no duplicate start on pause/resume). Spawn scheduling: per-wave config {duration, enemyCount, spawnInterval} in one centralized table; spawns via EnemySpawner.SpawnEnemy with deterministic type rotation (index % prefab count) at M4.6 cardinal offsets. Wave completion = elapsed >= duration (NOT enemy-alive count). Publishes WaveStarted/WaveCompleted once per wave; after wave 10 it goes idle (no wave 11, no Victory logic — Boss is M8.3). Public StartWave(index) for later subtasks/tests. Never touches ObjectPool directly.
+- Assets/Scripts/Enemy/EnemySpawner.cs: removed the Start-time automatic four-direction spawn (wave-driven since M8.1); kept per-prefab pools/GetPool; added public SpawnEnemy(prefab, position), GetEnemyPrefab(index), GetSpawnPosition(offsetIndex, playerPos).
+- Assets/Scenes/SC_Main.unity: WaveManager component attached to the EnemySpawner object.
+- Placeholder wave table (W1 8s/5/1.6s → W9 16s/13/0.8s, W10 12s/15/0.7s) — explicitly documented as M8.1 temporary scheduling, not final difficulty. No difficulty scaling, no boss, no stats changes.
+
+### Verification
+- Compilation: 0 errors.
+- In-play probe (temporary WaveProbe, deleted): 42/42 PASS, 0 FAILURES — WaveStarted(1) exactly once + CurrentWave 1 + active; Wave 1 config 5/8s; first spawn at t=0; interval respected; all 5 spawned; spawn stops at configured count; Wave 1 completes → WaveCompleted(1) once → CurrentWave 2 → WaveStarted(2); Paused freezes wave time (2s real pass, elapsed unchanged) + resume without re-publishing WaveStarted; LevelUp and Shop each freeze wave time; GameOver stops wave + no more spawns; MainMenu → Playing restarts a fresh run at wave 1; StartWave(10) → WaveCompleted(10) → no WaveStarted(11) → idle; four enemy types available via deterministic rotation; wave-spawned enemies run their AI; weapons/pickups/Boomerang regressions sane.
+- Manual play: switching to Playing visibly drives waves (enemies spawn, wave index advances, kills/pickups flow).
+- Final clean play/stop twice: 0 errors, 0 warnings.
+
+### Next
+M8.2 — Wave Difficulty Growth.

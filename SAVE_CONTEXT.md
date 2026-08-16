@@ -204,3 +204,8 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - Full kill→drop→collect→release lifecycle verified 3x; four weapons together; EventBus once-per-event; cross-play static state clean (3 final Play/Stops, 0/0 each).
 - Git clean at 0723224; temp probes deleted.
 - Next: M8.1 Wave System.
+
+## M8.1 — Wave Lifecycle & Spawn Scheduling (2026-08-16)
+- WaveManager (Enemy ns, on EnemySpawner in scene): waves 1..10, deltaTime-accumulated time (Playing only; pause states freeze; GameOver/Victory stop + fresh-run reset), centralized per-wave config (duration/count/interval), deterministic type rotation, cardinal spawn points via EnemySpawner.SpawnEnemy (pooled). WaveStarted/WaveCompleted events. Wave 10 = normal enemies (boss M8.3); after wave 10 idle (no victory logic). No difficulty scaling.
+- Verified: 42/42 probe PASS (events once, progression 1→2, spawn count/interval/stop, pause freeze + resume no dup start, GameOver stop + restart W1, wave-10 boundary, 4-type rotation, regressions). Manual play: waves drive visibly. Final play/stop twice: 0/0.
+- Next: M8.2 Wave Difficulty Growth.

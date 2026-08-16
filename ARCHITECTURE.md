@@ -41,7 +41,8 @@
 - `ShooterAI` (M4.4) — ranged attacker: approaches only outside AttackRange, stops inside it; fires a minimal `Projectile` at the player when in range and off cooldown (Time.time). ShooterData.asset (speed 2.5 / range 6 / cd 1.5 / dmg 8 / HP 25) + Shooter.prefab.
 - `Projectile` (M5.1 migration) — flies at fixed velocity, expires after lifetime, on contact routes a `DamageRequest` through CombatSystem to any `IDamageable` (source carried from the firer). No direct health coupling. Known: hits any IDamageable including other enemies (no faction filter yet — later refinement).
 - `TankAI` (M4.5) — slow, high-HP pursuer; same pursuit pattern as ChaserAI, identity from TankData (moveSpeed 2, maxHP 120). TankData.asset + Tank.prefab.
-- `EnemySpawner` (M4.6) — minimal spawn entry: Start-time single spawn of one instance per configured prefab at fixed cardinal offsets around the player; no wave/timer/loop (M8 owns waves, M7 owns pooling).
+- `EnemySpawner` (M4.6, wave-driven since M8.1) — owns per-prefab enemy pools and the public `SpawnEnemy(prefab, position)` entry; no automatic spawn (M8.1 removed Start-time spawn).
+- `WaveManager` (M8.1) — wave lifecycle 1..10: Time.deltaTime-accumulated wave time advancing only while Playing; centralized per-wave config (duration/enemyCount/spawnInterval); deterministic type rotation; spawns via EnemySpawner.SpawnEnemy at M4.6 cardinal offsets; publishes WaveStarted/WaveCompleted; wave completion by duration+schedule (not enemy-alive count); after wave 10 idle (Boss M8.3). Never touches ObjectPool directly.
 - Wave logic stays in M8.
 
 ## Combat System (M5, in progress)
