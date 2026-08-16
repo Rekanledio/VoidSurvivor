@@ -526,3 +526,23 @@ M7.2.2 — Enemy Pool Integration (part of M7 — Object Pool)
 
 ### Next
 M7.2.3 — Pickup Pool Integration.
+
+## 2026-08-16
+### Milestone
+M7.2.3 — Pickup Pool Integration (last major M7.2 integration — M7.2 COMPLETE)
+
+### Completed
+- Pickup.cs: implements IPoolable. Static Spawn(ObjectPool<Pickup> pool, Vector2 position) = pool.Get + _myPool injection + reposition. Collection (OnTriggerEnter2D → PlayerProgress.AddXP/AddGold + PickupCollected) → DespawnSelf → Release (fallback Destroy only when never pooled). OnSpawn/OnDespawn are documented no-ops — the pickup has no runtime state (PickupData is a static serialized reference per prefab; there is no Rigidbody2D, so no velocity/physics to clear); being inactive stops the trigger and any duplicate collection. Collection-once semantics preserved: after Release the collider cannot fire again; a re-Spawn re-enables it and collects again.
+- PickupSystem.cs: owns one lazy ObjectPool per prefab (XP pool + Gold pool, capacity 16, parent = system transform, grows on demand). OnEnemyKilled → Pickup.Spawn(xpPool, pos) + Pickup.Spawn(goldPool, pos) — still exactly 1 XP + 1 Gold at the enemy's ACTUAL death position, read before the enemy is released at frame end. XP=10 / Gold=5 / PickupType / PickupData / PlayerProgress / PickupCollected semantics unchanged.
+
+### Verification
+- Compilation: 0 errors.
+- In-play probe (temporary PickupPoolIntegrationProbe, deleted): 34/34 PASS, 0 FAILURES — XP/Gold pools pre-warmed 2/2; Get activates / Release deactivates; reuse same instances; double-release safe; counts correct; XP amount 10 + Gold amount 5; collect +10 exactly once + one PickupCollected; released pickup never settles again + no duplicate PickupCollected; Gold +5; recycled pickup collects again + reuses same instance (+20 total); multiple pickups coexist; EnemyKilled spawns exactly 1 XP + 1 Gold at the enemy's death position; second kill at its own position with no state bleed; regressions (PlayerHealth, weapon prefabs).
+- Debugging notes (methodology): two probe assert fixes — (a) physics overlap-separation can push the test enemy slightly off the Instantiate position, so the assertion compares pickups against the enemy's ACTUAL death position (production code was correct all along); (b) a reuse-test gold pickup spawned off-player lingered active and skewed scene counts — recycled it explicitly. Also: Pickup is both a namespace and a type, so the probe used a type alias.
+- Final clean play/stop twice: 0 errors, 0 warnings.
+
+### M7.2 Status
+M7.2 — Pool Integration COMPLETE (Projectile M7.2.1 + Enemy M7.2.2 + Pickup M7.2.3 all pooled).
+
+### Next
+M7 — final overall regression/acceptance; then M8 — Wave System.

@@ -192,3 +192,9 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - EnemyController implements IPoolable (Spawn(pool,pos); OnSpawn resets health + notifies AI; OnDespawn stops AI + zeroes velocity; death → Release). EnemyHealth.ResetForSpawn. EnemySpawner owns per-prefab lazy pools (M4.6 rules unchanged). ShooterAI OnSpawn resets cooldown.
 - Verified: 31/31 probe PASS (HP/IsDead reset, EnemyDied once per life, Chaser re-track, Shooter fires+reset+stops, double-release, Clear, regressions). Final play/stop twice: 0 errors / 0 warnings.
 - Next: M7.2.3 Pickup Pool Integration.
+
+## M7.2.3 — Pickup Pool Integration (2026-08-16) — M7.2 COMPLETE
+- Pickup implements IPoolable (Spawn(pool,pos); collect → Release; no runtime state to reset). PickupSystem owns XP/Gold pools (lazy, capacity 16). EnemyKilled → 1 XP + 1 Gold at actual death position unchanged.
+- Verified: 34/34 probe PASS (amounts 10/5, collect-once, recycle, death-position, no state bleed, regressions). Final play/stop twice: 0 errors / 0 warnings.
+- M7.2 complete: Projectile (M7.2.1) + Enemy (M7.2.2) + Pickup (M7.2.3) all pooled.
+- Next: M7 final regression/acceptance; then M8 Wave System.
