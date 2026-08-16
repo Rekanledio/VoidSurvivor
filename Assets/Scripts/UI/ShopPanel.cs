@@ -1,43 +1,48 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using VoidSurvivor.Core;
 using VoidSurvivor.Player;
+using VoidSurvivor.Shop;
 
 namespace VoidSurvivor.UI
 {
     /// <summary>
-    /// Shop UI (M9.4, same pattern as LevelUpPanel): component on the ACTIVE
-    /// Canvas; the visible ShopPanel is an initially-inactive child. Shows the
-    /// panel from GameStateChanged (Shop → visible, other states → hidden),
-    /// refreshes the 4 product buttons + gold text from
-    /// <see cref="ShopProductsGenerated"/>, and forwards clicks to ShopManager
-    /// (Purchase / Refresh / Continue). Owns no gold/stats/weapons writes.
+    /// Shop UI (M9.4, polished M9.4): component on the ACTIVE Canvas; the
+    /// visible ShopPanel is an initially-inactive child. GameStateChanged shows/
+    /// hides the panel (Shop → visible, other states → hidden); ShopProductsGenerated
+    /// drives 4 product cards (Name / Type / Price / Buy button) + gold text.
+    /// All player-facing text is Chinese (display mapping only — ShopItemData/
+    /// UpgradeData fields are untouched). Owns no gold/stats/weapons writes.
     /// </summary>
     [DisallowMultipleComponent]
     public class ShopPanel : MonoBehaviour
     {
-        [SerializeField] private Shop.ShopManager shopManager;
+        [SerializeField] private ShopManager shopManager;
         [SerializeField] private PlayerProgress progress;
         [SerializeField] private GameObject panel;
         [SerializeField] private TextMeshProUGUI goldText;
-        [SerializeField] private Button[] productButtons = new Button[4];
-        [SerializeField] private TextMeshProUGUI[] productLabels = new TextMeshProUGUI[4];
+        [SerializeField] private TextMeshProUGUI[] nameTexts = new TextMeshProUGUI[4];
+        [SerializeField] private TextMeshProUGUI[] typeTexts = new TextMeshProUGUI[4];
+        [SerializeField] private TextMeshProUGUI[] priceTexts = new TextMeshProUGUI[4];
+        [SerializeField] private Button[] buyButtons = new Button[4];
+        [SerializeField] private TextMeshProUGUI[] buyLabels = new TextMeshProUGUI[4];
         [SerializeField] private Button refreshButton;
         [SerializeField] private Button continueButton;
 
         private void Awake()
         {
-            if (shopManager == null) shopManager = FindFirstObjectByType<Shop.ShopManager>();
+            if (shopManager == null) shopManager = FindFirstObjectByType<ShopManager>();
             if (progress == null) progress = FindFirstObjectByType<PlayerProgress>();
             if (panel == null) panel = gameObject;
 
-            for (int i = 0; i < productButtons.Length; i++)
+            for (int i = 0; i < buyButtons.Length; i++)
             {
                 int index = i;
-                if (productButtons[i] != null)
+                if (buyButtons[i] != null)
                 {
-                    productButtons[i].onClick.AddListener(() =>
+                    buyButtons[i].onClick.AddListener(() =>
                     {
                         if (shopManager != null) shopManager.Purchase(index);
                     });
@@ -93,22 +98,18 @@ namespace VoidSurvivor.UI
         {
             RefreshGoldText();
             var products = new[] { e.Product0, e.Product1, e.Product2, e.Product3 };
-            for (int i = 0; i < productButtons.Length; i++)
+            for (int i = 0; i < buyButtons.Length; i++)
             {
-                if (productLabels[i] == null) continue;
-                if (i < products.Length && products[i] != null)
+                bool valid = i < products.Length && products[i] != null;
+                if (nameTexts[i] != null) nameTexts[i].text = valid ? ProductName(products[i]) : "—";
+                if (typeTexts[i] != null) typeTexts[i].text = valid ? ProductTypeName(products[i]) : "";
+                if (priceTexts[i] != null) priceTexts[i].text = valid ? $"价格：{products[i].Price} 金币" : "";
+
+                if (buyButtons[i] != null)
                 {
-                    productLabels[i].text = BuildLabel(products[i]);
-                    if (productButtons[i] != null)
-                    {
-                        bool bought = shopManager != null && shopManager.IsPurchased(i);
-                        productButtons[i].interactable = !bought;
-                    }
-                }
-                else
-                {
-                    productLabels[i].text = "—";
-                    if (productButtons[i] != null) productButtons[i].interactable = false;
+                    bool bought = shopManager != null && shopManager.IsPurchased(i);
+                    buyButtons[i].interactable = valid && !bought;
+                    if (buyLabels[i] != null) buyLabels[i].text = valid ? (bought ? "已购买" : "购买") : "—";
                 }
             }
         }
@@ -117,19 +118,66 @@ namespace VoidSurvivor.UI
         {
             if (goldText != null)
             {
-                goldText.text = progress != null ? $"Gold: {progress.CurrentGold}" : "Gold: —";
+                goldText.text = progress != null ? $"金币：{progress.CurrentGold}" : "金币：—";
             }
         }
 
-        private static string BuildLabel(Shop.ShopItemData item)
+        // ---- Player-facing display mapping (中文显示映射；不改数据结构) ----
+
+        private static readonly Dictionary<string, string> WeaponNames = new()
         {
-            if (item.ItemType == Shop.ShopItemType.Weapon)
+            ["PulseGun"] = "脉冲枪",
+            ["ScatterBlaster"] = "散射爆能枪",
+            ["Boomerang"] = "回旋镖",
+            ["ArcBlade"] = "弧刃",
+        };
+
+        private static string ProductName(ShopItemData item)
+        {
+            if (item.ItemType == ShopItemType.Weapon)
             {
-                return $"{item.DisplayName}\n{item.ItemType}\n{item.Price} Gold";
+                string key = item.DisplayName;
+                if (WeaponNames.TryGetValue(key, out string zh)) return zh;
+                if (item.WeaponPrefab != null && WeaponNames.TryGetValue(item.WeaponPrefab.name, out zh)) return zh;
+                return key;
             }
 
-            string bonus = item.Upgrade != null ? $" {item.Upgrade.DisplayName}" : "";
-            return $"{item.DisplayName}{bonus}\n{item.ItemType}\n{item.Price} Gold";
+            // Stat bonus: "+属性名 数值" using the mapped stat name.
+            if (item.Upgrade != null)
+            {
+                return $"+{StatName(item.Upgrade.StatType)} {FormatAmount(item.Upgrade.Amount)}";
+            }
+            return item.DisplayName;
+        }
+
+        private static string ProductTypeName(ShopItemData item)
+        {
+            return item.ItemType == ShopItemType.Weapon ? "武器" : "属性";
+        }
+
+        public static string StatName(UpgradeStat stat)
+        {
+            return stat switch
+            {
+                UpgradeStat.MaxHP => "最大生命值",
+                UpgradeStat.HPRegen => "生命回复",
+                UpgradeStat.MoveSpeed => "移动速度",
+                UpgradeStat.Damage => "伤害",
+                UpgradeStat.AttackSpeed => "攻击速度",
+                UpgradeStat.CritChance => "暴击率",
+                UpgradeStat.CritDamage => "暴击伤害",
+                UpgradeStat.Range => "攻击范围",
+                UpgradeStat.PickupRange => "拾取范围",
+                UpgradeStat.Armor => "护甲",
+                _ => stat.ToString(),
+            };
+        }
+
+        public static string FormatAmount(float amount)
+        {
+            return Mathf.Approximately(amount, Mathf.Round(amount))
+                ? ((int)Mathf.Round(amount)).ToString()
+                : amount.ToString("0.##");
         }
     }
 }

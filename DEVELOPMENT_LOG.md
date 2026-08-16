@@ -750,3 +750,21 @@ M9.4 — Shop (part of M9 — Roguelite / Upgrade)
 
 ### Next
 M9.5 — Weapon Upgrade.
+
+## 2026-08-16
+### Milestone
+M9.4 UI Polish (Chinese localization + ShopPanel layout fix — no gameplay logic changes)
+
+### Completed
+- Assets/Scripts/UI/ShopPanel.cs: rebuilt around a 4-product-card layout — each card has separate Name / Type / Price texts and a Buy button (no overlapping children). All player-facing text is now Chinese via a display mapping (ShopItemData / UpgradeData / enums / WeaponData untouched): 商店 / 金币：{N} / 武器 / 属性 / 购买 / 已购买 / 刷新（20金币） / 继续; weapons 脉冲枪/散射爆能枪/回旋镖/弧刃; stats 最大生命值/生命回复/移动速度/伤害/攻击速度/暴击率/暴击伤害/攻击范围/拾取范围/护甲; cards show "+属性 数值" and "价格：XX 金币". TMP overflow set to Overflow + word wrapping so long names never clip.
+- Assets/Scripts/UI/LevelUpPanel.cs: option labels changed to Chinese "+属性 数值" (e.g. "+最大生命值 10"); scene Title changed from "LEVEL UP!" to "升级！".
+- Assets/Scenes/SC_Main.unity: ShopPanel hierarchy rebuilt (Title, GoldText, 4×ProductCard{Name,Type,Price,BuyButton}, RefreshButton, ContinueButton) under the existing single Canvas; panel 600×700 centered, cards 560×96 spaced 115 apart (no overlap). CanvasScaler unchanged (1920×1080, match 0.5) — content fits 1280×720 and 1024×768 (scaled height ≈ 431–497 logical → content ≈ 580 logical incl. margins, fits).
+- No gameplay logic touched: ShopManager / PlayerProgress / PlayerStats / WeaponManager / WaveManager / GameManager / UpgradeData / ShopItemData unchanged.
+
+### Verification
+- In-play probe (temporary M94UIFixProbe + UIFixTool, deleted): 32/32 PASS, 0 FAILURES — panels start hidden; LevelUp title 升级！ + Chinese options (+最大生命值 10 / +移动速度 0.5 / +护甲 1) + choose → Playing; W1 → Shop state + panel visible; 4 cards evenly spaced (no overlap); Chinese texts (商店 / 金币：0 / 刷新（20金币） / 继续 / 回旋镖 / 弧刃 / +最大生命值 10 / +移动速度 0.5 / 武器 / 价格：30 金币 / 购买); buy → -30 gold + 已购买 + disabled + gold refresh; refresh → -20 gold + reset to 购买; continue → Playing + panel hidden (all logic unchanged).
+- Debugging notes: the scene-builder ran as a temporary runtime tool (execute_code's codedom cannot reference Editor assemblies nor compile Chinese literals reliably — the rebuild was driven by a plain runtime class + execute_code calling it); probe TMP paths must include the child "Label" (UIFixTool attaches TMP to a Label child; the M9.3 LevelUp Title carries its TMP directly); the LevelUp choose button must be found by path (UpgradeButton0), not by sorting all scene buttons.
+- Final clean play/stop twice: 0 errors, 0 warnings.
+
+### Next
+M9.5 — Weapon Upgrade.

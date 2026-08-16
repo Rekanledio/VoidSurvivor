@@ -96,16 +96,10 @@ namespace VoidSurvivor.UI
 
         private static string BuildLabel(UpgradeData upgrade)
         {
-            // DisplayName / StatType / +Amount — no description field yet.
-            return $"{upgrade.DisplayName}\n{upgrade.StatType}\n+{FormatAmount(upgrade.Amount)}";
-        }
-
-        private static string FormatAmount(float amount)
-        {
-            // Integers show as integers; floats keep their raw value (no %).
-            return Mathf.Approximately(amount, Mathf.Round(amount))
-                ? ((int)Mathf.Round(amount)).ToString()
-                : amount.ToString("0.##");
+            // Chinese display: "+属性名 数值" (display mapping only; no data changes).
+            string stat = ShopPanel.StatName(upgrade.StatType);
+            string amount = ShopPanel.FormatAmount(upgrade.Amount);
+            return $"+{stat} {amount}";
         }
     }
 }
