@@ -219,3 +219,8 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - BossData : EnemyData (MaxHP 500/Dmg 20/Speed 1.5/Range 1.5/Cd 1.0 — impl params); BossAI pursuit + contact damage via CombatSystem (player-only, cooldown); EnemySpawner.SpawnBoss (same pool); Wave 10 = boss encounter (1 boss, W10 mult 1.45, no normal spawns) → BossSpawned → BossDefeated (via EnemyKilled match) → Victory. Boss death keeps EnemyDied/EnemyKilled/Pickup chain.
 - Verified: 47/47 probe PASS. Final play/stop twice: 0/0.
 - M8 tasks complete; Next: M8 Final Regression & Acceptance.
+
+## M8 — Wave System COMPLETE (2026-08-16)
+- M8.1 42/42, M8.2 39/39, M8.3 47/47, M8 Final 58/58 — all PASS. Full flow MainMenu→Playing→W1..W9→W10 Boss→BossDefeated→Victory verified; pause freeze; restart W1; boss contact damage; no wave 11; pools/weapons/EventBus regressions. 3 final Play/Stops 0/0.
+- Git clean at 8d20ede; temp probes deleted.
+- Next: M9.1 XP Level Up.

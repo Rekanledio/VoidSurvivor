@@ -639,3 +639,33 @@ M8.3 — Boss (Wave 10) (part of M8 — Wave System)
 
 ### Next
 M8 — Final Regression & Acceptance.
+
+## 2026-08-16
+### Milestone
+M8 — Final Regression & Acceptance — M8 COMPLETE (Wave System)
+
+### Acceptance
+- M8.1 Wave Lifecycle & Spawn Scheduling: 42/42 PASS
+- M8.2 Wave Difficulty Growth: 39/39 PASS
+- M8.3 Boss (Wave 10): 47/47 PASS
+- M8 Final Regression (temporary M8FinalRegressionProbe, deleted): 58/58 PASS, 0 FAILURES.
+
+### Integrated regression coverage
+- Full flow: MainMenu → Playing → Wave 1 (natural run: enemies spawn with multiplier 1.00, WaveCompleted(1) exactly once, Wave 2 auto-starts) → Paused/LevelUp/Shop freeze wave time (resume without re-publishing WaveStarted) → GameOver stops → MainMenu → Playing restarts at wave 1 → Wave 10 boss encounter: BossSpawned exactly once, no additional normal enemies, boss alive = no Victory; boss contact damage via CombatSystem (Source = boss) reduces PlayerHealth; boss death → EnemyKilled exactly once → BossDefeated exactly once → GameState.Victory (not re-triggered, wave stopped, no more boss spawns, no Wave 11); boss pickups dropped; boss pool reuse clean (IsDead/HP/multiplier reset, velocity zero).
+- M8.2: W1/W5/W10 multipliers 1.00/1.20/1.45; Chaser scaled at 1.2 (36 HP / 4.2 speed); Range/Cooldown unchanged; W1 schedule (5/8s/1.6) unchanged.
+- Four weapons: Pulse Gun killed 4 test enemies (within range) → EnemyKilled flowed + pickups dropped.
+- EventBus: WaveStarted per wave (4 total incl. restart + W10), boss events exactly once each, no duplicates.
+- Cross-play static state: 3 final Play/Stop cycles — 0 errors / 0 warnings each, no NullReference/MissingReference/residue.
+
+### Debugging notes (methodology)
+- Probe asserts fixed, not production: StartWave(10) legitimately publishes WaveStarted(10) (assert expected +1); a test enemy at y=9 was outside Pulse Gun's range 8 (physics boundary), then y=8 sat on the boundary — final positions y=4..7 killed reliably. Play-mode time advances slowly while MCP tool calls are frequent, so waits used longer sleeps with fewer queries.
+
+### Final verification
+- 3 clean final Play/Stop cycles: 0 errors, 0 warnings each.
+- Git clean; temporary probe deleted; no /tmp residue.
+
+### M8 Status
+M8 — Wave System: COMPLETE (lifecycle + difficulty + boss + final regression).
+
+### Next
+M9 — Roguelite / Upgrade (M9.1 XP Level Up).

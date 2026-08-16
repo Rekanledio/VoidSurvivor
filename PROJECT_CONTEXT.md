@@ -43,7 +43,7 @@
 Phase 1 — Core framework development
 
 ## Current Milestone
-M8 — Wave System (spawn waves; uses the M7 pools)
+M9 — Roguelite / Upgrade (XP Level Up, upgrades, shop)
 
 ## Completed Milestones
 - M0 — Project Documentation Initialization
@@ -62,10 +62,10 @@ M8 — Wave System (spawn waves; uses the M7 pools)
 - M6.5 — Arc Blade (2026-08-16): close-range area weapon — ArcBladeData (:WeaponData, Range = radius), ArcBlade one OverlapCircleAll strike per cooldown, every live in-range enemy hit once via PlayerAttack → CombatSystem. ArcBladeData (dmg 8/cd 0.9/range 2.5) + prefab (no projectile). Verified 29/29 probe PASS, 0 errors/warnings. **M6 — Weapon System: COMPLETE (all 4 weapons).**
 
 ## Next Milestone
-M8 — Wave System (spawn waves; uses the M7 pools)
+M9 — Roguelite / Upgrade (XP Level Up, upgrades, shop)
 
 ## Current Task
-M8 — Final Regression & Acceptance (M4–M8.3 complete: enemies, combat, pickups, 4 weapons, object pools, wave lifecycle + difficulty + boss).
+M9.1 — XP Level Up (M4–M8 complete: enemies, combat, pickups, 4 weapons, object pools, wave system incl. boss).
 
 ## Important Decisions
 - Do not add special differentiation mechanics for MVP.
