@@ -425,3 +425,24 @@ M6.3 — Scatter Blaster (second formal weapon, part of M6 — Weapon System)
 
 ### Next
 M6.4 — Boomerang.
+
+## 2026-08-16
+### Milestone
+M6.4 — Boomerang (third formal weapon, part of M6 — Weapon System)
+
+### Completed
+- Assets/Scripts/Weapons/BoomerangData.cs: WeaponData subclass adding maxDistance (6), outSpeed (8), returnSpeed (10).
+- Assets/Scripts/Weapons/BoomerangProjectile.cs: two-phase projectile. Outbound: moves straight at outSpeed until the distance from the spawn origin reaches maxDistance (world distance, not a timer). Return: re-aims at the player's CURRENT world position every physics frame (MovePosition at returnSpeed) and destroys itself within 0.5 units. Per-target hit-once via a HashSet — each throw hits a given enemy at most once while it may hit different enemies on the way out and back. Damage via CombatSystem with the player as Source. Static ActiveCount for the single-flight rule.
+- Assets/Scripts/Weapons/Boomerang.cs: auto-attack loop (Time.time cooldown), minimal targeting (nearest live EnemyHealth within Range → initial throw direction only; return never tracks the target), single-flight rule (no new throw while ActiveCount > 0).
+- Assets: BoomerangData.asset (Boomerang: baseDamage 7 / attackCooldown 1.2 / range 8 / maxDistance 6 / outSpeed 8 / returnSpeed 10 — medium damage, low fire rate, visible flight distance, return faster than outward; simple values for type identity, recorded), Boomerang.prefab + BoomerangProjectile.prefab (green ring placeholder). Not the default weapon (scene keeps Pulse Gun); equipped via WeaponManager for tests.
+- No Arc Blade, no upgrade/shop/roguelite, no object pool (M7), no homing/penetration/combo.
+
+### Verification
+- Compilation: 0 errors.
+- In-play probe (temporary BoomerangProbe, deleted): 37/37 PASS, 0 FAILURES — data (7 fields); slot-0 equip; auto throw launched + single-flight (one active); auto throw returned & destroyed; outbound speed 8.00 exact over fixed frames; moves toward target; reaches maxDistance 6.24; hit-once (HP 23 = 30-7 after crossing twice); player-sourced damage; manual throw returned & destroyed; return re-aims at the player's MOVED position; returned to moved player & destroyed; multi-target (2 hits, A and B each once); kill → EnemyKilled once with Killer == Player; dead enemy destroyed; pickups present; PlayerAttack/PlayerHealth/PlayerProgress/Pulse Gun/Scatter Blaster/Spawner (4 types) regressions.
+- Debugging notes (methodology): (a) early auto-throws fired while scene pursuers were still in range polluted the tracked throw — drained old boomerangs before the target test and disabled the weapon after the auto-throw check so manual throws are fully controlled; (b) the old loop checked `bp != null` before the yield but the object could be destroyed during the wait — re-checked inside the loop.
+- Manual play: boomerang visible out-and-return flight; auto throw + kill confirmed in play.
+- Final clean play/stop twice: 0 errors, 0 warnings.
+
+### Next
+M6.5 — Arc Blade.

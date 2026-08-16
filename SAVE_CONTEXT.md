@@ -166,3 +166,8 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - WeaponController.Owner lazy-resolve fix (runtime-instantiated weapons kept null source → projectiles hit the player and died; now resolves on access).
 - Verified: 42/42 probe PASS (fan geometry exact, cooldown 0.801s, kill → Killer == Player, regressions) + manual play. Final play/stop twice: 0 errors / 0 warnings.
 - Next: M6.4 Boomerang.
+
+## M6.4 — Boomerang (2026-08-16)
+- BoomerangData : WeaponData (+maxDistance 6/outSpeed 8/returnSpeed 10); Boomerang auto-throws with single-flight rule; BoomerangProjectile two-phase (Outbound to maxDistance, Return re-aims at player's current position, hit-once per enemy). BoomerangData (dmg 7/cd 1.2/range 8) + prefabs (green ring).
+- Verified: 37/37 probe PASS (speeds exact, hit-once, multi-target, return to moved player, kill → Killer == Player, regressions). Final play/stop twice: 0 errors / 0 warnings.
+- Next: M6.5 Arc Blade.
