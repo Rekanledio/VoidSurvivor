@@ -446,3 +446,27 @@ M6.4 — Boomerang (third formal weapon, part of M6 — Weapon System)
 
 ### Next
 M6.5 — Arc Blade.
+
+## 2026-08-16
+### Milestone
+M6.5 — Arc Blade (final formal weapon — M6 COMPLETE, part of M6 — Weapon System)
+
+### Completed
+- Assets/Scripts/Weapons/ArcBladeData.cs: WeaponData subclass reusing the base fields only (Range doubles as the attack radius; no new fields).
+- Assets/Scripts/Weapons/ArcBlade.cs: close-range area weapon — auto-attack loop (Time.time cooldown), each strike performs ONE Physics2D.OverlapCircleAll centered on the player, hits every live EnemyHealth inside Range exactly once (deduped list, dead targets skipped, self ignored) and routes each hit through the weapon's protected Attack(target, damage) → PlayerAttack → CombatSystem. No projectile, no single-target selection, no upgrade.
+- Assets: ArcBladeData.asset (Arc Blade: baseDamage 8 / attackCooldown 0.9 / range 2.5 — close range, low-mid fire rate, meaningful single-target damage; simple values for type identity, recorded) + ArcBlade.prefab (no projectile, no visual — attack logic only per design).
+- Not auto-equipped (scene keeps Pulse Gun); equipped via WeaponManager for tests.
+- No projectile/pool/upgrade/shop/roguelite/wave; M7 Object Pool remains separate.
+
+### Verification
+- Compilation: 0 errors.
+- In-play probe (temporary ArcBladeProbe, deleted): 29/29 PASS, 0 FAILURES — data (name/dmg 8/cd 0.9/range 2.5); slot-0 equip; first strike hits near (0,1.5) and edge (0,2.3) exactly once each (30 → 22); out-of-range target (0,6) untouched (HP 30); player never hit by own strike; per-target once per strike (near/edge 30 → 14 after 2 strikes, no repeats); strike cooldown ≈ 0.9 (0.900s measured in the prior run); kill → EnemyKilled once with Killer == Player; dead enemy destroyed; out-of-range still untouched after the kill; pickups present (4); Pulse Gun / Scatter Blaster / Boomerang / PlayerAttack / PlayerHealth / PlayerProgress / Spawner (4 types) regressions.
+- Debugging notes (methodology): two assert-timing fixes (waited for 6 hits = 3 strikes while asserting 1 strike's HP; kill baseline read after the target had already died) — not implementation bugs.
+- Manual play: area strikes active, multiple enemies damaged simultaneously by one strike, kill + pickups observed.
+- Final clean play/stop twice: 0 errors, 0 warnings.
+
+### M6 Status
+M6 — Weapon System: COMPLETE (all 4 weapons: Pulse Gun, Scatter Blaster, Boomerang, Arc Blade).
+
+### Next
+M7 — Object Pool (M7.1).

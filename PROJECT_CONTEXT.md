@@ -43,7 +43,7 @@
 Phase 1 — Core framework development
 
 ## Current Milestone
-M6 — Weapon System (4 weapons and slots)
+M7 — Object Pool (pooling for enemies / projectiles / pickups)
 
 ## Completed Milestones
 - M0 — Project Documentation Initialization
@@ -59,12 +59,13 @@ M6 — Weapon System (4 weapons and slots)
 - M6.2 — Pulse Gun (2026-08-16): first formal weapon — auto-attack loop + nearest-target + single PulseProjectile (Source = player) → CombatSystem; PlayerAttack gains damage overload. PulseGunData (dmg 5/cd 0.25/range 8) + prefabs; SC_Main PulseGun under player. Verified 27/27 probe PASS + manual auto-combat, 0 errors/warnings.
 - M6.3 — Scatter Blaster (2026-08-16): multi-pellet fan weapon — ScatterBlasterData (:WeaponData, count 5/spread 45), ScatterBlaster fires N PulseProjectiles in a deterministic uniform symmetric fan; WeaponController.Owner lazy-resolve fix. ScatterBlasterData (dmg 3/cd 0.8/range 7) + prefab. Verified 42/42 probe PASS + manual play, 0 errors/warnings.
 - M6.4 — Boomerang (2026-08-16): out-and-return weapon — BoomerangData (:WeaponData, maxDistance/outSpeed/returnSpeed), Boomerang single-flight auto-throw, BoomerangProjectile two-phase (out to maxDistance, return re-aims at player's current position, hit-once per enemy). BoomerangData (dmg 7/cd 1.2/range 8) + prefabs. Verified 37/37 probe PASS, 0 errors/warnings.
+- M6.5 — Arc Blade (2026-08-16): close-range area weapon — ArcBladeData (:WeaponData, Range = radius), ArcBlade one OverlapCircleAll strike per cooldown, every live in-range enemy hit once via PlayerAttack → CombatSystem. ArcBladeData (dmg 8/cd 0.9/range 2.5) + prefab (no projectile). Verified 29/29 probe PASS, 0 errors/warnings. **M6 — Weapon System: COMPLETE (all 4 weapons).**
 
 ## Next Milestone
-M6 — Weapon System (4 weapons and slots)
+M7 — Object Pool (pooling for enemies / projectiles / pickups)
 
 ## Current Task
-M6.5 — Arc Blade (per-weapon work; M6.1–M6.4 complete).
+M7.1 — Object Pool (M4–M6 complete: enemies, combat, pickups, player attack, 4 weapons).
 
 ## Important Decisions
 - Do not add special differentiation mechanics for MVP.

@@ -75,7 +75,8 @@
 - `ScatterBlaster` (M6.3) — multi-pellet fan weapon: auto-attack loop, nearest-target gives the fan center, fires `PulseProjectile` × N simultaneously in a deterministic uniform symmetric fan. `ScatterBlasterData : WeaponData` (+projectileCount 5 / spreadAngle 45; dmg 3 / cd 0.8 / range 7).
 - `WeaponController.Owner` (M6.3 fix) — lazy-resolves PlayerAttack on every access; weapons instantiated before parenting keep a valid player source.
 - `Boomerang` (M6.4) — out-and-return weapon: auto-throw with single-flight rule (no new throw while one is active); `BoomerangProjectile` two-phase (Outbound to maxDistance from spawn, Return re-aims at the player's CURRENT position, hit-once per enemy per throw via HashSet). `BoomerangData : WeaponData` (maxDistance 6 / outSpeed 8 / returnSpeed 10; dmg 7 / cd 1.2 / range 8).
-- Remaining formal weapon: Arc Blade (M6.5). No weapon upgrade/shop/roguelite yet; Object Pool is M7.
+- `ArcBlade` (M6.5) — close-range area weapon: auto-attack loop; each strike does one `Physics2D.OverlapCircleAll` centered on the player (Range = radius) and hits every live EnemyHealth inside exactly once (deduped, dead skipped, self ignored) via PlayerAttack → CombatSystem. `ArcBladeData : WeaponData` (dmg 8 / cd 0.9 / range 2.5).
+- M6 — Weapon System COMPLETE (Pulse Gun / Scatter Blaster / Boomerang / Arc Blade). No weapon upgrade/shop/roguelite yet; Object Pool is M7.
 
 ## Runtime Layer
 Runtime objects consume configuration assets and maintain mutable state at runtime.

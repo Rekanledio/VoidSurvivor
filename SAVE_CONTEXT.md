@@ -171,3 +171,9 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - BoomerangData : WeaponData (+maxDistance 6/outSpeed 8/returnSpeed 10); Boomerang auto-throws with single-flight rule; BoomerangProjectile two-phase (Outbound to maxDistance, Return re-aims at player's current position, hit-once per enemy). BoomerangData (dmg 7/cd 1.2/range 8) + prefabs (green ring).
 - Verified: 37/37 probe PASS (speeds exact, hit-once, multi-target, return to moved player, kill → Killer == Player, regressions). Final play/stop twice: 0 errors / 0 warnings.
 - Next: M6.5 Arc Blade.
+
+## M6.5 — Arc Blade (2026-08-16) — M6 COMPLETE
+- ArcBladeData : WeaponData (Range = attack radius); ArcBlade close-range area strike — one OverlapCircleAll per cooldown, every live in-range enemy hit once (deduped, dead skipped, self ignored), each via PlayerAttack → CombatSystem. ArcBladeData (dmg 8/cd 0.9/range 2.5) + prefab (no projectile).
+- Verified: 29/29 probe PASS (multi-target one strike, out-of-range untouched, player unharmed, per-target once, kill → Killer == Player, regressions). Final play/stop twice: 0 errors / 0 warnings.
+- M6 — Weapon System: COMPLETE (all 4 weapons).
+- Next: M7.1 Object Pool.
