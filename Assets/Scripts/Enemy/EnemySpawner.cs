@@ -1,14 +1,15 @@
 using System.Collections.Generic;
 using UnityEngine;
+using VoidSurvivor.Core;
 
 namespace VoidSurvivor.Enemy
 {
     /// <summary>
-    /// Minimal spawn entry (M4.6): instantiates the configured enemy prefabs
-    /// once around the player when the game starts. Spawns exactly one of each
-    /// prefab in the list at fixed offsets around the player (no wave logic,
-    /// no timers, no loops). Enemies run their own AI via EnemyController.
-    /// Full wave management belongs to M8.
+    /// Minimal spawn entry (M4.6, pooled since M7.2.2): gets enemies from
+    /// per-prefab <see cref="ObjectPool{T}"/>s around the player when the game
+    /// starts. Spawns exactly one of each prefab in the list at fixed offsets
+    /// around the player (no wave logic, no timers, no loops). Enemies run
+    /// their own AI via EnemyController. Full wave management belongs to M8.
     /// </summary>
     [DisallowMultipleComponent]
     public class EnemySpawner : MonoBehaviour
@@ -20,12 +21,26 @@ namespace VoidSurvivor.Enemy
         [SerializeField, Tooltip("Distance from the player at which enemies spawn.")]
         private float spawnDistance = 10f;
 
+        // One pool per prefab, created lazily on first use (M7.2.2).
+        private readonly Dictionary<GameObject, ObjectPool<EnemyController>> _pools = new();
+
         private void Start()
         {
             SpawnOnce();
         }
 
-        /// <summary>Spawns one instance of each configured prefab around the player.</summary>
+        private ObjectPool<EnemyController> GetPool(GameObject prefab)
+        {
+            if (!_pools.TryGetValue(prefab, out var pool))
+            {
+                var controllerPrefab = prefab.GetComponent<EnemyController>();
+                pool = new ObjectPool<EnemyController>(controllerPrefab, 1, transform);
+                _pools.Add(prefab, pool);
+            }
+            return pool;
+        }
+
+        /// <summary>Spawns one instance of each configured prefab around the player (pooled).</summary>
         private void SpawnOnce()
         {
             Vector2 origin = Vector2.zero;
@@ -53,7 +68,7 @@ namespace VoidSurvivor.Enemy
                     continue;
                 }
 
-                Instantiate(prefab, origin + offsets[i] * spawnDistance, Quaternion.identity);
+                EnemyController.Spawn(GetPool(prefab), origin + offsets[i] * spawnDistance);
             }
         }
     }

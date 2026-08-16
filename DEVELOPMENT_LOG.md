@@ -507,3 +507,22 @@ M7.2.1 — Projectile Pool Integration (part of M7 — Object Pool)
 
 ### Next
 M7.2.2 — Enemy / Pickup Pool Integration.
+
+## 2026-08-16
+### Milestone
+M7.2.2 — Enemy Pool Integration (part of M7 — Object Pool)
+
+### Completed
+- EnemyController.cs: implements IPoolable. Static Spawn(pool, position) = pool.Get + _myPool injection + reposition. OnSpawn: EnemyHealth.ResetForSpawn() + notifies child IPoolable components (skipping itself) so per-type AI resets. OnDespawn: notifies child IPoolable (AI stop) + zeroes Rigidbody2D velocity/angularVelocity. Death path: OnEnemyDied → DespawnSelf → pool.Release (fallback Destroy only when never pooled). EventBus subscription stays in Awake (once per instance creation) — pool reuse never re-subscribes; inactive pooled enemies simply ignore EnemyDied for themselves.
+- EnemyHealth.cs: added ResetForSpawn() — restores MaxHP, clears _isDead (death event guard already prevents duplicate EnemyDied per life).
+- EnemySpawner.cs: owns per-prefab pools (Dictionary<GameObject, ObjectPool<EnemyController>>, lazily created, capacity 1, parent = spawner transform) and spawns via EnemyController.Spawn — M4.6 offsets/count/spawn rules unchanged.
+- ShooterAI.cs: implements IPoolable — OnSpawn resets _nextAttackTime (no stale cooldown across lives). Chaser/Runner/Tank AI are stateless (movement only) — no per-state reset needed; they stop when inactive/IsDead.
+
+### Verification
+- Compilation: 0 errors.
+- In-play probe (temporary EnemyPoolIntegrationProbe, deleted): 31/31 PASS, 0 FAILURES — pool pre-warm 1/1, Spawn activates + alive + full HP, damage on first life, EnemyDied exactly once, dead released (inactive) + pool restored, reuse same instance, re-spawn clears IsDead + restores HP, second death → EnemyDied once again, double-release safe, Chaser re-tracks (moves toward player), released enemy never moves, Chaser re-tracks after respawn, Shooter fires fresh + after respawn (verified via DamageApplied with source == shooter, avoiding unreliable projectile polling) + stops when dead, Clear empties pools + destroys instances (no residue), PlayerHealth/PlayerProgress/PickupSystem (10 pickups)/EnemyKilled/weapon prefabs regressions.
+- Debugging notes (methodology): shooter-fire verification switched from projectile counting (unreliable — projectile may hit the player within a frame) to DamageApplied(source == shooter); manual shooters were cross-fired by the scene Shooter and by the scene Pulse Gun — disabled Pulse Gun and re-moved scene enemies before manual tests.
+- Final clean play/stop twice: 0 errors, 0 warnings.
+
+### Next
+M7.2.3 — Pickup Pool Integration.

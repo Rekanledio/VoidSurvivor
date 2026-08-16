@@ -187,3 +187,8 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - PulseProjectile / BoomerangProjectile / Shooter Projectile → ObjectPool (static shared per-type pool; PulseGun+ScatterBlaster share PulseProjectile pool). Spawn = Get+Init; lifetime/hit → Release. IPoolable OnDespawn clears runtime state. Boomerang ActiveCount via Spawn/DespawnSelf (not OnDestroy). Static reset on play start.
 - Verified: 38/38 probe PASS + regressions. Final play/stop twice: 0 errors / 0 warnings.
 - Next: M7.2.2 Enemy / Pickup Pool Integration.
+
+## M7.2.2 — Enemy Pool Integration (2026-08-16)
+- EnemyController implements IPoolable (Spawn(pool,pos); OnSpawn resets health + notifies AI; OnDespawn stops AI + zeroes velocity; death → Release). EnemyHealth.ResetForSpawn. EnemySpawner owns per-prefab lazy pools (M4.6 rules unchanged). ShooterAI OnSpawn resets cooldown.
+- Verified: 31/31 probe PASS (HP/IsDead reset, EnemyDied once per life, Chaser re-track, Shooter fires+reset+stops, double-release, Clear, regressions). Final play/stop twice: 0 errors / 0 warnings.
+- Next: M7.2.3 Pickup Pool Integration.

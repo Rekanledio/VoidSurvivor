@@ -9,25 +9,38 @@ namespace VoidSurvivor.Enemy
     /// shared by all enemy types (stats, health, physics body, player target)
     /// and provides the extension point for per-type AI (M4.2+).
     ///
-    /// M5.2: also acts as the enemy death/despawn layer — on its own
-    /// <see cref="EnemyDied"/> it destroys the enemy GameObject (plain Destroy;
-    /// Object Pool arrives in M7).
+    /// M5.2: acts as the enemy death/despawn layer — on its own
+    /// <see cref="EnemyDied"/> it releases itself back to the pool (M7.2.2).
+    /// M7.2.2: pooled — Spawn() from an <see cref="ObjectPool{T}"/>, OnSpawn
+    /// resets health + notifies child AI components, OnDespawn stops physics and
+    /// notifies child AI. EventBus subscription happens once in Awake (instance
+    /// creation); pool reuse never re-subscribes.
     ///
     /// No AI behavior is implemented here — Chaser / Runner / Shooter / Tank
-    /// derive from or compose this component in later M4 subtasks.
+    /// compose this component in later M4 subtasks.
     /// </summary>
     [DisallowMultipleComponent]
-    public class EnemyController : MonoBehaviour
+    public class EnemyController : MonoBehaviour, IPoolable
     {
         private EnemyStats _stats;
         private EnemyHealth _health;
         private Rigidbody2D _body;
         private PlayerHealth _target;
+        private ObjectPool<EnemyController> _myPool;
 
         public EnemyStats Stats => _stats;
         public EnemyHealth Health => _health;
         public Rigidbody2D Body => _body;
         public PlayerHealth Target => _target;
+
+        /// <summary>Gets an enemy from the pool and places it at the given position.</summary>
+        public static EnemyController Spawn(ObjectPool<EnemyController> pool, Vector2 position)
+        {
+            var enemy = pool.Get();
+            enemy._myPool = pool;
+            enemy.transform.position = position;
+            return enemy;
+        }
 
         private void Awake()
         {
@@ -47,20 +60,59 @@ namespace VoidSurvivor.Enemy
             EventBus.Unsubscribe<EnemyDied>(OnEnemyDied);
         }
 
+        private void Start()
+        {
+            // Resolve the player target once (not a hot path). PlayerHealth is a
+            // stable singleton in the MVP scene. Runs on the first active frame
+            // of each instance (pool warmup instances get it on their first Get).
+            _target = Object.FindFirstObjectByType<PlayerHealth>();
+        }
+
         private void OnEnemyDied(EnemyDied e)
         {
             if (e.Enemy == gameObject)
             {
-                Destroy(gameObject);
+                DespawnSelf();
             }
         }
 
-        private void Start()
+        public void OnSpawn()
         {
-            // Resolve the player target once (not a hot path). PlayerHealth is a
-            // stable singleton in the MVP scene; re-lookup per enemy type if the
-            // player is ever pooled/respawned (M7/M12).
-            _target = Object.FindFirstObjectByType<PlayerHealth>();
+            // Restore a "brand new enemy" state: full HP, alive.
+            _health.ResetForSpawn();
+            // Let per-type AI components (which implement IPoolable) reset too.
+            var poolables = GetComponents<IPoolable>();
+            for (int i = 0; i < poolables.Length; i++)
+            {
+                if (!ReferenceEquals(poolables[i], this)) poolables[i].OnSpawn();
+            }
+        }
+
+        public void OnDespawn()
+        {
+            // Stop child AI state first, then stop physics.
+            var poolables = GetComponents<IPoolable>();
+            for (int i = 0; i < poolables.Length; i++)
+            {
+                if (!ReferenceEquals(poolables[i], this)) poolables[i].OnDespawn();
+            }
+            if (_body != null)
+            {
+                _body.linearVelocity = Vector2.zero;
+                _body.angularVelocity = 0f;
+            }
+        }
+
+        private void DespawnSelf()
+        {
+            if (_myPool != null)
+            {
+                _myPool.Release(this);
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }

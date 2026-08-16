@@ -1,4 +1,5 @@
 using UnityEngine;
+using VoidSurvivor.Core;
 
 namespace VoidSurvivor.Enemy
 {
@@ -8,16 +9,29 @@ namespace VoidSurvivor.Enemy
     /// Movement: approach only when farther than AttackRange, stop once in range
     /// (no kiting/wall-hugging logic). Reuses EnemyController refs — no per-frame
     /// GetComponent/Find. Stops moving/attacking when dead.
+    ///
+    /// M7.2.2: implements IPoolable so the attack cooldown timer resets on
+    /// respawn (no stale cooldown from a previous life).
     /// </summary>
     [DisallowMultipleComponent]
     [RequireComponent(typeof(EnemyController))]
-    public class ShooterAI : MonoBehaviour
+    public class ShooterAI : MonoBehaviour, IPoolable
     {
         [SerializeField, Tooltip("Minimal M4.4 projectile prefab. M5 replaces this with the unified combat pipeline.")]
         private GameObject projectilePrefab;
 
         private EnemyController _controller;
         private float _nextAttackTime;
+
+        public void OnSpawn()
+        {
+            _nextAttackTime = 0f; // no stale cooldown from a previous life
+        }
+
+        public void OnDespawn()
+        {
+            // Movement/attack stop automatically when inactive; nothing to clear.
+        }
 
         private void Awake()
         {

@@ -33,6 +33,13 @@ namespace VoidSurvivor.Enemy
             _currentHP = _stats.MaxHP;
         }
 
+        /// <summary>Restores full HP and clears the dead flag (pooled respawn, M7.2.2).</summary>
+        public void ResetForSpawn()
+        {
+            _currentHP = _stats != null ? _stats.MaxHP : 0f;
+            _isDead = false;
+        }
+
         /// <summary>Applies damage; clamps HP to >= 0; triggers death exactly once.</summary>
         public void TakeDamage(float damage)
         {
