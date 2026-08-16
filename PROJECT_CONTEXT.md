@@ -65,7 +65,7 @@ M9 — Roguelite / Upgrade (XP Level Up, upgrades, shop)
 M9 — Roguelite / Upgrade (XP Level Up, upgrades, shop)
 
 ## Current Task
-M9.4 — Shop (M4–M9.3 complete).
+M9.5 — Weapon Upgrade (M4–M9.4 complete).
 
 ## Important Decisions
 - Do not add special differentiation mechanics for MVP.

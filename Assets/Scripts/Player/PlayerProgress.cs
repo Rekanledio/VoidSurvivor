@@ -48,5 +48,19 @@ namespace VoidSurvivor.Player
         {
             if (amount > 0) _currentGold += amount;
         }
+
+        /// <summary>
+        /// The ONLY gold spending entry (M9.4). Returns true and deducts when
+        /// amount &gt; 0 and enough gold is available; otherwise returns false
+        /// and changes nothing. Gold never goes negative.
+        /// </summary>
+        public bool TrySpendGold(int amount)
+        {
+            if (amount <= 0) return false;
+            if (_currentGold < amount) return false;
+
+            _currentGold -= amount;
+            return true;
+        }
     }
 }

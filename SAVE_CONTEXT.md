@@ -239,3 +239,8 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - UpgradeOptionsGenerated(option0..2) event published by UpgradeManager after Options fully written. LevelUpPanel (UI ns, component on ACTIVE Canvas — inactive never Awakes): GameStateChanged show/hide, event-driven 3-button labels (DisplayName/StatType/+Amount), onClick → Select(i). Scene: Canvas (Overlay+Scaler 1920x1080+Raycaster) + EventSystem(InputSystemUIInputModule) + LevelUpPanel (Title+3 buttons, inactive). Consecutive pending level-ups refresh in place; hides on Playing.
 - Verified: 55/55 probe PASS (real button clicks, refresh across sets, no duplicates, guards). Final play/stop twice: 0/0.
 - Next: M9.4 Shop.
+
+## M9.4 — Shop (2026-08-16)
+- TrySpendGold (only spend entry). ShopItemData : SO (Weapon/StatBonus, price, weaponPrefab | Upgrade ref) + 14 assets (weapon 30 / stat 20 — placeholders). ShopManager (scene): WaveCompleted W1..W9 → 4 products (2 weapon + 2 stat, unique) → Shop; Purchase (stat via ApplyUpgrade; weapon via Instantiate+Equip empty slot, gold AFTER equip, already-owned/no-slot rejected no-spend); Refresh 20 flat (placeholder); Continue → Playing (wave resumes). ShopPanel on Canvas (LevelUpPanel pattern) + ShopProductsGenerated event. Single Canvas/EventSystem.
+- Verified: 58/58 probe PASS (gold rules, W1→Shop freeze, purchases, already-owned PulseGun, no-slot, refresh, continue, W10→Victory no shop, UI single instance, regressions). Final play/stop twice: 0/0.
+- Next: M9.5 Weapon Upgrade.

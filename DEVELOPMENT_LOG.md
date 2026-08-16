@@ -728,3 +728,25 @@ M9.3 — LevelUp UI Panel (part of M9 — Roguelite / Upgrade)
 
 ### Next
 M9.4 — Shop.
+
+## 2026-08-16
+### Milestone
+M9.4 — Shop (part of M9 — Roguelite / Upgrade)
+
+### Completed
+- Assets/Scripts/Player/PlayerProgress.cs: added TrySpendGold(int) — the ONLY gold-spending entry; amount <= 0 or insufficient gold → false (nothing changes), otherwise deducts and returns true; gold never negative.
+- Assets/Scripts/Shop/ShopItemData.cs (new): ScriptableObject (ShopItemType Weapon/StatBonus, DisplayName, Price, WeaponPrefab, Upgrade reference). WeaponUpgrade type deferred.
+- Assets/ScriptableObjects/Shop/: 14 assets — 4 weapons (30 gold) + 10 stat bonuses (20 gold), referencing the existing weapon prefabs and UpgradeData. Prices are M9.4 implementation placeholders, NOT GAME_DESIGN.
+- Assets/Scripts/Shop/ShopManager.cs (new, scene GameObject "ShopManager"): listens WaveCompleted (W1..W9; Wave 10 never publishes it → no shop). GenerateProducts: 4 products = 2 weapons + 2 stat bonuses, unique per shop (M9.4 rule), no weights/rarity. Purchase(i): stat bonus → UpgradeData → PlayerStats.ApplyUpgrade; weapon → prefab Instantiate + WeaponManager.Equip into an EMPTY slot, gold spent AFTER a successful equip, already-owned (same WeaponData) and no-empty-slot rejected WITHOUT spending. SetForcedProducts test hook. Refresh(): flat 20 gold (M9.4 placeholder, unlimited) → re-roll + reset purchase state. Continue(): Shop → Playing (WaveManager resumes the pre-started next wave).
+- Assets/Scripts/Core/GameEvents.cs: added ShopProductsGenerated(product0..3) — published after the product list is fully written (entry, purchase, refresh).
+- Assets/Scripts/UI/ShopPanel.cs (new, on the ACTIVE Canvas — same pattern as LevelUpPanel): GameStateChanged show/hide (Shop visible, other states hidden), ShopProductsGenerated drives the 4 product buttons (DisplayName/ItemType/Price) + gold text, Purchase/Refresh/Continue buttons wired to ShopManager. Single Canvas/EventSystem preserved.
+- Assets/Scenes/SC_Main.unity: ShopManager object + ShopPanel hierarchy (Title, GoldText, 4 ProductButtons, RefreshButton, ContinueButton) under the existing Canvas.
+
+### Verification
+- Compilation: 0 errors.
+- In-play probe (temporary M94ShopProbe, deleted): 58/58 PASS, 0 FAILURES — gold spend rules (<=0/insufficient rejected, never negative); W1 completes naturally → Shop state + ShopPanel visible + wave elapsed frozen; 4 products unique, 2 weapons + 2 stat bonuses; stat purchase (20 gold, applied, no double-buy); weapon purchase into an empty slot (30 gold, equipped, SlotCount unchanged, no double-buy); ALREADY-OWNED PulseGun product rejected without spending; no-empty-slot weapon purchase rejected without spending; Refresh (20 gold, re-roll, purchase state reset, re-published; insufficient gold fails without deduction); Continue → Playing → next wave resumes with no duplicate WaveStarted; ShopPanel hidden after Continue; W10 boss → BossDefeated → Victory with NO shop products (no WaveCompleted(10)); Victory hides the panel; UI buttons exist; exactly 1 Canvas / 1 EventSystem; regressions (PlayerProgress/PlayerStats/PlayerHealth/Pulse Gun/Boomerang ActiveCount).
+- Debugging notes (methodology): (a) GenerateOptions-style bug — DrawUnique compared _products.Count against the per-pool target, so the second pool (stats) drew nothing when the first pool already filled 2; fixed with a local drawn counter. (b) The scene Pulse Gun self-equips into slot 0 (M6.2 Start behavior), so the PulseGun shop product is legitimately "already owned" — the probe became deterministic via SetForcedProducts (Boomerang/ArcBlade/MaxHP/MoveSpeed) plus sufficient gold, and explicitly asserts the already-owned rejection. (c) Refresh event-count assertion recorded the counter AFTER Refresh() (which already published) — moved the baseline before the call.
+- Final clean play/stop twice: 0 errors, 0 warnings.
+
+### Next
+M9.5 — Weapon Upgrade.

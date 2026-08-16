@@ -215,4 +215,30 @@ namespace VoidSurvivor.Core
             Option2 = option2;
         }
     }
+
+    /// <summary>
+    /// Published by <see cref="VoidSurvivor.Shop.ShopManager"/> AFTER the current
+    /// product list has been fully written (M9.4) — on entry to the shop, after a
+    /// purchase (state changed) and after a refresh. UI listeners read the
+    /// complete products and re-query purchase state. Fact-only event.
+    /// </summary>
+    public readonly struct ShopProductsGenerated
+    {
+        public VoidSurvivor.Shop.ShopItemData Product0 { get; }
+        public VoidSurvivor.Shop.ShopItemData Product1 { get; }
+        public VoidSurvivor.Shop.ShopItemData Product2 { get; }
+        public VoidSurvivor.Shop.ShopItemData Product3 { get; }
+
+        public ShopProductsGenerated(
+            VoidSurvivor.Shop.ShopItemData product0,
+            VoidSurvivor.Shop.ShopItemData product1,
+            VoidSurvivor.Shop.ShopItemData product2,
+            VoidSurvivor.Shop.ShopItemData product3)
+        {
+            Product0 = product0;
+            Product1 = product1;
+            Product2 = product2;
+            Product3 = product3;
+        }
+    }
 }
