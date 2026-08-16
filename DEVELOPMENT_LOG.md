@@ -546,3 +546,34 @@ M7.2 — Pool Integration COMPLETE (Projectile M7.2.1 + Enemy M7.2.2 + Pickup M7
 
 ### Next
 M7 — final overall regression/acceptance; then M8 — Wave System.
+
+## 2026-08-16
+### Milestone
+M7 — Final Regression & Acceptance — M7 COMPLETE (Object Pool)
+
+### Acceptance
+- M7.1 Object Pool Base Framework: 19/19 PASS
+- M7.2.1 Projectile Pool Integration: 38/38 PASS
+- M7.2.2 Enemy Pool Integration: 31/31 PASS
+- M7.2.3 Pickup Pool Integration: 34/34 PASS
+- M7 Final Regression (temporary M7FinalRegressionProbe, deleted): 45/45 PASS, 0 FAILURES.
+
+### Integrated regression coverage
+- Pool chain: PulseProjectile pooled spawn/release/reuse; Boomerang ActiveCount 0→1→0 with full flight; Enemy pooled spawn → death → release → respawn with HP/IsDead reset and can die again; XP Pickup collect +10 + recycle (+20).
+- Full lifecycle repeated 3x: enemy killed → EnemyDied + EnemyKilled exactly once each → enemy released → 1 XP + 1 Gold spawned at death position → player collects +10 XP +5 Gold → PickupCollected exactly twice → all pickups released (none active).
+- Four weapons together (Pulse Gun + ScatterBlaster + Boomerang + ArcBlade equipped): killed clustered targets, Player never damaged by own weapons, Boomerang single-flight holds with auto-throw, weapon kills dropped pooled pickups. ArcBlade (OverlapCircleAll, no projectile pool) verified working in the mix.
+- EventBus: EnemyDied/EnemyKilled/PickupCollected exactly once per occurrence across all rounds; no duplicate subscribe (pool reuse never re-subscribes).
+- Cross-play static state: 3 final Play/Stop cycles — pools reset per play, Boomerang ActiveCount starts 0 each time, static projectile pools reset, no NullReference/MissingReference/duplicate events.
+
+### Debugging notes
+- Phase A enemy-death check used EnemyHealth.TakeDamage (not CombatSystem) so the death releases the enemy via EnemyDied WITHOUT spawning pickups — keeps the manual phase side-effect free (CombatSystem kill would drop pickups at the manual test position and linger).
+
+### Final verification
+- 3 clean final Play/Stop cycles: 0 errors, 0 warnings each.
+- Git clean; temporary probe deleted; no /tmp residue.
+
+### M7 Status
+M7 — Object Pool: COMPLETE.
+
+### Next
+M8 — Wave System (M8.1).

@@ -43,7 +43,7 @@
 Phase 1 — Core framework development
 
 ## Current Milestone
-M7 — Object Pool (pooling for enemies / projectiles / pickups)
+M8 — Wave System (spawn waves; uses the M7 pools)
 
 ## Completed Milestones
 - M0 — Project Documentation Initialization
@@ -62,10 +62,10 @@ M7 — Object Pool (pooling for enemies / projectiles / pickups)
 - M6.5 — Arc Blade (2026-08-16): close-range area weapon — ArcBladeData (:WeaponData, Range = radius), ArcBlade one OverlapCircleAll strike per cooldown, every live in-range enemy hit once via PlayerAttack → CombatSystem. ArcBladeData (dmg 8/cd 0.9/range 2.5) + prefab (no projectile). Verified 29/29 probe PASS, 0 errors/warnings. **M6 — Weapon System: COMPLETE (all 4 weapons).**
 
 ## Next Milestone
-M7 — Object Pool (pooling for enemies / projectiles / pickups)
+M8 — Wave System (spawn waves; uses the M7 pools)
 
 ## Current Task
-M7.1 — Object Pool (M4–M6 complete: enemies, combat, pickups, player attack, 4 weapons).
+M8.1 — Wave System (M4–M7 complete: enemies, combat, pickups, 4 weapons, object pools).
 
 ## Important Decisions
 - Do not add special differentiation mechanics for MVP.

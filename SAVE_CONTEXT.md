@@ -198,3 +198,9 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - Verified: 34/34 probe PASS (amounts 10/5, collect-once, recycle, death-position, no state bleed, regressions). Final play/stop twice: 0 errors / 0 warnings.
 - M7.2 complete: Projectile (M7.2.1) + Enemy (M7.2.2) + Pickup (M7.2.3) all pooled.
 - Next: M7 final regression/acceptance; then M8 Wave System.
+
+## M7 — Object Pool COMPLETE (2026-08-16)
+- M7.1 Framework 19/19, M7.2.1 Projectile 38/38, M7.2.2 Enemy 31/31, M7.2.3 Pickup 34/34, M7 Final Regression 45/45 — all PASS.
+- Full kill→drop→collect→release lifecycle verified 3x; four weapons together; EventBus once-per-event; cross-play static state clean (3 final Play/Stops, 0/0 each).
+- Git clean at 0723224; temp probes deleted.
+- Next: M8.1 Wave System.
