@@ -244,3 +244,6 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - TrySpendGold (only spend entry). ShopItemData : SO (Weapon/StatBonus, price, weaponPrefab | Upgrade ref) + 14 assets (weapon 30 / stat 20 — placeholders). ShopManager (scene): WaveCompleted W1..W9 → 4 products (2 weapon + 2 stat, unique) → Shop; Purchase (stat via ApplyUpgrade; weapon via Instantiate+Equip empty slot, gold AFTER equip, already-owned/no-slot rejected no-spend); Refresh 20 flat (placeholder); Continue → Playing (wave resumes). ShopPanel on Canvas (LevelUpPanel pattern) + ShopProductsGenerated event. Single Canvas/EventSystem.
 - Verified: 58/58 probe PASS (gold rules, W1→Shop freeze, purchases, already-owned PulseGun, no-slot, refresh, continue, W10→Victory no shop, UI single instance, regressions). Final play/stop twice: 0/0.
 - Next: M9.5 Weapon Upgrade.
+
+## TMP CJK Font Integration (2026-08-16)
+- Noto Sans SC static SDF font asset (Assets/Fonts/NotoSansSC SDF.asset + sub-asset atlas/material) baked from Assets/Fonts/NotoSansSC-Regular.otf (OFL-1.1) covering all 71 UI chars + punctuation (lookup=83, missing=0). All scene TMPs wired to NotoSansSC SDF directly (no fallback chain). Shop play-mode screenshot proves full Chinese rendering with NO □ placeholders. LevelUp NRE is a pre-existing UI bug, not font-related.

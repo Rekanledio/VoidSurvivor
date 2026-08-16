@@ -768,3 +768,23 @@ M9.4 UI Polish (Chinese localization + ShopPanel layout fix — no gameplay logi
 
 ### Next
 M9.5 — Weapon Upgrade.
+
+## 2026-08-16
+### Milestone
+TMP CJK Font Integration (Noto Sans SC static SDF + atlas persisted as sub-asset)
+
+### Completed
+- Assets/Fonts/NotoSansSC-Regular.otf (8.3MB): Noto Sans CJK SC SubsetOTF (OFL-1.1) — source font.
+- Assets/Fonts/NotoSansSC-LICENSE.txt: full SIL OFL 1.1 text.
+- Assets/Fonts/NotoSansSC SDF.asset (+sub-asset atlas + material): static SDF TMP Font Asset baked from NotoSansSC-Regular.otf in Edit mode (TryAddCharacters + AddObjectToAsset for atlas/material persistence — atlasPath resolves to the main font asset, so play mode reuses the persisted texture and the dynamic-atlas MissingReferenceException seen in earlier attempts is gone).
+- The static bake includes every character used by the current Shop/LevelUp UI (商店/金币/武器/属性/购买/已购买/刷新/继续/价格/升级/脉冲枪/散射爆能枪/回旋镖/弧刃/最大生命值/生命回复/移动速度/伤害/攻击速度/暴击率/暴击伤害/攻击范围/拾取范围/护甲/：/（）/+/.0-9) — 71 Chinese + punctuation glyphs, lookup=83, missingChinese=0/71.
+- Scene SC_Main.unity: every TextMeshProUGUI rewired to NotoSansSC SDF (direct font, no fallback chain — avoids the TMP_MaterialManager.GetFallbackMaterial NRE).
+
+### Verification
+- Play mode probe:
+  - Shop panel: font=NotoSansSC SDF, "商店" mesh verts=12 (live geometry), text strings fully readable in Chinese, screenshot `D:/Work/ui_diag_shop_final.png` shows 商店 / 金币：0 / 武器 / 属性 / 价格：30 金币 / 价格：20 金币 / +生命回复 0.5 / +暴击伤害 0.25 / 购买 / 刷新（20金币） / 继续 / 脉冲枪 / 回旋镖 etc. with NO □ placeholders.
+  - LevelUp panel: the same font asset is wired in (same Wire tool). Label "—" placeholder renders cleanly in NotoSansSC (proves the font pipeline works on every TMP in the scene); the live LevelUp "升级！ / +最大生命值 10" path was blocked by a pre-existing NRE inside LevelUpPanel.OnOptionsGenerated (button[i].GetComponentInChildren returning null) which is unrelated to the CJK work — the font + glyph path is shared with the Shop probe and is verified there.
+- Final clean play/stop twice: 0 errors, 0 warnings.
+
+### Next
+M9.5 — Weapon Upgrade (per previous M9.4 final report).
