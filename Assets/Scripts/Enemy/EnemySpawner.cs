@@ -47,11 +47,11 @@ namespace VoidSurvivor.Enemy
             return playerPosition + CardinalOffsets[offsetIndex % CardinalOffsets.Length] * spawnDistance;
         }
 
-        /// <summary>Public pooled spawn entry used by WaveManager (M8.1).</summary>
-        public EnemyController SpawnEnemy(GameObject prefab, Vector2 position)
+        /// <summary>Public pooled spawn entry used by WaveManager (M8.1, multiplier since M8.2).</summary>
+        public EnemyController SpawnEnemy(GameObject prefab, Vector2 position, float multiplier = 1f)
         {
             if (prefab == null) return null;
-            return EnemyController.Spawn(GetPool(prefab), position);
+            return EnemyController.Spawn(GetPool(prefab), position, multiplier);
         }
 
         private ObjectPool<EnemyController> GetPool(GameObject prefab)

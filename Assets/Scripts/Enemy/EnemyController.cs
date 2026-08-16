@@ -33,12 +33,16 @@ namespace VoidSurvivor.Enemy
         public Rigidbody2D Body => _body;
         public PlayerHealth Target => _target;
 
-        /// <summary>Gets an enemy from the pool and places it at the given position.</summary>
-        public static EnemyController Spawn(ObjectPool<EnemyController> pool, Vector2 position)
+        /// <summary>Gets an enemy from the pool, applies the wave multiplier and places it.</summary>
+        public static EnemyController Spawn(ObjectPool<EnemyController> pool, Vector2 position, float waveMultiplier = 1f)
         {
             var enemy = pool.Get();
             enemy._myPool = pool;
             enemy.transform.position = position;
+            // Order matters: multiplier FIRST, then ResetForSpawn so CurrentHP uses
+            // the scaled MaxHP (M8.2). Pool reuse overwrites the previous wave's value.
+            enemy._stats.WaveMultiplier = waveMultiplier;
+            enemy._health.ResetForSpawn();
             return enemy;
         }
 
@@ -101,6 +105,9 @@ namespace VoidSurvivor.Enemy
                 _body.linearVelocity = Vector2.zero;
                 _body.angularVelocity = 0f;
             }
+            // Reset the wave multiplier so a direct pool.Get (outside Spawn) can
+            // never leak a previous wave's difficulty (M8.2).
+            if (_stats != null) _stats.WaveMultiplier = 1f;
         }
 
         private void DespawnSelf()

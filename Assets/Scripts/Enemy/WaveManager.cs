@@ -13,8 +13,9 @@ namespace VoidSurvivor.Enemy
     ///
     /// GameState linkage: time only advances while Playing; Paused/LevelUp/Shop
     /// freeze it; GameOver/Victory stop it; re-entering Playing after GameOver/
-    /// Victory starts a fresh run at wave 1. No difficulty scaling (M8.2), no
-    /// boss (M8.3), no Victory/Boss logic.
+    /// Victory starts a fresh run at wave 1. Difficulty grows via a per-wave
+    /// runtime multiplier (M8.2: scales enemy HP/Damage/MoveSpeed at spawn; the
+    /// boss is M8.3; no Victory/Boss logic).
     /// </summary>
     [DisallowMultipleComponent]
     [RequireComponent(typeof(EnemySpawner))]
@@ -22,36 +23,39 @@ namespace VoidSurvivor.Enemy
     {
         public const int TotalWaves = 10;
 
-        /// <summary>Per-wave schedule (M8.1 placeholder tuning, not final difficulty design).</summary>
+        /// <summary>Per-wave schedule + difficulty multiplier (M8.1 tuning + M8.2 multiplier; not final difficulty design).</summary>
         public readonly struct WaveConfig
         {
             public readonly float Duration;
             public readonly int EnemyCount;
             public readonly float SpawnInterval;
+            public readonly float Multiplier;
 
-            public WaveConfig(float duration, int enemyCount, float spawnInterval)
+            public WaveConfig(float duration, int enemyCount, float spawnInterval, float multiplier)
             {
                 Duration = duration;
                 EnemyCount = enemyCount;
                 SpawnInterval = spawnInterval;
+                Multiplier = multiplier;
             }
         }
 
-        // MVP placeholder scheduling: duration/count rise, interval falls —
-        // a simple ramp toward harder waves WITHOUT touching enemy stats.
-        // Wave 10 currently spawns normal enemies only; the boss is M8.3.
+        // M8.1 placeholder scheduling: duration/count rise, interval falls.
+        // M8.2 adds the wave difficulty multiplier (scales HP/Damage/MoveSpeed at
+        // runtime only — EnemyData assets untouched). Simple base slope:
+        // W1 1.00 → W10 1.45. Wave 10 currently spawns normal enemies only.
         private static readonly WaveConfig[] WaveTable =
         {
-            new(8f, 5, 1.6f),   // W1
-            new(9f, 6, 1.5f),   // W2
-            new(10f, 7, 1.4f),  // W3
-            new(11f, 8, 1.3f),  // W4
-            new(12f, 9, 1.2f),  // W5
-            new(13f, 10, 1.1f), // W6
-            new(14f, 11, 1.0f), // W7
-            new(15f, 12, 0.9f), // W8
-            new(16f, 13, 0.8f), // W9
-            new(12f, 15, 0.7f), // W10 (boss entry reserved for M8.3)
+            new(8f, 5, 1.6f, 1.00f),  // W1
+            new(9f, 6, 1.5f, 1.05f),  // W2
+            new(10f, 7, 1.4f, 1.10f), // W3
+            new(11f, 8, 1.3f, 1.15f), // W4
+            new(12f, 9, 1.2f, 1.20f), // W5
+            new(13f, 10, 1.1f, 1.25f),// W6
+            new(14f, 11, 1.0f, 1.30f),// W7
+            new(15f, 12, 0.9f, 1.35f),// W8
+            new(16f, 13, 0.8f, 1.40f),// W9
+            new(12f, 15, 0.7f, 1.45f),// W10 (boss entry reserved for M8.3)
         };
 
         private EnemySpawner _spawner;
@@ -144,7 +148,8 @@ namespace VoidSurvivor.Enemy
             var player = GameObject.Find("Player");
             if (player != null) origin = player.transform.position;
 
-            _spawner.SpawnEnemy(prefab, _spawner.GetSpawnPosition(_spawnedCount, origin));
+            WaveConfig config = WaveTable[CurrentWave - 1];
+            _spawner.SpawnEnemy(prefab, _spawner.GetSpawnPosition(_spawnedCount, origin), config.Multiplier);
         }
 
         private void CompleteWave()

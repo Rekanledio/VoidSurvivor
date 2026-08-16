@@ -42,7 +42,8 @@
 - `Projectile` (M5.1 migration) — flies at fixed velocity, expires after lifetime, on contact routes a `DamageRequest` through CombatSystem to any `IDamageable` (source carried from the firer). No direct health coupling. Known: hits any IDamageable including other enemies (no faction filter yet — later refinement).
 - `TankAI` (M4.5) — slow, high-HP pursuer; same pursuit pattern as ChaserAI, identity from TankData (moveSpeed 2, maxHP 120). TankData.asset + Tank.prefab.
 - `EnemySpawner` (M4.6, wave-driven since M8.1) — owns per-prefab enemy pools and the public `SpawnEnemy(prefab, position)` entry; no automatic spawn (M8.1 removed Start-time spawn).
-- `WaveManager` (M8.1) — wave lifecycle 1..10: Time.deltaTime-accumulated wave time advancing only while Playing; centralized per-wave config (duration/enemyCount/spawnInterval); deterministic type rotation; spawns via EnemySpawner.SpawnEnemy at M4.6 cardinal offsets; publishes WaveStarted/WaveCompleted; wave completion by duration+schedule (not enemy-alive count); after wave 10 idle (Boss M8.3). Never touches ObjectPool directly.
+- `WaveManager` (M8.1) — wave lifecycle 1..10: Time.deltaTime-accumulated wave time advancing only while Playing; centralized per-wave config; deterministic type rotation; spawns via EnemySpawner.SpawnEnemy at M4.6 cardinal offsets; publishes WaveStarted/WaveCompleted; after wave 10 idle (Boss M8.3). Never touches ObjectPool directly.
+- Wave difficulty (M8.2) — `EnemyStats.WaveMultiplier` (runtime, non-serialized): MaxHP/Damage/MoveSpeed × per-wave multiplier (W1 1.00 → W10 1.45 in WaveTable); AttackRange/AttackCooldown unchanged. Injected per spawn (EnemyController.Spawn sets stats then ResetForSpawn); OnDespawn resets to 1 (no pool leak). EnemyData assets stay static.
 - Wave logic stays in M8.
 
 ## Combat System (M5, in progress)

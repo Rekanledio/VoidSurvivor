@@ -209,3 +209,8 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - WaveManager (Enemy ns, on EnemySpawner in scene): waves 1..10, deltaTime-accumulated time (Playing only; pause states freeze; GameOver/Victory stop + fresh-run reset), centralized per-wave config (duration/count/interval), deterministic type rotation, cardinal spawn points via EnemySpawner.SpawnEnemy (pooled). WaveStarted/WaveCompleted events. Wave 10 = normal enemies (boss M8.3); after wave 10 idle (no victory logic). No difficulty scaling.
 - Verified: 42/42 probe PASS (events once, progression 1→2, spawn count/interval/stop, pause freeze + resume no dup start, GameOver stop + restart W1, wave-10 boundary, 4-type rotation, regressions). Manual play: waves drive visibly. Final play/stop twice: 0/0.
 - Next: M8.2 Wave Difficulty Growth.
+
+## M8.2 — Wave Difficulty Growth (2026-08-16)
+- EnemyStats.WaveMultiplier (runtime, non-serialized): MaxHP/Damage/MoveSpeed × multiplier; AttackRange/AttackCooldown unchanged. Chain: WaveManager (per-wave multiplier W1 1.00→W10 1.45 in WaveTable) → SpawnEnemy(prefab,pos,mult) → EnemyController.Spawn sets stats then ResetForSpawn (scaled HP). OnDespawn resets multiplier → no pool leak. EnemyData assets untouched.
+- Verified: 39/39 probe PASS (table, scaling per type, Range/Cooldown unchanged, injection order, pool reuse reset, W10 1.45, assets unchanged, regressions). Manual play: escalating difficulty visible. Final play/stop twice: 0/0.
+- Next: M8.3 Boss (Wave 10).

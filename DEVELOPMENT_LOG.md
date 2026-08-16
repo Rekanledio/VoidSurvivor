@@ -597,3 +597,23 @@ M8.1 — Wave Lifecycle & Spawn Scheduling (part of M8 — Wave System)
 
 ### Next
 M8.2 — Wave Difficulty Growth.
+
+## 2026-08-16
+### Milestone
+M8.2 — Wave Difficulty Growth (part of M8 — Wave System)
+
+### Completed
+- Assets/Scripts/Enemy/EnemyStats.cs: added plain non-serialized runtime field `WaveMultiplier` (default 1). MaxHP / Damage / MoveSpeed now return data × WaveMultiplier; AttackRange / AttackCooldown stay at the EnemyData values. One change here scales all four AIs (they read Stats live every frame) with no per-AI logic.
+- Assets/Scripts/Enemy/EnemyController.cs: `Spawn(pool, position, waveMultiplier = 1f)` — after pool.Get it sets `_stats.WaveMultiplier` FIRST, then `_health.ResetForSpawn()` so CurrentHP uses the scaled MaxHP. OnDespawn resets WaveMultiplier to 1 so any direct pool.Get can never leak a previous wave's difficulty.
+- Assets/Scripts/Enemy/EnemySpawner.cs: `SpawnEnemy(prefab, position, multiplier = 1f)` passes through (old call sites stay compatible).
+- Assets/Scripts/Enemy/WaveManager.cs: WaveConfig gained `Multiplier`; WaveTable now W1 1.00 → W10 1.45 (simple M8.2 base slope, explicitly not from GAME_DESIGN). SpawnOne passes the current wave's multiplier. duration/enemyCount/spawnInterval unchanged from M8.1.
+- EnemyData assets untouched; no Boss/M9 systems.
+
+### Verification
+- Compilation: 0 errors.
+- In-play probe (temporary M82DifficultyProbe, deleted): 39/39 PASS, 0 FAILURES — W1/W5/W10 multipliers 1.00/1.20/1.45; W1 wave spawn injects 1.00; Chaser/Runner/Tank MaxHP + MoveSpeed scaled (36/36/144 HP, 4.2/7.2/2.4 speed at 1.2), Shooter MaxHP 30 + Damage 9.6 at 1.2; Shooter AttackRange (6) and AttackCooldown (1.5) unchanged; Spawn CurrentHP == scaled MaxHP (injection before reset); TakeDamage works on scaled HP; scaled enemy dies and releases; pool reuse: multiplier reset → MaxHP back to 30, CurrentHP original, IsDead cleared, velocity zero; W10 1.45 → 43.5 HP; all four EnemyData assets verified unchanged (maxHP 30/30/25/120, damage 10, moveSpeed 2.5); regressions (PlayerHealth/PlayerProgress/weapons/Boomerang ActiveCount).
+- Manual play: waves drive with escalating difficulty (W2 enemies carry 1.05 multiplier), kills/pickups flow.
+- Final clean play/stop twice: 0 errors, 0 warnings.
+
+### Next
+M8.3 — Boss (Wave 10).
