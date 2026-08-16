@@ -404,3 +404,24 @@ M6.2 — Pulse Gun (first formal weapon, part of M6 — Weapon System)
 
 ### Next
 M6.3 — Scatter Blaster.
+
+## 2026-08-16
+### Milestone
+M6.3 — Scatter Blaster (second formal weapon, part of M6 — Weapon System)
+
+### Completed
+- Assets/Scripts/Weapons/ScatterBlasterData.cs: WeaponData subclass adding projectileCount (5) and spreadAngle (45) — base WeaponData untouched.
+- Assets/Scripts/Weapons/ScatterBlaster.cs: auto-attack loop (Time.time cooldown), minimal targeting (nearest live EnemyHealth within Range used as the fan center direction), fires the configured count of PulseProjectiles simultaneously in a deterministic uniform fan (angles -half..+half, center pellet → target, even spacing, symmetric). Damage/Source per pellet = ScatterBlasterData.BaseDamage / player.
+- Assets/Scripts/Weapons/WeaponController.cs (fix): Owner now lazy-resolves PlayerAttack on every access. Real bug: weapons instantiated at runtime before parenting (Awake runs during Instantiate) kept _playerAttack null, so Owner returned null and projectiles had no source — from the player's position they immediately hit the player and were destroyed without reaching the target. Scene-placed Pulse Gun never exposed this (parent preset at load); the fix also hardens Pulse Gun.
+- Assets: ScatterBlasterData.asset (Scatter Blaster: baseDamage 3 / attackCooldown 0.8 / range 7 / projectileCount 5 / spreadAngle 45 — low fire rate, multi-pellet, visible fan; simple values chosen for type identity, recorded) + ScatterBlaster.prefab (reuses PulseProjectile.prefab + red dot art).
+- No Boomerang/Arc Blade, no weapon upgrade/shop/roguelite, no object pool (M7), no random spread.
+
+### Verification
+- Compilation: 0 errors.
+- In-play probe (temporary ScatterProbe, deleted): 42/42 PASS, 0 FAILURES — data (name/dmg 3/cd 0.8/range 7/count 5/spread 45); slot-0 equip; beyond-range target untouched; in-range static enemy hit (30 → 21) via player-sourced projectiles; fan geometry exact (center 0.00°, inner ±11.2°, outer ±22.5°, symmetric, even spacing, normalized); volley-to-volley cooldown 0.801s; lethal kill → EnemyKilled once with Killer == Player; dead enemy destroyed; pickups present; PlayerAttack/PlayerHealth/Spawner (4 types)/Pulse Gun regressions.
+- Manual play: Scatter auto-fires its fan and kills the target (observed in play).
+- Debugging notes (test-methodology): probe failures were caused by (a) scene enemies/pursuers stealing the scatter center (moved them far away), (b) the cooldown/fan asserts reading pre-clear residue projectiles (cleared capture + took the latest volley), (c) the kill loop using render frames (switched to fixed physics frames), and the one real production bug (Owner lazy-resolve) above.
+- Final clean play/stop twice: 0 errors, 0 warnings.
+
+### Next
+M6.4 — Boomerang.

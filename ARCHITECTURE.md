@@ -72,7 +72,9 @@
 - `PulseGun` (M6.2) — first formal weapon: auto-attack loop (Time.time cooldown), minimal targeting (nearest live EnemyHealth within Range), fires one `PulseProjectile` (Source = player) per shot; self-equips into slot 0. PulseGunData (dmg 5 / cd 0.25 / range 8) + PulseGun.prefab + PulseProjectile.prefab.
 - `PulseProjectile` (M6.2) — straight flight, lifetime, contact → CombatSystem with player source; skips its own Source.
 - `PlayerAttack` (M5.4 + M6.2) — added Attack(target, damage) overload; Attack(target) keeps PlayerStats.Damage default (regression-compatible).
-- Remaining formal weapons: Scatter Blaster / Boomerang / Arc Blade (M6.3–M6.5). No weapon upgrade/shop/roguelite yet; Object Pool is M7.
+- `ScatterBlaster` (M6.3) — multi-pellet fan weapon: auto-attack loop, nearest-target gives the fan center, fires `PulseProjectile` × N simultaneously in a deterministic uniform symmetric fan. `ScatterBlasterData : WeaponData` (+projectileCount 5 / spreadAngle 45; dmg 3 / cd 0.8 / range 7).
+- `WeaponController.Owner` (M6.3 fix) — lazy-resolves PlayerAttack on every access; weapons instantiated before parenting keep a valid player source.
+- Remaining formal weapons: Boomerang / Arc Blade (M6.4–M6.5). No weapon upgrade/shop/roguelite yet; Object Pool is M7.
 
 ## Runtime Layer
 Runtime objects consume configuration assets and maintain mutable state at runtime.

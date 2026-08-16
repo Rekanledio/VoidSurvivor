@@ -160,3 +160,9 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - PulseGunData (dmg 5 / cd 0.25 / range 8); PlayerAttack extended with Attack(target, damage) (old API compatible).
 - Verified: 27/27 probe PASS (cooldown gaps 0.250–0.252s exact, beyond-range silent, nearest targeted, kill → Killer == Player, re-target). Manual play: auto-combat live (enemies 4 → 1, player XP 20 / Gold 5). Final play/stop twice: 0 errors / 0 warnings.
 - Next: M6.3 Scatter Blaster.
+
+## M6.3 — Scatter Blaster (2026-08-16)
+- ScatterBlasterData : WeaponData (+count 5/spread 45); ScatterBlaster auto-fires N PulseProjectiles in a uniform symmetric fan (center → target); reuses PulseProjectile. ScatterBlasterData (dmg 3/cd 0.8/range 7) + prefab.
+- WeaponController.Owner lazy-resolve fix (runtime-instantiated weapons kept null source → projectiles hit the player and died; now resolves on access).
+- Verified: 42/42 probe PASS (fan geometry exact, cooldown 0.801s, kill → Killer == Player, regressions) + manual play. Final play/stop twice: 0 errors / 0 warnings.
+- Next: M6.4 Boomerang.

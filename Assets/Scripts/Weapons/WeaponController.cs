@@ -20,8 +20,20 @@ namespace VoidSurvivor.Weapons
         public WeaponData Data => data;
         public bool IsValid => data != null;
 
-        /// <summary>The player GameObject this weapon belongs to (attack source).</summary>
-        protected GameObject Owner => _playerAttack != null ? _playerAttack.gameObject : null;
+        /// <summary>
+        /// The player GameObject this weapon belongs to (attack source).
+        /// Re-resolves lazily on every access so weapons instantiated before
+        /// parenting (Awake runs during Instantiate) still resolve the owner
+        /// once they are parented under the player.
+        /// </summary>
+        protected GameObject Owner
+        {
+            get
+            {
+                ResolvePlayerAttack();
+                return _playerAttack != null ? _playerAttack.gameObject : null;
+            }
+        }
 
         private void Awake()
         {

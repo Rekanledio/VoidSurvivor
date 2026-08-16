@@ -57,12 +57,13 @@ M6 — Weapon System (4 weapons and slots)
 - M5.4 — Player Attack Path (2026-08-14): PlayerAttack.Attack(target) → DamageRequest(Source=Player, PlayerStats.Damage) → CombatSystem; no auto-attack/weapon logic (M6 owns weapons). Player prefab gains PlayerAttack. Verified 23/23 probe PASS, 0 errors/warnings.
 - M6.1 — Weapon Base Framework (2026-08-16): WeaponData (SO) + WeaponController (runtime → PlayerAttack, lazy resolve) + WeaponSlot + WeaponManager (4 slots, bounds-checked). WeaponBaseData.asset + WeaponBase.prefab (test base); Player prefab gains WeaponManager. Verified 32/32 probe PASS, 0 errors/warnings.
 - M6.2 — Pulse Gun (2026-08-16): first formal weapon — auto-attack loop + nearest-target + single PulseProjectile (Source = player) → CombatSystem; PlayerAttack gains damage overload. PulseGunData (dmg 5/cd 0.25/range 8) + prefabs; SC_Main PulseGun under player. Verified 27/27 probe PASS + manual auto-combat, 0 errors/warnings.
+- M6.3 — Scatter Blaster (2026-08-16): multi-pellet fan weapon — ScatterBlasterData (:WeaponData, count 5/spread 45), ScatterBlaster fires N PulseProjectiles in a deterministic uniform symmetric fan; WeaponController.Owner lazy-resolve fix. ScatterBlasterData (dmg 3/cd 0.8/range 7) + prefab. Verified 42/42 probe PASS + manual play, 0 errors/warnings.
 
 ## Next Milestone
 M6 — Weapon System (4 weapons and slots)
 
 ## Current Task
-M6.3 — Scatter Blaster (per-weapon work; M6.1 base + M6.2 Pulse Gun complete).
+M6.4 — Boomerang (per-weapon work; M6.1–M6.3 complete).
 
 ## Important Decisions
 - Do not add special differentiation mechanics for MVP.
