@@ -234,3 +234,8 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - UpgradeData : SO (UpgradeId/DisplayName/StatType(10)/Amount additive) + 10 assets (placeholders: MaxHP+10, HPRegen+0.5, MoveSpeed+0.5, Damage+1, AttackSpeed+0.1, CritChance+0.02, CritDamage+0.25, Range+0.5, PickupRange+0.5, Armor+1 — non-design). PlayerStats runtime bonus layer (base + bonus; ApplyUpgrade; ResetForRun; base untouched). UpgradeManager (on Player, pool 10): pending queue, 3 unique random options, SetForcedOptions hook, Select guards + apply once + UpgradeSelected(upgrade,level) + Playing when drained; LevelUp freezes/resumes wave (WaveManager untouched).
 - Verified: 58/58 probe PASS. Final play/stop twice: 0/0.
 - Next: M9.3 LevelUp UI Panel.
+
+## M9.3 — LevelUp UI Panel (2026-08-16)
+- UpgradeOptionsGenerated(option0..2) event published by UpgradeManager after Options fully written. LevelUpPanel (UI ns, component on ACTIVE Canvas — inactive never Awakes): GameStateChanged show/hide, event-driven 3-button labels (DisplayName/StatType/+Amount), onClick → Select(i). Scene: Canvas (Overlay+Scaler 1920x1080+Raycaster) + EventSystem(InputSystemUIInputModule) + LevelUpPanel (Title+3 buttons, inactive). Consecutive pending level-ups refresh in place; hides on Playing.
+- Verified: 55/55 probe PASS (real button clicks, refresh across sets, no duplicates, guards). Final play/stop twice: 0/0.
+- Next: M9.4 Shop.

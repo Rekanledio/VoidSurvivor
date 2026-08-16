@@ -709,3 +709,22 @@ M9.2 — Upgrade Chooser Logic (part of M9 — Roguelite / Upgrade)
 
 ### Next
 M9.3 — LevelUp UI Panel.
+
+## 2026-08-16
+### Milestone
+M9.3 — LevelUp UI Panel (part of M9 — Roguelite / Upgrade)
+
+### Completed
+- Assets/Scripts/Core/GameEvents.cs: added UpgradeOptionsGenerated(option0, option1, option2) — fact-only event carrying the fully-written candidate set.
+- Assets/Scripts/Player/UpgradeManager.cs: GenerateOptions() and SetForcedOptions() now publish UpgradeOptionsGenerated AFTER Options is complete (UI listeners always read the full set).
+- Assets/Scripts/UI/LevelUpPanel.cs (new): component on the ACTIVE Canvas (inactive objects never get Awake — a critical lesson). GameStateChanged controls visibility (LevelUp → show; Playing/GameOver/Victory/MainMenu → hide; Paused/Shop untouched). UpgradeOptionsGenerated updates the 3 button labels (DisplayName / StatType / +Amount; integer amounts shown as integers, floats raw, no %). Buttons bound once via onClick.AddListener → UpgradeManager.Select(i). No stats/game-state writes.
+- Assets/Scenes/SC_Main.unity: Canvas (Screen Space Overlay + CanvasScaler ScaleWithScreenSize 1920x1080 match 0.5 + GraphicRaycaster) + EventSystem with InputSystemUIInputModule (project uses Unity Input System; StandaloneInputModule not used) + LevelUpPanel hierarchy (Image, Title "LEVEL UP!", 3 UpgradeButtons each with a label child), panel initially inactive.
+
+### Verification
+- Compilation: 0 errors.
+- In-play probe (temporary M93LevelUpUIProbe, deleted): 55/55 PASS, 0 FAILURES — Canvas/EventSystem/InputSystemUIInputModule present; panel starts hidden; exactly 3 buttons; title correct; LevelUp → panel visible; UpgradeOptionsGenerated received; 3 labels match DisplayName/StatType/Amount ("Max HP +10|MaxHP|+10" etc.); REAL button.onClick.Invoke() applied only the chosen upgrade + UpgradeSelected once + Playing + panel hidden + wave resumes; duplicate click ignored; consecutive level-ups (L3→L5): panel stays visible, second set genuinely refreshed (button0 changed Move Speed → Armor) + applied, Playing + hidden after queue drains; non-LevelUp states hidden; exactly 1 Canvas/EventSystem/LevelUpPanel; options events per generation (6); regressions (PlayerProgress/PlayerHealth/weapons/Boomerang/EnemySpawner).
+- Debugging notes (methodology): (a) the first UI creation script crashed (TMP_Settings.defaultFontAsset getter NRE) AFTER already creating Canvas/EventSystem/Panel/Title — leaving duplicates; cleaned by name and rebuilt in one pass. (b) Putting the LevelUpPanel component on the INACTIVE panel meant Awake never ran → no subscriptions; moved the component to the active Canvas with the panel as a serialized child reference. (c) probe: GameObject.Find only sees active objects, so the inactive panel was located via canvas.transform.Find; Title check needs FindObjectsInactive.Include. All production-behavior fixes, not probe-only.
+- Final clean play/stop twice: 0 errors, 0 warnings.
+
+### Next
+M9.4 — Shop.

@@ -191,4 +191,28 @@ namespace VoidSurvivor.Core
             Level = level;
         }
     }
+
+    /// <summary>
+    /// Published by <see cref="VoidSurvivor.Player.UpgradeManager"/> AFTER the
+    /// current candidate set has been fully written into Options (M9.3), so a
+    /// UI listening for this event can always read the complete candidates.
+    /// Carries the up-to-3 options (null slots when the pool is exhausted).
+    /// Fact-only event; no UI logic.
+    /// </summary>
+    public readonly struct UpgradeOptionsGenerated
+    {
+        public VoidSurvivor.Player.UpgradeData Option0 { get; }
+        public VoidSurvivor.Player.UpgradeData Option1 { get; }
+        public VoidSurvivor.Player.UpgradeData Option2 { get; }
+
+        public UpgradeOptionsGenerated(
+            VoidSurvivor.Player.UpgradeData option0,
+            VoidSurvivor.Player.UpgradeData option1,
+            VoidSurvivor.Player.UpgradeData option2)
+        {
+            Option0 = option0;
+            Option1 = option1;
+            Option2 = option2;
+        }
+    }
 }

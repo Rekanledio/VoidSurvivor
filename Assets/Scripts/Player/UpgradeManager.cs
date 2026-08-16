@@ -56,7 +56,9 @@ namespace VoidSurvivor.Player
 
         /// <summary>
         /// Draws up to 3 UNIQUE options from the pool (no weights/rarity).
-        /// Different level-ups may draw the same upgrade again.
+        /// Different level-ups may draw the same upgrade again. Publishes
+        /// <see cref="UpgradeOptionsGenerated"/> AFTER Options is fully updated
+        /// (M9.3) so UI listeners always read the complete candidate set.
         /// </summary>
         public void GenerateOptions()
         {
@@ -64,6 +66,7 @@ namespace VoidSurvivor.Player
             if (upgradePool == null || upgradePool.Count == 0)
             {
                 _waitingForSelection = false;
+                PublishOptionsGenerated();
                 return;
             }
 
@@ -76,6 +79,7 @@ namespace VoidSurvivor.Player
             }
 
             _waitingForSelection = _options.Count > 0;
+            PublishOptionsGenerated();
         }
 
         /// <summary>Test hook: forces the next set of options (ignores the pool).</summary>
@@ -84,6 +88,15 @@ namespace VoidSurvivor.Player
             _options.Clear();
             if (forced != null) _options.AddRange(forced);
             _waitingForSelection = _options.Count > 0;
+            PublishOptionsGenerated();
+        }
+
+        private void PublishOptionsGenerated()
+        {
+            EventBus.Publish(new UpgradeOptionsGenerated(
+                _options.Count > 0 ? _options[0] : null,
+                _options.Count > 1 ? _options[1] : null,
+                _options.Count > 2 ? _options[2] : null));
         }
 
         /// <summary>
