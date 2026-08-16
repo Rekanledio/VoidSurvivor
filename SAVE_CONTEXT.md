@@ -154,3 +154,9 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - WeaponData (SO), WeaponController (runtime → PlayerAttack), WeaponSlot, WeaponManager (4 slots, bounds-checked). WeaponBaseData.asset + WeaponBase.prefab (test base, not a formal weapon); Player prefab gains WeaponManager.
 - Verified: 32/32 probe PASS (lazy player resolve fixed Awake-before-parent timing). Final play/stop twice: 0 errors / 0 warnings.
 - Next: M6.2 Pulse Gun.
+
+## M6.2 — Pulse Gun (2026-08-16)
+- PulseGun (auto-attack, Time.time cooldown, nearest-target in Range, one PulseProjectile per shot, Source = player, self-equips slot 0) + PulseProjectile (straight flight → CombatSystem, skips own source).
+- PulseGunData (dmg 5 / cd 0.25 / range 8); PlayerAttack extended with Attack(target, damage) (old API compatible).
+- Verified: 27/27 probe PASS (cooldown gaps 0.250–0.252s exact, beyond-range silent, nearest targeted, kill → Killer == Player, re-target). Manual play: auto-combat live (enemies 4 → 1, player XP 20 / Gold 5). Final play/stop twice: 0 errors / 0 warnings.
+- Next: M6.3 Scatter Blaster.

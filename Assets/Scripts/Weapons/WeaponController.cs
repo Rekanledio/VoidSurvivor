@@ -20,6 +20,9 @@ namespace VoidSurvivor.Weapons
         public WeaponData Data => data;
         public bool IsValid => data != null;
 
+        /// <summary>The player GameObject this weapon belongs to (attack source).</summary>
+        protected GameObject Owner => _playerAttack != null ? _playerAttack.gameObject : null;
+
         private void Awake()
         {
             // The weapon lives under the player (parent hierarchy); resolve once
@@ -36,7 +39,7 @@ namespace VoidSurvivor.Weapons
             }
         }
 
-        /// <summary>Routes a weapon attack through the player attack entry.</summary>
+        /// <summary>Routes a direct weapon attack through the player attack entry (player base damage).</summary>
         public DamageResult Attack(GameObject target)
         {
             ResolvePlayerAttack();
@@ -47,6 +50,19 @@ namespace VoidSurvivor.Weapons
             }
 
             return _playerAttack.Attack(target);
+        }
+
+        /// <summary>Routes a direct weapon attack with an explicit damage value (weapon damage).</summary>
+        protected DamageResult Attack(GameObject target, float damage)
+        {
+            ResolvePlayerAttack();
+
+            if (_playerAttack == null || target == null)
+            {
+                return new DamageResult(false, 0f, false);
+            }
+
+            return _playerAttack.Attack(target, damage);
         }
     }
 }

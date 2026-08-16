@@ -382,3 +382,25 @@ M6.1 — Weapon Base Framework (part of M6 — Weapon System)
 
 ### Next
 M6.2 — Pulse Gun.
+
+## 2026-08-16
+### Milestone
+M6.2 — Pulse Gun (first formal weapon, part of M6 — Weapon System)
+
+### Completed
+- PlayerAttack (M5.4) extended: Attack(target) now delegates to Attack(target, damage) (PlayerStats.Damage default) — old API regression-compatible; new overload lets weapons pass WeaponData.BaseDamage into CombatSystem.
+- WeaponController (M6.1) extended: exposes protected Owner (the player GameObject = attack source) and a protected Attack(target, damage) for direct-damage weapons.
+- Assets/Scripts/Weapons/PulseGun.cs: auto-attack loop (Time.time cooldown from WeaponData.AttackCooldown), minimal targeting (nearest live EnemyHealth within Range via Physics2D.OverlapCircleAll, re-acquires only when the current target is dead/out-of-range), fires one PulseProjectile per shot (Source = player), self-equips into WeaponManager slot 0 on Start (empty slot only).
+- Assets/Scripts/Weapons/PulseProjectile.cs: single-target straight flight (direction captured at spawn), fixed speed, lifetime, contact → CombatSystem with player source; skips its own Source object (minimal self-hit guard, no faction system).
+- Assets: PulseGunData.asset (Pulse Gun: baseDamage 5 / attackCooldown 0.25 / range 8 — high fire rate, single target, mid range; simple values, no doc values → chosen for type identity, recorded), PulseProjectile.prefab (red dot placeholder), PulseGun.prefab (PulseGun + data + projectilePrefab + speed 12). SC_Main: PulseGun instance under Player.
+- No other weapons, no weapon upgrade/shop/roguelite, no object pool (M7), no projectile pooling.
+
+### Verification
+- Compilation: 0 errors.
+- In-play probe (temporary PulseGunProbe, deleted): 27/27 PASS, 0 FAILURES — data (name/dmg 5/cd 0.25/range 8); slot-0 equip; target beyond Range not attacked (HP unchanged); nearest in-range enemy attacked (HP 30 → 15); player-sourced damage via projectile → combat; cooldown exact (spawn gaps 0.250–0.252s, min gap 0.250 → no same-frame double fire); auto-attack active (14 projectiles/~2.2s); lethal kill → EnemyKilled with Killer == Player; dead enemy destroyed; pickups present; auto-attack re-targets after kill; PlayerHealth/PlayerProgress/Spawner regressions.
+- Note: two probe assert-timing fixes (enemy nearer than scene pursuers → moved baseline before kill; scene auto-fire clears enemies → 4-type check moved to probe start). Not implementation bugs.
+- Manual play: REAL auto-combat observed — PulseGun auto-fires, scene enemies 4 → 1, player auto-collects drops (XP 20 / Gold 5).
+- Final clean play/stop twice: 0 errors, 0 warnings (auto-fire confirmed both runs).
+
+### Next
+M6.3 — Scatter Blaster.

@@ -8,7 +8,7 @@
 | M3 | Player System | Movement, stats, health, camera | Completed |
 | M4 | Enemy System | 4 enemy types and AI | Completed (2026-08-14) |
 | M5 | Combat System | Damage, death, pickups | Completed (2026-08-14) |
-| M6 | Weapon System | 4 weapons and slots | In progress (M6.1 done) |
+| M6 | Weapon System | 4 weapons and slots | In progress (M6.1–M6.2 done) |
 | M7 | Object Pool | High-frequency object reuse | Pending |
 | M8 | Wave System | 10-wave combat progression | Pending |
 | M9 | Roguelite System | XP, levels, upgrades, stats | Pending |

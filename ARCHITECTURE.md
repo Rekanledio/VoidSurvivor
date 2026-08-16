@@ -68,8 +68,11 @@
 - `WeaponController` (M6.1) — runtime weapon: holds WeaponData, resolves the player's PlayerAttack via GetComponentInParent (Awake + lazy re-resolve on Attack), routes Attack(target) through PlayerAttack. Layering: Weapon → PlayerAttack → CombatSystem → EnemyHealth (never bypasses).
 - `WeaponSlot` (M6.1) — plain runtime container (Equip/Unequip/IsEmpty).
 - `WeaponManager` (M6.1) — player-side container: exactly 4 slots, Equip/Unequip/GetSlot/GetWeapon with bounds checks.
-- WeaponBaseData.asset + WeaponBase.prefab — base test weapon (NOT one of the four formal weapons). Formal weapons (Pulse Gun / Scatter Blaster / Boomerang / Arc Blade) land in M6.2–M6.5.
-- No auto-attack loop, no projectile weapon framework, no weapon upgrade/shop yet.
+- WeaponBaseData.asset + WeaponBase.prefab — base test weapon (NOT one of the four formal weapons).
+- `PulseGun` (M6.2) — first formal weapon: auto-attack loop (Time.time cooldown), minimal targeting (nearest live EnemyHealth within Range), fires one `PulseProjectile` (Source = player) per shot; self-equips into slot 0. PulseGunData (dmg 5 / cd 0.25 / range 8) + PulseGun.prefab + PulseProjectile.prefab.
+- `PulseProjectile` (M6.2) — straight flight, lifetime, contact → CombatSystem with player source; skips its own Source.
+- `PlayerAttack` (M5.4 + M6.2) — added Attack(target, damage) overload; Attack(target) keeps PlayerStats.Damage default (regression-compatible).
+- Remaining formal weapons: Scatter Blaster / Boomerang / Arc Blade (M6.3–M6.5). No weapon upgrade/shop/roguelite yet; Object Pool is M7.
 
 ## Runtime Layer
 Runtime objects consume configuration assets and maintain mutable state at runtime.

@@ -56,12 +56,13 @@ M6 — Weapon System (4 weapons and slots)
 - M5.3 — Pickup System (2026-08-14): PlayerProgress (XP/Gold) + PickupType/PickupData + Pickup collect + PickupSystem (EnemyKilled → drop XP+Gold at death position). XPPickup/GoldPickup prefabs; Player gains PlayerProgress; SC_Main gains PickupSystem. Verified 25/25 probe PASS + manual play, 0 errors/warnings.
 - M5.4 — Player Attack Path (2026-08-14): PlayerAttack.Attack(target) → DamageRequest(Source=Player, PlayerStats.Damage) → CombatSystem; no auto-attack/weapon logic (M6 owns weapons). Player prefab gains PlayerAttack. Verified 23/23 probe PASS, 0 errors/warnings.
 - M6.1 — Weapon Base Framework (2026-08-16): WeaponData (SO) + WeaponController (runtime → PlayerAttack, lazy resolve) + WeaponSlot + WeaponManager (4 slots, bounds-checked). WeaponBaseData.asset + WeaponBase.prefab (test base); Player prefab gains WeaponManager. Verified 32/32 probe PASS, 0 errors/warnings.
+- M6.2 — Pulse Gun (2026-08-16): first formal weapon — auto-attack loop + nearest-target + single PulseProjectile (Source = player) → CombatSystem; PlayerAttack gains damage overload. PulseGunData (dmg 5/cd 0.25/range 8) + prefabs; SC_Main PulseGun under player. Verified 27/27 probe PASS + manual auto-combat, 0 errors/warnings.
 
 ## Next Milestone
 M6 — Weapon System (4 weapons and slots)
 
 ## Current Task
-Begin M6: 4 weapons and slots. M5 combat/pickup/player-attack pipeline is stable; M6.1 base framework complete, M6.2+ per-weapon work next.
+M6.3 — Scatter Blaster (per-weapon work; M6.1 base + M6.2 Pulse Gun complete).
 
 ## Important Decisions
 - Do not add special differentiation mechanics for MVP.
