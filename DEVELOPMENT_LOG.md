@@ -360,3 +360,25 @@ M5.4 — Player Attack Path (part of M5 — Combat System)
 
 ### Next
 M5 completion per the official task split; weapons in M6.
+
+## 2026-08-16
+### Milestone
+M6.1 — Weapon Base Framework (part of M6 — Weapon System)
+
+### Completed
+- Assets/Scripts/Weapons/WeaponData.cs: ScriptableObject static config — weaponName / baseDamage / attackCooldown / range. Read-only at runtime; no crit/element/status/upgrade/rarity.
+- Assets/Scripts/Weapons/WeaponController.cs: runtime weapon — holds WeaponData, resolves the player's PlayerAttack via GetComponentInParent (Awake + lazy re-resolve on Attack, because Awake runs during Instantiate before parenting), Attack(target) routes through PlayerAttack (never directly to a health class). No auto-attack/targeting.
+- Assets/Scripts/Weapons/WeaponSlot.cs: plain runtime container — Equip/Unequip/IsEmpty/Weapon.
+- Assets/Scripts/Weapons/WeaponManager.cs: player-side container, exactly 4 slots, Equip/Unequip/GetSlot/GetWeapon with bounds checks (no silent out-of-range writes; out-of-range returns false/null).
+- Assets: WeaponBaseData.asset (Base Test Weapon: dmg 10 / cd 0.5 / range 5) + WeaponBase.prefab (WeaponController + data) — explicitly a base test asset, NOT one of the four formal weapons (M6.2+). Player prefab gains WeaponManager (scene instance synced).
+- Layer kept: Weapon → PlayerAttack → CombatSystem → EnemyHealth (no bypass). No auto-attack loop, no projectile weapon framework, no weapon upgrade/shop/roguelite.
+
+### Verification
+- Compilation: 0 errors.
+- In-play probe (temporary WeaponProbe, deleted): 32/32 PASS, 0 FAILURES — WeaponData values (10/0.5/5); runtime binding (data reference correct); 4 slots; equip 0-3; out-of-range equip/unequip rejected; slot state transitions; GetWeapon/GetSlot access; weapon attack applied (30 → 20, DamageApplied once, no EnemyKilled on non-lethal); weapon lethal kill (EnemyKilled once, Killer == Player); death cleanup; PlayerHealth/PlayerProgress/Spawner/4 enemy types/PickupSystem regressions.
+- First run: 6 attack-phase FAILs caused by WeaponController resolving PlayerAttack in Awake — Awake runs during Instantiate, before the weapon is parented under the player, so the resolve returned null. Fixed with lazy re-resolve on Attack (also more robust for real equip order). Assertion/时序 issue, fixed in production code.
+- Manual play: WeaponManager on player (4 slots visible), test weapon equipped, Attack drives Enemy HP down through the combat pipeline.
+- Final clean play/stop twice: 0 errors, 0 warnings.
+
+### Next
+M6.2 — Pulse Gun.

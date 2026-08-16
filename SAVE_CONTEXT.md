@@ -149,3 +149,8 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - PlayerAttack.cs: Attack(target) → DamageRequest(Source=Player, PlayerStats.Damage) → CombatSystem.ApplyDamage; no auto-attack/weapon logic (M6 owns weapons). Player prefab gains PlayerAttack.
 - Verified: 23/23 probe PASS (non-lethal/lethal, EnemyKilled once Killer==Player, cleanup, dead rejection, Pickup drops at death position, regressions). Final play/stop twice: 0 errors / 0 warnings.
 - Next: M5 completion per official split; M6 weapons.
+
+## M6.1 — Weapon Base Framework (2026-08-16)
+- WeaponData (SO), WeaponController (runtime → PlayerAttack), WeaponSlot, WeaponManager (4 slots, bounds-checked). WeaponBaseData.asset + WeaponBase.prefab (test base, not a formal weapon); Player prefab gains WeaponManager.
+- Verified: 32/32 probe PASS (lazy player resolve fixed Awake-before-parent timing). Final play/stop twice: 0 errors / 0 warnings.
+- Next: M6.2 Pulse Gun.

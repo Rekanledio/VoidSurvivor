@@ -43,7 +43,7 @@
 Phase 1 — Core framework development
 
 ## Current Milestone
-M5 — Combat System (damage, death, pickups)
+M6 — Weapon System (4 weapons and slots)
 
 ## Completed Milestones
 - M0 — Project Documentation Initialization
@@ -55,12 +55,13 @@ M5 — Combat System (damage, death, pickups)
 - M5.2 — Enemy Death & Kill Attribution (2026-08-14): EnemyKilled (Enemy/Killer) published once per lethal hit on EnemyHealth with valid Source; EnemyController destroys dead enemies (pool in M7). Verified 28/28 probe PASS, 0 errors/warnings.
 - M5.3 — Pickup System (2026-08-14): PlayerProgress (XP/Gold) + PickupType/PickupData + Pickup collect + PickupSystem (EnemyKilled → drop XP+Gold at death position). XPPickup/GoldPickup prefabs; Player gains PlayerProgress; SC_Main gains PickupSystem. Verified 25/25 probe PASS + manual play, 0 errors/warnings.
 - M5.4 — Player Attack Path (2026-08-14): PlayerAttack.Attack(target) → DamageRequest(Source=Player, PlayerStats.Damage) → CombatSystem; no auto-attack/weapon logic (M6 owns weapons). Player prefab gains PlayerAttack. Verified 23/23 probe PASS, 0 errors/warnings.
+- M6.1 — Weapon Base Framework (2026-08-16): WeaponData (SO) + WeaponController (runtime → PlayerAttack, lazy resolve) + WeaponSlot + WeaponManager (4 slots, bounds-checked). WeaponBaseData.asset + WeaponBase.prefab (test base); Player prefab gains WeaponManager. Verified 32/32 probe PASS, 0 errors/warnings.
 
 ## Next Milestone
-M5 — Combat System (damage, death, pickups)
+M6 — Weapon System (4 weapons and slots)
 
 ## Current Task
-Begin M5: unified damage/death/pickup pipeline. M4 enemy framework (all 4 AI types + minimal spawn) is stable.
+Begin M6: 4 weapons and slots. M5 combat/pickup/player-attack pipeline is stable; M6.1 base framework complete, M6.2+ per-weapon work next.
 
 ## Important Decisions
 - Do not add special differentiation mechanics for MVP.

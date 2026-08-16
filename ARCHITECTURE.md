@@ -63,6 +63,14 @@
 ## Player Attack (M5.4)
 - `PlayerAttack` — formal Player → Enemy entry: Attack(target) builds a DamageRequest (Source = Player, damage from PlayerStats.Damage) and routes it through CombatSystem.ApplyDamage, returning DamageResult. No auto-attack loop, no weapon/projectile/targeting framework (M6 owns weapon cycles and target selection).
 
+## Weapon System (M6, in progress)
+- `WeaponData` (M6.1) — ScriptableObject static config (weaponName / baseDamage / attackCooldown / range); read-only at runtime.
+- `WeaponController` (M6.1) — runtime weapon: holds WeaponData, resolves the player's PlayerAttack via GetComponentInParent (Awake + lazy re-resolve on Attack), routes Attack(target) through PlayerAttack. Layering: Weapon → PlayerAttack → CombatSystem → EnemyHealth (never bypasses).
+- `WeaponSlot` (M6.1) — plain runtime container (Equip/Unequip/IsEmpty).
+- `WeaponManager` (M6.1) — player-side container: exactly 4 slots, Equip/Unequip/GetSlot/GetWeapon with bounds checks.
+- WeaponBaseData.asset + WeaponBase.prefab — base test weapon (NOT one of the four formal weapons). Formal weapons (Pulse Gun / Scatter Blaster / Boomerang / Arc Blade) land in M6.2–M6.5.
+- No auto-attack loop, no projectile weapon framework, no weapon upgrade/shop yet.
+
 ## Runtime Layer
 Runtime objects consume configuration assets and maintain mutable state at runtime.
 

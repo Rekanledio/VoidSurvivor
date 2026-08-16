@@ -57,11 +57,18 @@
 
 ## M4 — Enemy System: COMPLETE (2026-08-14)
 
-## Current Milestone: M5 — Combat System
-- [x] M5.1 Combat Base Framework (2026-08-14): IDamageable (PlayerHealth/EnemyHealth implement), DamageRequest/DamageResult structs, CombatSystem static unified ApplyDamage entry, DamageApplied event; Projectile migrated off direct PlayerHealth coupling to the combat entry (with source). Verified: 23/23 probe checks PASS (player/enemy damage via combat, death + rejection of dead targets, projectile fly→hit→combat→damage→destroy, DamageApplied events, Chaser/Runner/Tank/Shooter/Spawner regression), 0 errors/warnings.
-- [x] M5.2 Enemy Death & Kill Attribution (2026-08-14): EnemyKilled event (Enemy/Killer) published by CombatSystem exactly once when a lethal hit lands on EnemyHealth with a valid Source; null-source deaths publish EnemyDied only; EnemyController subscribes EnemyDied and destroys the enemy GameObject (plain Destroy, pool in M7). Event order: TakeDamage → EnemyDied → EnemyKilled → cleanup. Verified: 28/28 probe checks PASS (non-lethal → DamageApplied only; lethal → EnemyDied+EnemyKilled once each with correct refs; dead-target rejection + no duplicate events; null-source → EnemyDied only; projectile→combat→EnemyKilled chain with attribution; death cleanup; Player/DamageApplied/PlayerDied/Spawner/4-enemy regression), 0 errors/warnings.
-- [x] M5.3 Pickup System (2026-08-14): PlayerProgress (XP/Gold runtime resources, negative-safe), PickupType (XP/Gold), PickupData (SO), Pickup (trigger collect → PlayerProgress + PickupCollected → destroy), PickupSystem (subscribes EnemyKilled → spawns XP+Gold at the death position before enemy destroy). XPPickup/GoldPickup prefabs + data assets; Player prefab gains PlayerProgress; SC_Main gains PickupSystem. Verified: 25/25 probe checks PASS (progress adds, pickup config, contact collection + destroy, EnemyKilled→spawn-at-death-position, events, regressions) + manual play observation (scene enemies die → drop → player collects), 0 errors/warnings.
-- [x] M5.4 Player Attack Path (2026-08-14): PlayerAttack — Attack(target) routes a DamageRequest (Source = Player, damage from PlayerStats.Damage) through CombatSystem; no auto-attack/weapon/projectile logic (M6 owns weapons). Player prefab gains PlayerAttack. Verified: 23/23 probe checks PASS (component/damage read, non-lethal → DamageApplied only, lethal → EnemyDied+EnemyKilled once with Killer == Player, cleanup, dead-target rejection, PickupSystem drops XP+Gold at death position, Spawner/PlayerHealth/PlayerProgress regression), 0 errors/warnings.
+## M5 — Combat System: COMPLETE (2026-08-14)
+- [x] M5.1 Combat Base Framework (2026-08-14): IDamageable (PlayerHealth/EnemyHealth implement), DamageRequest/DamageResult structs, CombatSystem static unified ApplyDamage entry, DamageApplied event; Projectile migrated off direct PlayerHealth coupling to the combat entry (with source). Verified: 23/23 probe checks PASS, 0 errors/warnings.
+- [x] M5.2 Enemy Death & Kill Attribution (2026-08-14): EnemyKilled event (Enemy/Killer) published once per lethal hit on EnemyHealth with a valid Source; EnemyController destroys dead enemies (pool in M7). Verified: 28/28 probe checks PASS, 0 errors/warnings.
+- [x] M5.3 Pickup System (2026-08-14): PlayerProgress (XP/Gold) + PickupType/PickupData + Pickup collect + PickupSystem (EnemyKilled → drop XP+Gold at death position). Verified: 25/25 probe checks PASS + manual play, 0 errors/warnings.
+- [x] M5.4 Player Attack Path (2026-08-14): PlayerAttack — Attack(target) routes a DamageRequest (Source = Player, PlayerStats.Damage) through CombatSystem; no auto-attack/weapon logic (M6 owns weapons). Verified: 23/23 probe checks PASS, 0 errors/warnings.
+
+## Current Milestone: M6 — Weapon System
+- [x] M6.1 Weapon Base Framework (2026-08-16): WeaponData (SO: name/damage/cooldown/range), WeaponController (runtime; Attack(target) → PlayerAttack, lazy parent resolve), WeaponSlot (container), WeaponManager (4 slots, Equip/Unequip/Get with bounds checks). WeaponBaseData.asset + WeaponBase.prefab (test base, not one of the 4 formal weapons); Player prefab gains WeaponManager. Verified: 32/32 probe checks PASS (data values, runtime binding, 4-slot equip/unequip + out-of-range rejection, weapon→PlayerAttack→CombatSystem damage, lethal kill with Killer == Player, cleanup, regressions), 0 errors/warnings.
+- [ ] M6.2 Pulse Gun
+- [ ] M6.3 Scatter Blaster
+- [ ] M6.4 Boomerang
+- [ ] M6.5 Arc Blade
 
 ## Rules
 - Only mark a task complete after actual verification.
