@@ -834,3 +834,33 @@ M9.4 ShopPanel Layout Fix (anchoredPosition 修复 — 纯布局修正)
 
 ### Next
 M9.5 — Weapon Upgrade。
+
+## 2026-08-16
+### Milestone
+M9.4 Shop Type/BuyButton Layout Fix v2 (消除右上/右下视觉重叠)
+
+### Root cause (实测确认)
+- **用户最初指定值（Type (-91,-32)/150×22 + BuyButton (-74,39)/120×46）实测仍重叠**：Type anchor (1,1) 顶右角 pos y=-32 实际比旧值-29 更靠下（绝对值越大越靠下），BuyButton anchor (1,0) 底右角 pos y=39 实际比旧值37 更靠上（正值越大越靠上）——两者**相向移动**；且 size 26→22 后半高从 13 减为 11，用户按旧半高 13 推算"Type 底 3"实际为 5。卡片坐标 gap = Type底5 - Buy顶14 = **-9px**（重叠 9px）
+- **文字视觉间距**：fontSize 20 行高 28.96 > rect 22 → textBounds 超 rect 6.96px，文字向下溢出 → 文字底 < Buy 顶，视觉间距仅 6.9 卡片 px
+
+### Fix
+| 节点 | 旧值 | 新值 | 效果 |
+|---|---|---|---|
+| Type anchoredPosition | (-91,-29) | **(-91,-15)** | 中心 19→33（更靠上）+ Type 底 6→22 |
+| Type sizeDelta | 150×26 | **150×22** | 高减 4 |
+| Type fontSize | 20 | **15** | Noto Sans SC 行高系数 1.448 → 21.72 ≤ 22（textBounds 不超 rect） |
+| BuyButton anchoredPosition | (-74,37) | **(-74,32)** | 中心 -11→-16（更靠下）+ BuyButton 顶 12→7 |
+| BuyButton sizeDelta | 120×46 | **120×46**（保持） | — |
+- 卡片坐标：rectGap = Type底22 - Buy顶7 = **15px ≥10 ✓**；textGap = 文字底 - Buy顶 = **11.7px >0 ✓**；textBounds 21.72 ≤ rect 22 ✓
+
+### Verification
+- **Play 实测 4/4 PASS**（scale 0.759 → 卡片坐标系）：rectGap=15、textBoundsH=21.72≤rectH=22、textGap=11.7>0、无 yOverlap，4 张卡片一致（"武器"/"属性"均 PASS）
+- **三分辨率实际截图**（GameView.position 反射切换）：
+  - 当前（1280×934）→ `D:/Work/ui_fix2_shop_current.png` + `ui_fix2_card0_current.png`
+  - 1280×720（实际 1600×874）→ `ui_fix2_shop_1280.png` + `ui_fix2_card0_1280.png`（"武器"小字15px 清晰在右上角、"购买"绿色按钮24px 在右下角、明显空白间隙）
+  - 1024×768（实际 1280×934）→ `ui_fix2_card0_1024.png`
+- **Shop 完整功能回归**：W1→Shop/State=Shop/isInShop=True/products=4 → stat购买 gold 200→180 (-20) → Refresh gold 180→160 (-20) → Continue state=Playing → W10 publish state保持Playing products=4
+- **最终 Play/Stop×2**：0 errors / 0 warnings
+
+### Next
+M9.5 — Weapon Upgrade.

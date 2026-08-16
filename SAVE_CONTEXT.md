@@ -253,3 +253,12 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - Verified Play Mode: 16 子节点全 inside card rect；3 分辨率（1920×1080/1280×720/1024×768）实际截图 Name 左上/Type 右上/Price 左下/BuyButton 右下；Shop 功能完整回归（W1→Shop/购买-20/Refresh-20/Continue/W10 不进 Shop）；中文渲染 mesh.verts>0。最终 Play/Stop×2 0/0。
 - 字体 asset 在 Play 期间被写坏（atlas 1×1），`git checkout HEAD` 从 HEAD 恢复。
 - 未改任何 Shop 玩法/逻辑/字体代码。
+
+## M9.4 Shop Type/BuyButton Layout Fix v2 (2026-08-16 22:04)
+- SC_Main.unity 4×ProductCard 内 Type/BuyButton 间距消除重叠：
+  - Type: pos (-91,-29)→(-91,-15), size 150×26→150×22, fontSize 20→15
+  - BuyButton: pos (-74,37)→(-74,32), size 120×46 (保持)
+- 用户原指定值 Type(-91,-32)/Buy(-74,39) 实测仍重叠（卡片坐标 -9px），因 anchor(1,1) pos y 越负越靠下 + anchor(1,0) pos y 越正越靠上（相向移动）+ size 26→22 半高变 11 而非 13。已按 ≥10px 验收修正为 -15/32。
+- fontSize 20→15 是为满足"Type textBounds 不超出 rect"验收（Noto Sans SC 行高 1.448×fontSize）。
+- Play 验证 4/4 PASS：rectGap=15 卡片 px、textBounds 21.72≤rect 22、textGap=11.7>0、无重叠。三分辨率实际截图确认 Type/BuyButton 明显分离。Shop 功能回归全通过。最终 Play/Stop×2 0/0。
+- 未改 Shop 玩法/逻辑/字体资源代码。
