@@ -65,7 +65,7 @@ M9 — Roguelite / Upgrade (XP Level Up, upgrades, shop)
 M9 — Roguelite / Upgrade (XP Level Up, upgrades, shop)
 
 ## Current Task
-M9.1 — XP Level Up (M4–M8 complete: enemies, combat, pickups, 4 weapons, object pools, wave system incl. boss).
+M9.2 — Upgrade Chooser (3 random options; M4–M9.1 complete).
 
 ## Important Decisions
 - Do not add special differentiation mechanics for MVP.

@@ -159,4 +159,19 @@ namespace VoidSurvivor.Core
             Killer = killer;
         }
     }
+
+    /// <summary>
+    /// Published by <see cref="VoidSurvivor.Player.PlayerProgress"/> once per
+    /// level gained (M9.1). Carries the NEW level. Fact-only event; the upgrade
+    /// chooser (M9.2) reacts to it. One AddXP can publish several of these.
+    /// </summary>
+    public readonly struct PlayerLevelUp
+    {
+        public int Level { get; }
+
+        public PlayerLevelUp(int level)
+        {
+            Level = level;
+        }
+    }
 }

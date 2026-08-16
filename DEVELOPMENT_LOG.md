@@ -669,3 +669,22 @@ M8 — Wave System: COMPLETE (lifecycle + difficulty + boss + final regression).
 
 ### Next
 M9 — Roguelite / Upgrade (M9.1 XP Level Up).
+
+## 2026-08-16
+### Milestone
+M9.1 — XP Level Up (part of M9 — Roguelite / Upgrade)
+
+### Completed
+- Assets/Scripts/Player/PlayerProgress.cs: gained level state — Level (starts 1), XPToNextLevel (M9.1 PLACEHOLDER formula 100 × level, explicitly NOT a GAME_DESIGN value), AddXP accumulates XP and levels up with carry-over; one AddXP can cross multiple levels (each level publishes its own event; the loop always terminates because the threshold grows and XP strictly decreases).
+- Assets/Scripts/Core/GameEvents.cs: added PlayerLevelUp(level) — published once per level gained, carries the NEW level.
+- Assets/Scripts/Player/PlayerLevelSystem.cs (new, attached to the Player in SC_Main and the Player prefab): subscribes PlayerLevelUp; only while GameState == Playing calls GameManager.TryChangeState(LevelUp) (Playing → LevelUp is a legal transition; GameManager untouched). Non-Playing states are never force-entered.
+- WaveManager untouched — its existing `GameState != Playing` check freezes wave time/spawns during LevelUp; resume continues the same wave with no duplicate WaveStarted.
+
+### Verification
+- Compilation: 0 errors.
+- In-play probe (temporary M91LevelProbe, deleted): 41/41 PASS, 0 FAILURES — initial Level 1 / XP 0; threshold placeholder 100; AddXP(0)/negative ignored; 90 XP no level-up + no event; 90+20 → Level 2 with carry 10 + PlayerLevelUp(2) exactly once + threshold 200; Playing → LevelUp (PlayerLevelSystem) not re-entered; WaveElapsed + spawns frozen during LevelUp + wave NOT reset; LevelUp → Playing resumes wave (elapsed continues, no duplicate WaveStarted); 340 → Level 3 / XP 150 + PlayerLevelUp(3) once; 1000 → Level 5 / XP 450 crossing levels with PlayerLevelUp(4)+(5) each once; GameOver: XP still processes + level-ups publish but GameOver NOT force-entered LevelUp (non-Playing protection); regressions (Gold, PlayerHealth, weapons, Boss prefab, Boomerang ActiveCount).
+- Debugging notes (methodology): a scene demo XPPickup adds XP on the first physics frame before the probe can disable it — the probe resets the test target's XP/Level via reflection for clean assertions (test-only; production untouched); two assertion arithmetic corrections (threshold grows with level: 350 → L3/150, 1150 → L5/450, 950 → L6/450).
+- Final clean play/stop twice: 0 errors, 0 warnings.
+
+### Next
+M9.2 — Upgrade Chooser (3 random options).

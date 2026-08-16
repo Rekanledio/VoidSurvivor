@@ -224,3 +224,8 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - M8.1 42/42, M8.2 39/39, M8.3 47/47, M8 Final 58/58 — all PASS. Full flow MainMenu→Playing→W1..W9→W10 Boss→BossDefeated→Victory verified; pause freeze; restart W1; boss contact damage; no wave 11; pools/weapons/EventBus regressions. 3 final Play/Stops 0/0.
 - Git clean at 8d20ede; temp probes deleted.
 - Next: M9.1 XP Level Up.
+
+## M9.1 — XP Level Up (2026-08-16)
+- PlayerProgress: Level (1) + XPToNextLevel placeholder (100×level, non-design) + AddXP carry-over + multi-level + PlayerLevelUp event (once per level). PlayerLevelSystem (on Player): Playing → LevelUp on level-up; non-Playing protected. WaveManager untouched (LevelUp freezes/resumes wave automatically).
+- Verified: 41/41 probe PASS. Final play/stop twice: 0/0.
+- Next: M9.2 Upgrade Chooser (3 random options).

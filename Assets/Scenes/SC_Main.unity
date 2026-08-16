@@ -165,6 +165,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &520726470 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2734891605708252962, guid: 71294eba75b0e294784da530597deb4e, type: 3}
+  m_PrefabInstance: {fileID: 4353819866880962496}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &557433518
 GameObject:
   m_ObjectHideFlags: 0
@@ -767,13 +772,28 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 214053186306708429, guid: 71294eba75b0e294784da530597deb4e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2136205994}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2734891605708252962, guid: 71294eba75b0e294784da530597deb4e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4353819866880962507}
   m_SourcePrefab: {fileID: 100100000, guid: 71294eba75b0e294784da530597deb4e, type: 3}
 --- !u!4 &4353819866880962497 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 214053186306708429, guid: 71294eba75b0e294784da530597deb4e, type: 3}
   m_PrefabInstance: {fileID: 4353819866880962496}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4353819866880962507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 520726470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 277084ca487e26f4d976eb31f77c00fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VoidSurvivor.Player.PlayerLevelSystem
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

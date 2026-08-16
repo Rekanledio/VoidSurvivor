@@ -46,6 +46,9 @@
 - Wave difficulty (M8.2) — `EnemyStats.WaveMultiplier` (runtime, non-serialized): MaxHP/Damage/MoveSpeed × per-wave multiplier (W1 1.00 → W10 1.45 in WaveTable); AttackRange/AttackCooldown unchanged. Injected per spawn; OnDespawn resets to 1 (no pool leak). EnemyData assets stay static.
 - Boss (M8.3) — `BossData : EnemyData` (Minimal subclass; asset stats). `BossAI` pursues the player and deals CONTACT damage via CombatSystem (player-only, AttackCooldown timer; no projectile/skills). `EnemySpawner.SpawnBoss` uses the same pool dictionary. Wave 10 is the boss encounter (one boss, W10 multiplier, no normal spawns) → `BossSpawned` → boss defeat matches EnemyKilled → `BossDefeated` → Victory (existing legal transition). Boss death keeps the EnemyDied/EnemyKilled/Pickup chain.
 - M8 COMPLETE — wave lifecycle (M8.1), difficulty growth (M8.2), boss + Victory (M8.3), final regression 58/58 PASS.
+
+## Roguelite / Upgrade (M9, in progress)
+- M9.1 — XP Level Up: `PlayerProgress` Level state (start 1) + `XPToNextLevel` (PLACEHOLDER 100 × level, non-design) + AddXP carry-over + multi-level; `PlayerLevelUp(level)` event once per level. `PlayerLevelSystem` (on Player) transitions Playing → LevelUp only while Playing (non-Playing protected); WaveManager untouched (LevelUp freezes/resumes the wave).
 - Wave logic stays in M8.
 
 ## Combat System (M5, in progress)
