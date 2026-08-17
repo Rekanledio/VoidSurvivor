@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using VoidSurvivor.Audio;
 using VoidSurvivor.Core;
 
 namespace VoidSurvivor.UI
@@ -27,7 +28,7 @@ namespace VoidSurvivor.UI
             if (panel == null) panel = gameObject;
 
             if (restartButton != null)
-                restartButton.onClick.AddListener(() => RunRestarter.RestartRun());
+                restartButton.onClick.AddListener(() => { SfxLibrary.PlayUiClick(); RunRestarter.RestartRun(); });
             if (mainMenuButton != null)
                 mainMenuButton.onClick.AddListener(OnMainMenuPressed);
 
@@ -51,6 +52,7 @@ namespace VoidSurvivor.UI
 
         private void OnMainMenuPressed()
         {
+            SfxLibrary.PlayUiClick(); // M12.2: shared UI click
             if (GameManager.Instance != null)
                 GameManager.Instance.TryChangeState(GameState.MainMenu);
         }

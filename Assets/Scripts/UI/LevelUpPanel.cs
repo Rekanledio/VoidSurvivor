@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using VoidSurvivor.Audio;
 using VoidSurvivor.Core;
 using VoidSurvivor.Player;
 
@@ -39,6 +40,7 @@ namespace VoidSurvivor.UI
                 {
                     buttons[i].onClick.AddListener(() =>
                     {
+                        SfxLibrary.PlayUiClick(); // M12.2: shared UI click
                         if (upgradeManager != null) upgradeManager.Select(index);
                     });
                 }

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using VoidSurvivor.Audio;
 using VoidSurvivor.Core;
 using VoidSurvivor.Player;
 using VoidSurvivor.Shop;
@@ -45,6 +46,7 @@ namespace VoidSurvivor.UI
                 {
                     buyButtons[i].onClick.AddListener(() =>
                     {
+                        SfxLibrary.PlayUiClick(); // M12.2: shared UI click
                         if (shopManager != null) shopManager.Purchase(index);
                     });
                 }
@@ -53,6 +55,7 @@ namespace VoidSurvivor.UI
             {
                 refreshButton.onClick.AddListener(() =>
                 {
+                    SfxLibrary.PlayUiClick(); // M12.2: shared UI click
                     if (shopManager != null) shopManager.Refresh();
                 });
             }
@@ -60,6 +63,7 @@ namespace VoidSurvivor.UI
             {
                 continueButton.onClick.AddListener(() =>
                 {
+                    SfxLibrary.PlayUiClick(); // M12.2: shared UI click
                     if (shopManager != null) shopManager.Continue();
                 });
             }

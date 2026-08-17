@@ -25,6 +25,9 @@ namespace VoidSurvivor.Core
                 go.AddComponent<GameFlow>();
                 // M12.1: minimal persistent SFX foundation (one AudioSource).
                 go.AddComponent<VoidSurvivor.Audio.AudioManager>();
+                // M12.2: SFX library (clip mapping) + event wiring (gameplay + UI).
+                go.AddComponent<VoidSurvivor.Audio.SfxLibrary>();
+                go.AddComponent<VoidSurvivor.Audio.GameplaySfx>();
             }
         }
     }

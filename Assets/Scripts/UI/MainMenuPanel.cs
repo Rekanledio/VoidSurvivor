@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using VoidSurvivor.Audio;
 using VoidSurvivor.Core;
 
 namespace VoidSurvivor.UI
@@ -53,12 +54,14 @@ namespace VoidSurvivor.UI
 
         private void OnPlayPressed()
         {
+            SfxLibrary.PlayUiClick(); // M12.2: shared UI click
             if (GameManager.Instance != null)
                 GameManager.Instance.TryChangeState(GameState.Playing);
         }
 
         private void OnQuitPressed()
         {
+            SfxLibrary.PlayUiClick(); // M12.2: shared UI click
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #else
