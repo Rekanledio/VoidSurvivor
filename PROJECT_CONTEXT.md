@@ -79,7 +79,7 @@ M12 — Audio/VFX (Basic presentation feedback)
 M12 — Audio/VFX（尚未开始，等待任务指令；M11 — UI COMPLETE / ACCEPTED）
 
 ## Latest Commit
-f815d71 docs: M10.3 boss finalization and regression
+39826bb docs: M11.4 ui acceptance
 
 ## Important Decisions
 - Do not add special differentiation mechanics for MVP.
