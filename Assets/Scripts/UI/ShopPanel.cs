@@ -107,29 +107,36 @@ namespace VoidSurvivor.UI
                 if (nameTexts[i] != null)
                 {
                     nameTexts[i].text = valid ? ProductName(products[i]) : "—";
-                    // WeaponUpgrade: two-line name in a compact top-aligned font so it
-                    // fits the ProductCard without overflowing the top edge (M9.5 UI fix).
-                    // Other product types keep the original single-line style untouched.
-                    nameTexts[i].fontSize = isWeaponUpgrade ? 16f : 24f;
+                    // WeaponUpgrade (final layout): single TMP with two lines —
+                    // line1 weapon name (24px, same as normal cards), line2
+                    // "升级：X  等级：Lv.A → Lv.B" (16px). TopLeft alignment +
+                    // taller rect so both lines fit inside the ProductCard.
+                    // Other product types keep the original single-line 24px style.
+                    nameTexts[i].fontSize = isWeaponUpgrade ? 24f : 24f;
                     nameTexts[i].alignment = isWeaponUpgrade
                         ? TextAlignmentOptions.TopLeft
                         : TextAlignmentOptions.Left;
+                    if (nameTexts[i].rectTransform != null)
+                    {
+                        // Name/Label is a stretch child; resize the Name (parent) rect.
+                        var nameRt = nameTexts[i].rectTransform.parent as RectTransform;
+                        if (nameRt != null)
+                        {
+                            nameRt.sizeDelta = isWeaponUpgrade
+                                ? new Vector2(360f, 60f)
+                                : new Vector2(360f, 32f);
+                        }
+                    }
                 }
                 if (typeTexts[i] != null) typeTexts[i].text = valid ? ProductTypeName(products[i]) : "";
                 if (priceTexts[i] != null) priceTexts[i].text = valid ? $"价格：{products[i].Price} 金币" : "";
 
-                // WeaponUpgrade level line (own child, below Name, above Price).
-                if (levelTexts[i] != null)
+                // Level line is now part of the Name text (final layout); the
+                // legacy Level child stays inactive and unused.
+                if (levelTexts != null && i < levelTexts.Length && levelTexts[i] != null)
                 {
                     var levelGo = levelTexts[i].transform.parent;
-                    if (levelGo != null) levelGo.gameObject.SetActive(isWeaponUpgrade);
-                    if (isWeaponUpgrade && products[i].WeaponUpgrade != null)
-                    {
-                        int lvl = shopManager != null
-                            ? shopManager.LevelOfEquipped(products[i].WeaponUpgrade.TargetWeapon)
-                            : 1;
-                        levelTexts[i].text = $"等级：Lv.{lvl} → Lv.{lvl + 1}";
-                    }
+                    if (levelGo != null) levelGo.gameObject.SetActive(false);
                 }
 
                 if (buyButtons[i] != null)
@@ -192,9 +199,10 @@ namespace VoidSurvivor.UI
         }
 
         /// <summary>
-        /// WeaponUpgrade product name (M9.5, UI layout fix): two lines only —
-        /// weapon name / 升级：stat. The level line is rendered by the separate
-        /// Level child (levelTexts), not packed into Name (which would overflow).
+        /// WeaponUpgrade product name (final M9.5 UI layout): one TMP, two lines —
+        /// line1 weapon name (24px), line2 "升级：stat  等级：Lv.X → Lv.X+1" (16px
+        /// via rich text size tag). Level comes from the equipped weapon's actual
+        /// WeaponLevel (never hardcoded).
         /// </summary>
         private static string WeaponUpgradeName(ShopItemData item)
         {
@@ -205,7 +213,10 @@ namespace VoidSurvivor.UI
             if (WeaponDataNames.TryGetValue(upgrade.TargetWeapon.name, out string zn)) weaponZh = zn;
             else if (WeaponNames.TryGetValue(upgrade.TargetWeapon.name, out zn)) weaponZh = zn;
             string statZh = WeaponUpgradeStatName(upgrade.StatType);
-            return $"{weaponZh}\n升级：{statZh}";
+            int level = FindFirstObjectByType<ShopManager>() is { } sm
+                ? sm.LevelOfEquipped(upgrade.TargetWeapon)
+                : 1;
+            return $"{weaponZh}\n<size=15>升级：{statZh}  等级：Lv.{level} → Lv.{level + 1}</size>";
         }
 
         private static string ProductTypeName(ShopItemData item)
