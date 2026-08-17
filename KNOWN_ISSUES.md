@@ -34,6 +34,12 @@
 5. M6 legacy ScriptableObject scene references (WeaponData/ArcBladeData/BoomerangData attached to scene GameObjects) produce transient auto-fix warnings on Play.
    - Impact: None on runtime; Unity auto-fixes on each Play (warnings only, scene not modified persistently).
    - Status: Documented (historical legacy from M6, NOT introduced by M12; revisit if scene SO wiring is refactored).
+6. Unity Editor requires `-force-d3d11` to start after the MemoryStream Fatal Error recovery.
+   - Impact: DX12 init fails (0x80004002) + License handshake stalls; `-force-d3d11` bypasses and starts reliably.
+   - Status: Documented (Unity recovery, environment/tooling, NOT a project defect). Keep using -force-d3d11 for this project's sessions.
+7. `ProjectSettings/~UnityDirMonSyncFile~...` is a Unity directory-monitor temp file.
+   - Impact: None; untracked by git, Unity-managed. Do NOT delete, add, or commit it.
+   - Status: Documented; harmless.
 4. mcp manage_gameobject resolves project component types only by fully-qualified name (e.g. "VoidSurvivor.Player.PlayerStats").
    - Impact: Short names fail with "not found" — always pass full names.
    - Status: Documented; workaround in place.

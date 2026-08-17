@@ -1050,3 +1050,15 @@ M10 — Boss (per milestone list).
 - **验证**（临时 M13_1SaveFoundationProbe，已删）：**23/23 PASS, 0 FAILURES** — SaveManager 存在+唯一(1) / SaveData 默认值（1/1/0/0/0）/ Save path 正确（C:/Users/Lenovo/AppData/LocalLow/DefaultCompany/VoidSurvivor/VoidSurvivorSave.json）/ Save() 创建文件 + JSON 含全部字段 / **Load() 精确恢复测试值 0.73·0.41·8·12·350** / 修改后 Re-save·Load 一致 / DeleteSave 删除 + 缺文件 no-op / 缺文件 Load 默认 / **损坏 JSON 不崩溃 + 回退默认** / PlayerProgress·PlayerStats·WaveManager 不受影响 / MainMenu·LevelUp·Shop 面板正常 / AudioManager·VFXManager 正常。测试 save 文件已删。
 - **Unity Recovery 关联**：本任务在 MemoryStream Fatal Error 恢复后执行（-force-d3d11 启动），Unity MCP 恢复、Library 重建、Console 0/0。
 - **M13 整体 IN PROGRESS**（仅 M13.1 完成；M13.2/3/4 pending）。
+
+### M13.2 — Settings Persistence — COMPLETE
+- 范围：MasterVolume / SfxVolume 跨游戏启动本地持久化（不新增 UI、不建立第二套 Save 系统）。
+- **修改**：`Assets/Scripts/Audio/AudioManager.cs` —— MasterVolume/SfxVolume 改 private set；新增 `SetMasterVolume(float)`/`SetSfxVolume(float)`（Clamp01 → 赋值 → SaveSettings 读-改-写持久化，保留 best* 字段为 M13.3 准备）；Awake 末尾 `LoadSettings()`（SaveManager.Load → Clamp01 → 应用，缺文件/损坏自动回退 1.0/1.0）。AudioManager 不直接操作 JSON/File（委托 SaveManager）。
+- **修改**：`Assets/Scripts/Core/GameBootstrap.cs` —— SaveManager AddComponent 移到 AudioManager **之前**（Awake 顺序=AddComponent 顺序 → AudioManager.Awake 时 SaveManager.Instance 已就绪）。
+- **不修改**：SaveData / SaveManager / PlayerProgress / PlayerStats / WeaponController / WaveManager / Boss / UI / GameFlow / Scene / 字体。
+- **验证**（临时 M13_2SettingsPersistenceProbe，已删）：
+  - **Session A（Play #1，无 save）**：20/20 PASS — 默认 Master=1/Sfx=1 / Clamp（-1→0、2→1）/ Set 0.73·0.41 生效 / save 文件创建且含 0.73/0.41 / SFX 正常播放 / M9 LevelUp·Shop、M10 WaveManager、M11 MainMenu / PlayerProgress·PlayerStats·WeaponController·WaveManager 不受影响。
+  - **Session B（Play #2，重启）**：14/14 PASS — **AudioManager.Awake 自动加载 0.73/0.41** / 损坏 JSON → Load 回退默认 / 回归全过。
+  - **Session C（删 save 后 Play #3）**：execute_code 直接验证 Master=1/Sfx=1 + probe 20/20（A-fresh 分支全项）。
+- **测试清理**：测试 save（0.73/0.41）已删除（persistentDataPath 无残留）；probe 已删；字体未写坏（git diff 空）。
+- **M13 整体 IN PROGRESS**（M13.1+M13.2 完成；M13.3/4 pending）。

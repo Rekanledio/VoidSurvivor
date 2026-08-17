@@ -15,7 +15,7 @@
 | M10 | Boss | Final boss encounter | Completed |
 | M11 | UI | Complete game flow UI | Completed |
 | M12 | Audio/VFX | Basic presentation feedback | Completed |
-| M13 | Save | Local persistence | Pending |
+| M13 | Save | Local persistence | In Progress (M13.1 completed) |
 | M14 | Optimization | Performance and stability pass | Pending |
 | M15 | Release | Windows + Web builds | Pending |
 | M16 | GitHub Showcase | README, docs, screenshots, demo | Pending |

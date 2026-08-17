@@ -1,13 +1,13 @@
 # Void Survivor — Save Context
 
 ## Last Updated
-2026-08-17 (M13.1 Save Foundation COMPLETE — M13 IN PROGRESS；M13.2/3/4 pending)
+2026-08-17 (M13.2 Settings Persistence COMPLETE — M13 IN PROGRESS；M13.3/4 pending)
 
 ## Current Phase
 Phase 1 — Core framework development
 
 ## Current Milestone
-M13 — Save (Local persistence)（M12 — Audio/VFX COMPLETE / ACCEPTED；M13 NOT STARTED）
+M13 — Save (Local persistence)（IN PROGRESS；M13.1 Save Foundation COMPLETE；M13.2 NOT STARTED）
 
 ## Completed (overview)
 - M0: concept, MVP scope, delivery strategy, documentation strategy.
@@ -39,7 +39,8 @@ M13 — Save (Local persistence)（M12 — Audio/VFX COMPLETE / ACCEPTED；M13 N
 - M12.3 (2026-08-17): Basic VFX Feedback — 8 个 ParticleSystem prefab（Assets/Prefabs/VFX/，短生命周期 0.15-0.6s，autoDestroy）+ `VFXManager.cs`（事件订阅 DamageApplied/EnemyDied/PickupCollected/PlayerLevelUp/BossSpawned/BossDefeated/PlayerDied/GameStateChanged(Victory) → prefab Instantiate + Play；DamageApplied 0.05s 限频；缓存 Player 一次 Find）。M12_3BasicVfxProbe 22/22 PASS；2× Play/Stop 0/0；字体未写坏；probe 已删。**M12 整体 IN PROGRESS**（M12.1+M12.2+M12.3 完成；M12.4 pending）。
 - Fixed: Rigidbody2D.interpolation = Interpolate; Camera orthographicSize 5 → 8; PlayerController switched to serializable `InputActionAsset` + `FindAction("Move")`.
 - M12.4 (2026-08-17): Audio/VFX Integration & Acceptance — **VFX Runtime 修复**（AssetDatabase→Resources.Load，8 prefab 移至 Assets/Resources/VFX/，删 UnityEditor 依赖）+ 全链路验收（M12_4AudioVfxAcceptanceProbe **40/40 PASS**：9 SFX+8 VFX Runtime Load/8 事件 SFX+VFX 双链路/双限频 50→1/VFX 自动销毁/M9·M10·M11 回归/Restart clean）+ **Windows Standalone64 Build SUCCESS**（173.72MB，errors=0，三次运行进程稳定 20-25s 无崩溃）。3× Play/Stop 0 errors；字体未写坏；probe 已删。**M12 = COMPLETE / ACCEPTED**（M13 NOT STARTED）。HEAD d2f435c（docs: M12.4 audio vfx acceptance）。
-- M13.1 (2026-08-17): Save Foundation — SaveData（masterVolume/sfxVolume/bestWave/bestLevel/bestGold 预留字段）+ SaveManager（单例挂 GameManager GO；Save/Load/HasSave/DeleteSave；JsonUtility+persistentDataPath/VoidSurvivorSave.json；缺文件/损坏 JSON 回退默认不崩溃；不保存 Run Data）。M13_1SaveFoundationProbe **23/23 PASS**（含精确恢复 0.73·0.41·8·12·350、损坏 JSON 容错、M9/M10/M11/M12 回归）；测试 save 文件已清理；字体未写坏。**M13 整体 IN PROGRESS**（仅 M13.1 完成；M13.2/3/4 pending）。- Verified: W/A/D covered -20..+20 through center (no pull-back), bounds hold, camera follows; 0 console errors/warnings. Files: PlayerController.cs, Player.prefab, SC_Main.unity.
+- M13.1 (2026-08-17): Save Foundation — SaveData（masterVolume/sfxVolume/bestWave/bestLevel/bestGold 预留字段）+ SaveManager（单例挂 GameManager GO；Save/Load/HasSave/DeleteSave；JsonUtility+persistentDataPath/VoidSurvivorSave.json；缺文件/损坏 JSON 回退默认不崩溃；不保存 Run Data）。M13_1SaveFoundationProbe **23/23 PASS**（含精确恢复 0.73·0.41·8·12·350、损坏 JSON 容错、M9/M10/M11/M12 回归）；测试 save 文件已清理；字体未写坏。**M13 整体 IN PROGRESS**（仅 M13.1 完成；M13.2/3/4 pending）。production 3819433（feat: M13.1 save foundation）+ docs 9ca61c3（docs: M13.1 save foundation documentation）。
+- M13.2 (2026-08-17): Settings Persistence — AudioManager 加 SetMasterVolume/SetSfxVolume（Clamp01 + 读-改-写 SaveSettings）+ Awake LoadSettings；GameBootstrap 调整 SaveManager 先于 AudioManager 挂载。M13_2SettingsPersistenceProbe Session A 20/20 + B 14/14 + C 20/20（默认 1/1、重启自动加载 0.73/0.41、损坏 JSON/删 save 回退、M9/M10/M11 回归）；测试 save 已清理；字体未写坏。**M13 整体 IN PROGRESS**（M13.1+M13.2 完成；M13.3/4 pending）。- Verified: W/A/D covered -20..+20 through center (no pull-back), bounds hold, camera follows; 0 console errors/warnings. Files: PlayerController.cs, Player.prefab, SC_Main.unity.
 
 ## Modified / Added Files (M3 bug fix)
 - Assets/Scripts/Player/PlayerController.cs (InputActionAsset reference)
@@ -301,7 +302,7 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - Commit `12f17e4`. Normal Weapon / StatBonus cards visually unchanged.
 
 ## Next Step
-M13.2 — Settings Persistence（M13.1 COMPLETE；M13 整体 IN PROGRESS；M13.3/4 待任务）
+M13.3 — Best Run Record（M13.1+M13.2 COMPLETE；M13 整体 IN PROGRESS；M13.4 待任务）
 
 ## M10.1 — Boss Base Framework (2026-08-17)
 - 现有 M8.3 Boss 实现已完整覆盖 M10.1 职责（BossData/BossAI/W10 流程/事件/pool），M10.1 不修改任何生产代码，仅正式验证。
@@ -314,7 +315,7 @@ M13.2 — Settings Persistence（M13.1 COMPLETE；M13 整体 IN PROGRESS；M13.3
 - M10.1 + M10.2 + M10.3 COMPLETE；**M10 = COMPLETE / ACCEPTED**。
 - M11.1+M11.2+M11.3+M11.4 COMPLETE；**M11 = COMPLETE / ACCEPTED**。
 - M12.1+M12.2+M12.3+M12.4 COMPLETE；**M12 = COMPLETE / ACCEPTED**。
-- M13.1 COMPLETE；**M13 整体 IN PROGRESS**（M13.2/3/4 pending）。
+- M13.1+M13.2 COMPLETE；**M13 整体 IN PROGRESS**（M13.3/4 pending）。
 
 ## M10.2 — Boss Projectile Skill 参数（implementation parameters，非 GAME_DESIGN balance）
 - BossSkillCooldown = 3.0 s；BossProjectileSpeed = 6.0；BossProjectileLifetime = 3.0 s；BossSkillRange = 10.0；BossProjectileDamage = Boss 当前 runtime Stats.Damage（自动继承 WaveMultiplier）。

@@ -43,7 +43,7 @@
 Phase 1 — Core framework development
 
 ## Current Milestone
-M13 — Save (Local persistence)（M12 — Audio/VFX COMPLETE / ACCEPTED；M13 尚未开始）
+M13 — Save (Local persistence)（IN PROGRESS；M13.1 Save Foundation COMPLETE；M13.2 尚未开始）
 
 ## Completed Milestones
 - M0 — Project Documentation Initialization
@@ -76,10 +76,10 @@ M13 — Save (Local persistence)（M12 — Audio/VFX COMPLETE / ACCEPTED；M13 �
 M13 — Save (Local persistence)
 
 ## Current Task
-M13 — Save (Local persistence)（尚未开始，等待任务指令；M12 — Audio/VFX COMPLETE / ACCEPTED）
+M13.2 — Settings Persistence（尚未开始，等待任务指令；M13.1 Save Foundation COMPLETE）
 
 ## Latest Commit
-d2f435c docs: M12.4 audio vfx acceptance
+9ca61c3 docs: M13.1 save foundation documentation
 
 ## Important Decisions
 - Do not add special differentiation mechanics for MVP.
