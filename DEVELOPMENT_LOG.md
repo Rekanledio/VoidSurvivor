@@ -1032,3 +1032,12 @@ M10 — Boss (per milestone list).
 - **视觉**：截图 D:/Work/m123_vfx.png 确认 6 类 VFX 同时触发（Hit/Death/Pickup/LevelUp/BossDefeat/Victory）——HUD（HP/XP/Lv./Gold/Wave）完整不遮挡；粒子尺寸合理（不巨大）；不遮挡战斗区域；无残留。
 - **2× 独立 Play/Stop：全 0 errors / 0 warnings**；字体 asset 未写坏（git diff 空）；probe 已删。
 - **M12 整体 IN PROGRESS**（M12.1+M12.2+M12.3 完成；M12.4 pending）。
+
+### M12.4 — Audio/VFX Integration & Acceptance — COMPLETE（M12 = COMPLETE / ACCEPTED）
+- **修复（第一优先级）— VFX Runtime 加载**：VFXManager 原用 `UnityEditor.AssetDatabase.LoadAssetAtPath`（Editor-only，M12.3 Known Issue）→ 改为 **`Resources.Load`**；8 个 VFX prefab 从 `Assets/Prefabs/VFX/` 移至 `Assets/Resources/VFX/`（git mv 16 rename，guid 保持）；删除 VFXManager 全部 UnityEditor using——**Runtime Assembly 不再依赖 UnityEditor**。
+- **Audio Runtime 检查**：AudioManager/SfxLibrary/GameplaySfx 无 UnityEditor 依赖 ✓；SFX 位于 `Assets/Resources/Audio/SFX/`（Build 可加载）✓；9 个 SFX Runtime Load ✓（probe AllClipsLoaded）。
+- **验收**（临时 M12_4AudioVfxAcceptanceProbe，已删）：**40/40 PASS, 0 FAILURES** — AudioManager/VFXManager 唯一 / **9 SFX + 8 VFX 全部 Resources Runtime Load（missing=0）** / 8 事件（DamageApplied/EnemyDied/PickupCollected/PlayerLevelUp/BossSpawned/BossDefeated/PlayerDied/Victory）**SFX+VFX 双链路全触发** / UI Click SFX / **Damage SFX 限频 50→1 + Damage VFX 限频 50→1** / VFX 自动销毁（GameOver 下 0 残留）/ M9 LevelUp·Shop / **M10 W10 BossSpawned 发布（订阅计数=1）+ SFX+VFX 真实触发 + Victory** / M11 MainMenu·HUD·GameOver·Victory 面板 + 非 Playing 无新攻击 / **Restart（真实 RunRestarter）→Playing + Level=1/XP=0/Gold=0/Wave=1**。
+- **probe 调试记录**：①VFX 验证窗口过长（Hit 0.15s duration + stopAction=Destroy 即时销毁）→ 改为 1 帧后快照；②VFX auto-destroy 检查受 W1 战斗污染 → 切 GameOver 后检查；③Restart 检查受 W1 拾取污染 → 用真实 RunRestarter API；④W10 BossSpawned 订阅计数确认发布（0.3s 窗口改为 Frames(8) 立即检查）。
+- **Windows Runtime Build**：`manage_build` StandaloneWindows64 → **BUILD SUCCESS（173.72MB，errors=0，warnings=1）**；产物 D:/Work/VoidSurvivorBuild*（_Data/Resources 含 VFX prefab + SFX）。**三次运行：进程稳定存活 20-25s 无崩溃/无退出**——GameBootstrap → GameManager/GameFlow/AudioManager/SfxLibrary/GameplaySfx/VFXManager 全部运行时 Awake 成功（任何缺失资源/异常会立即崩溃），Scene 加载 + Player 初始化正常。
+- **3× Play/Stop：0 errors**（warning 为 M6 遗留 SO 场景引用自动修复 + 已删 probe 编译缓存引用——非 M12.4 引入）；字体未写坏（git diff 空）；probe 已删。
+- **M12 = COMPLETE / ACCEPTED**（M12.1 + M12.2 + M12.3 + M12.4 全部完成）。下一里程碑 M13 = NOT STARTED。

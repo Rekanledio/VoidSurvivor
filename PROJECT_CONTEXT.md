@@ -43,7 +43,7 @@
 Phase 1 — Core framework development
 
 ## Current Milestone
-M12 — Audio/VFX（M11 — UI COMPLETE / ACCEPTED；M12 尚未开始）
+M12 — Audio/VFX — COMPLETE / ACCEPTED（M11 — UI COMPLETE / ACCEPTED；M13 尚未开始）
 
 ## Completed Milestones
 - M0 — Project Documentation Initialization
@@ -73,10 +73,10 @@ M12 — Audio/VFX（M11 — UI COMPLETE / ACCEPTED；M12 尚未开始）
 - M10.1 — Boss Base Framework (2026-08-17, COMPLETE — 验证/正式化): 现有 M8.3 Boss 实现已完整覆盖 M10.1 职责 — `BossData : EnemyData` (SO 静态配置) + `BossAI` (追击 + 接触伤害 via CombatSystem, IPoolable) + Boss runtime 复用 EnemyController/EnemyStats/EnemyHealth + W10 Boss spawn (SpawnBossNow) + pooled lifecycle (复用 EnemySpawner 同一 ObjectPool) + death attribution (EnemyKilled) → `BossDefeated` → `Victory` + BossSpawned/BossDefeated 事件。**无生产代码修改**（不重复实现 Boss）。M10_1BossProbe 29/29 PASS（数据/prefab/W10 缩放 725·29·2.175/死亡链各一次/State Victory/No wave11/pool reuse 干净/reused chain 1/1/1/1/回归），2× Play/Stop 0/0。M10 整体 IN PROGRESS。M10.2 — Boss Projectile Skill (2026-08-17, COMPLETE): BossAI 唯一主动技能（每 3s 向玩家当前位置发射 1 个 PulseProjectile，复用共享 ObjectPool+CombatSystem，source=Boss/damage=runtime Stats.Damage 继承 WaveMultiplier/lifetime 3s 命中一次 Release/方向锁定不追踪；Boss prefab 挂 projectilePrefab；21/22 PASS 唯一 FAIL 为 probe 订阅时序、独立验证确认 DamageApplied 正常；2× Play/Stop 0/0）。M10.3 — Boss Finalization & Regression (2026-08-17, COMPLETE): **Boss 最终参数确认 + 完整战斗验收 + 跨系统回归 + 跨 Play Session 稳定性** — 无新增 mechanic、无生产代码修改；M10_3BossFinalRegressionProbe 55/55 PASS（参数 500/20/1.5/1.5/1.0 + W10 ×1.45→725/29/2.175、技能 3s/6.0/3.0s/10.0、追击/接触/技能/方向锁定/命中/Release/冷却/死亡链各一次/Victory/No Wave11/pool reuse 干净/跨两 run 各 2 次/M6·M7·M9 回归）；3× Play/Stop 0/0；参数确认适合 MVP 最终值 No changes required。**M10 = COMPLETE / ACCEPTED。**
 
 ## Next Milestone
-M12 — Audio/VFX (Basic presentation feedback)
+M13 — （待 ChatGPT 定义）
 
 ## Current Task
-M12 — Audio/VFX（尚未开始，等待任务指令；M11 — UI COMPLETE / ACCEPTED）
+M13 — （尚未开始，等待任务指令；M12 — Audio/VFX COMPLETE / ACCEPTED）
 
 ## Latest Commit
 a30bde3 docs: update latest commit to M11.4 acceptance
