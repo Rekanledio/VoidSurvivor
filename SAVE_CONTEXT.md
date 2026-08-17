@@ -7,7 +7,7 @@
 Phase 1 — Core framework development
 
 ## Current Milestone
-M10 — Boss — COMPLETE / ACCEPTED（M10.1 + M10.2 + M10.3 COMPLETE；M11 — UI 尚未开始）
+M11 — UI（M10 — Boss COMPLETE / ACCEPTED；M11 NOT STARTED）
 
 ## Completed (overview)
 - M0: concept, MVP scope, delivery strategy, documentation strategy.
@@ -28,7 +28,7 @@ M10 — Boss — COMPLETE / ACCEPTED（M10.1 + M10.2 + M10.3 COMPLETE；M11 — 
 - Shop WeaponUpgrade UI Final Layout Fix (2026-08-17): WeaponUpgrade Name = two-line single TMP (24px name + 15px upgrade/level via rich text), Price 22px unchanged, independent Level row removed, normal cards untouched, no overlap, Chinese OK. Commit 12f17e4.
 - M10.1 (2026-08-17): Boss Base Framework — **验证/正式化**。现有 M8.3 Boss 实现（BossData : EnemyData / BossAI / W10 SpawnBossNow / EnemyKilled→BossDefeated→Victory / BossSpawned+BossDefeated 事件 / 复用 EnemySpawner 同一 ObjectPool / IPoolable）已完整覆盖 M10.1 职责，**无生产代码修改**。M10_1BossProbe 29/29 PASS（数据/prefab 组件链/W10 缩放 725·29·2.175/死亡链各一次/State Victory/No wave11/pool reuse 干净/reused chain 1/1/1/1/回归），2× Play/Stop 0/0。HEAD 1f5369e。**M10.1 = COMPLETE**（M10 整体 IN PROGRESS）。
 - M10.2 (2026-08-17): Boss Projectile Skill — BossAI 唯一主动技能：每 3.0s（skillCooldown）存活+Playing+玩家存活+距离≤10.0 时向玩家**当前位置**发射 1 个 PulseProjectile（speed 6.0，lifetime 3.0s，方向锁定不追踪，Source=Boss，Damage=Boss runtime Stats.Damage 继承 WaveMultiplier，命中一次即 Release）。**复用共享 PulseProjectile ObjectPool + CombatSystem.ApplyDamage + DamageRequest + IPoolable**——无第二套 Damage/Pool/HP 框架。Boss prefab 挂 projectilePrefab=PulseProjectile.prefab。数值 3.0s/6.0/3.0s/10.0 为 implementation parameters 非 GAME_DESIGN balance。M10_2BossAbilityProbe 21/22 PASS（唯一 FAIL 为 probe DamageApplied 订阅时序，独立验证确认 CombatSystem 正常发布 DamageApplied；玩家 HP 实际正确下降），2× Play/Stop 0/0，M8 回归 PASS。HEAD 1fc45fc。**M10.2 = COMPLETE**。
-- M10.3 (2026-08-17): Boss Finalization & Regression — **Boss 最终参数确认（500/20/1.5/1.5/1.0 + W10 ×1.45 → 725/29/2.175，技能 3s/6.0/3.0s/10.0）确认适合作为 MVP 最终值，No production parameter changes required；无新增 mechanic、无生产代码修改**。完整战斗验收（W10 spawn/追击/接触伤害 29/技能发射/方向锁定不追踪/命中/Release/冷却/死亡链各一次/Victory/No Wave11/pool reuse 干净+技能重置/跨两 run 各 2 次）+ M6/M7/M9 回归。M10_3BossFinalRegressionProbe **55/55 PASS**；3× Play/Stop 全 0/0；probe 已删；字体未写坏。**M10 = COMPLETE / ACCEPTED。**
+- M10.3 (2026-08-17): Boss Finalization & Regression — **Boss 最终参数确认（500/20/1.5/1.5/1.0 + W10 ×1.45 → 725/29/2.175，技能 3s/6.0/3.0s/10.0）确认适合作为 MVP 最终值，No production parameter changes required；无新增 mechanic、无生产代码修改**。完整战斗验收（W10 spawn/追击/接触伤害 29/技能发射/方向锁定不追踪/命中/Release/冷却/死亡链各一次/Victory/No Wave11/pool reuse 干净+技能重置/跨两 run 各 2 次）+ M6/M7/M9 回归。M10_3BossFinalRegressionProbe **55/55 PASS**；3× Play/Stop 全 0/0；probe 已删；字体未写坏。**M10 = COMPLETE / ACCEPTED。** HEAD f815d71（docs: M10.3 boss finalization and regression）。
 ## In Progress
 - Nothing. M3 (incl. bug fix) is fully complete.
 
