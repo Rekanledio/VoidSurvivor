@@ -999,3 +999,13 @@ M10 — Boss (per milestone list).
 - **probe 调试记录**：①Boss 生成在玩家位置 → 发射的 projectile 距离≈0 立即命中消失 → 1.2s 后数不到 → 改为 spawn 后先把玩家移 30 外、再拉进 +7、0.5s 内计数（未命中仍在飞）；②**关键**：真实 PlayerDied→GameOver→Restart 后玩家仍 IsDead=true → BossAI.Target.IsDead 拦截发射（count=0）→ 修复 RunRestarter 复活玩家。
 - **3× 独立 Play/Stop：全 0 errors / 0 warnings**；字体 asset 未写坏（git diff 空）；probe 已删。
 - **M11 = COMPLETE / ACCEPTED**（M11.1 + M11.2 + M11.3 + M11.4 全部完成）。下一里程碑 M12 = Audio/VFX。
+
+### M12.1 — Audio Foundation — COMPLETE
+- 范围：最小 SFX 基础架构（AudioManager + 1 可复用 AudioSource + PlaySfx API + Master/Sfx volume）。M12.1 不接事件（M12.2 负责正式事件音效）、不做 BGM/AudioMixer/设置 UI。
+- **新增**：`Assets/Scripts/Audio/AudioManager.cs`（单例 + DontDestroyOnLoad；Awake 自持 AudioSource（playOnAwake=false/loop=false）；`PlaySfx(clip)` / `PlaySfx(clip, volume)` 用 PlayOneShot（支持重叠 SFX）；volume = clamp01(volume × Master × Sfx)；null clip 静默 no-op）。
+- **修改**：`GameBootstrap.cs` 挂 AudioManager 到 GameManager 同 GO（persistent，与 GameManager/GameFlow 同生命周期）。
+- **不修改**：GameManager / GameFlow / GameEvents / UI / 武器 / 敌人 / Boss / Scene / ScriptableObject。
+- **验证**（临时 M12_1AudioFoundationProbe，已删）：**16/16 PASS, 0 FAILURES** — AudioManager 存在 + 唯一(1) / AudioSource 存在 + playOnAwake=false + loop=false / **PlaySfx(clip) + PlaySfx(clip,0.5f) + null clip no-op 全部无异常** / **PlayOneShot 播放启动（isPlaying=true）** / volume 0..1 / MasterVolume/SfxVolume 默认 1.0 / GameState 不受影响 / LevelUpPanel 正常 / ShopPanel 正常 / **W10 Boss spawn + Boss 死亡→Victory 正常**。
+- **probe 调试记录**：`AudioSource.clip == clip` 断言 FAIL → **PlayOneShot 是 Unity 标准重叠 SFX 播放方式，不设置 AudioSource.clip 属性**（播放由 isPlaying 验证）→ 断言改为"PlayOneShot 播放启动"。
+- **2× 独立 Play/Stop：全 0 errors / 0 warnings**；字体 asset 未写坏（git diff 空）；probe 已删。
+- **M12 整体 IN PROGRESS**（仅 M12.1 完成；M12.2/3/4 pending）。

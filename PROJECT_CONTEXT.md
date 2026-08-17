@@ -43,7 +43,7 @@
 Phase 1 — Core framework development
 
 ## Current Milestone
-M11 — UI — COMPLETE / ACCEPTED（M10 — Boss COMPLETE / ACCEPTED；M12 — Audio/VFX 尚未开始）
+M12 — Audio/VFX（M11 — UI COMPLETE / ACCEPTED；M12 尚未开始）
 
 ## Completed Milestones
 - M0 — Project Documentation Initialization
@@ -79,7 +79,7 @@ M12 — Audio/VFX (Basic presentation feedback)
 M12 — Audio/VFX（尚未开始，等待任务指令；M11 — UI COMPLETE / ACCEPTED）
 
 ## Latest Commit
-39826bb docs: M11.4 ui acceptance
+a30bde3 docs: update latest commit to M11.4 acceptance
 
 ## Important Decisions
 - Do not add special differentiation mechanics for MVP.
