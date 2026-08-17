@@ -963,3 +963,14 @@ M10 — Boss (per milestone list).
 - **2× 独立 Play/Stop：全 0 errors / 0 warnings**；字体 asset 未写坏（git diff 空）；probe 已删。
 - **M11 整体 IN PROGRESS**（仅 M11.1 完成；M11.2/3/4 待任务）。
 - Commit 67f2ce0（feat: M11.1 main menu ui）。
+
+### M11.2 — Gameplay HUD — COMPLETE
+- 范围：最小 HUD 5 文本（HP/XP/Lv./Gold/Wave）+ 顶部条；只读展示，事件驱动显隐 + 每帧读缓存引用刷数据。
+- **复用**：现有 Canvas/EventSystem/InputSystemUIInputModule（唯一）/ GameStateChanged / PlayerHealth / PlayerProgress / WaveManager / TMP NotoSansSC。**不修改** PlayerHealth/PlayerProgress/WaveManager/GameManager/LevelUpPanel/ShopPanel/GameEvents。
+- **新文件**：`Assets/Scripts/UI/GameplayHUD.cs`（Awake 缓存 PlayerHealth/PlayerProgress/WaveManager + 订阅 GameStateChanged + 初始显隐；Update 在 visible 时读缓存刷 5 个 TMP 文本）。
+- **场景**：Canvas 下新增 GameplayHUD 子物体（半透明深色背景 Image + 5 TMP 文本：左上 HPText/XPText/LevelText，右上 GoldText/WaveText；锚顶 100 高）。
+- **验证**（临时 M11_2GameplayHUDProbe，已删）：**26/26 PASS, 0 FAILURES** — Canvas/EventSystem 各 1 / 5 文本存在 / MainMenu 隐藏 / Playing 显示 / **HP 初始 100/100 + 受伤后 75/100（真实 TakeDamage）** / **XP 跟随 runtime（AddXP(50) 后 "XP 60 / 100"，含击杀拾取 +10 XP）** / Level 升级 Lv.2 + XP "10 / 200" / Gold "120" + 消费后 "100" / Wave StartWave(3)→"Wave 3" / LevelUp·Shop 显示 / GameOver·MainMenu·Victory 隐藏 / 无 □ / 文本非空 / bounds 内 + 5 文本垂直分离无重叠。
+- **probe 调试记录**：①初始 probe 用绝对值断言（"XP 50/100"）→ 实际 Playing 中 WaveManager 自动 W1 + PulseGun 击杀敌人 + PickupSystem 拾取 → XP +10 → HUD 显示 60/100 是正确跟随真实 runtime → 断言改为"HUD 文本 == PlayerProgress 实时格式化值"（同步校验，证明了"HUD 跟随 runtime"）；②`Shop→GameOver` 非合法转换（M2 AllowedTransitions）→ probe 状态序列改为走合法路径（Playing→LevelUp→Playing→Shop→Playing→GameOver→MainMenu）。
+- **视觉**：截图 `D:/Work/m112_hud_playing.png` Playing 状态确认左上 HP 75/100 / XP 10/200 / Lv.2 + 右上 Gold 100 / Wave 1，字体清晰无 □，不遮挡战斗区域。
+- **2× 独立 Play/Stop：全 0 errors / 0 warnings**；字体 asset 未写坏（git diff 空）；probe 已删。
+- **M11 整体 IN PROGRESS**（仅 M11.1+M11.2 完成；M11.3/4 pending）。
