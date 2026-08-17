@@ -23,6 +23,10 @@ namespace VoidSurvivor.Core
                 // M11.4: game-flow handler (PlayerDied -> GameOver) lives on the
                 // same persistent object as the GameManager.
                 go.AddComponent<GameFlow>();
+                // M13.1: local persistence service (object <-> JSON <-> file).
+                // Added BEFORE AudioManager so AudioManager.Awake can Load() saved
+                // volume settings (M13.2) — Awake order follows AddComponent order.
+                go.AddComponent<VoidSurvivor.Save.SaveManager>();
                 // M12.1: minimal persistent SFX foundation (one AudioSource).
                 go.AddComponent<VoidSurvivor.Audio.AudioManager>();
                 // M12.2: SFX library (clip mapping) + event wiring (gameplay + UI).
@@ -30,8 +34,6 @@ namespace VoidSurvivor.Core
                 go.AddComponent<VoidSurvivor.Audio.GameplaySfx>();
                 // M12.3: minimal event-driven 2D VFX.
                 go.AddComponent<VoidSurvivor.VFX.VFXManager>();
-                // M13.1: local persistence service (object <-> JSON <-> file).
-                go.AddComponent<VoidSurvivor.Save.SaveManager>();
             }
         }
     }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using VoidSurvivor.Save;
 
 namespace VoidSurvivor.Audio
 {
@@ -9,14 +10,19 @@ namespace VoidSurvivor.Audio
     /// runtime-only (default 1.0); no settings UI, no PlayerPrefs, no mixer.
     /// Created by GameBootstrap on the persistent GameManager object
     /// (DontDestroyOnLoad), so exactly one instance exists for the app lifetime.
+    ///
+    /// M13.2: Master/Sfx volume persist across launches via SaveManager
+    /// (JsonUtility + persistentDataPath). Volume is clamped 0..1 on every set;
+    /// missing/corrupt save falls back to 1.0/1.0 defaults. AudioManager never
+    /// touches JSON/File directly — it delegates to SaveManager.
     /// </summary>
     [DisallowMultipleComponent]
     public class AudioManager : MonoBehaviour
     {
         public static AudioManager Instance { get; private set; }
 
-        public float MasterVolume { get; set; } = 1f;
-        public float SfxVolume { get; set; } = 1f;
+        public float MasterVolume { get; private set; } = 1f;
+        public float SfxVolume { get; private set; } = 1f;
 
         private AudioSource _sfxSource;
 
@@ -35,6 +41,52 @@ namespace VoidSurvivor.Audio
             if (_sfxSource == null) _sfxSource = gameObject.AddComponent<AudioSource>();
             _sfxSource.playOnAwake = false;
             _sfxSource.loop = false;
+
+            // M13.2: apply persisted volumes before any SFX can play.
+            // SaveManager is added to the same GO BEFORE AudioManager in
+            // GameBootstrap, so its Awake (Instance) already ran.
+            LoadSettings();
+        }
+
+        /// <summary>M13.2: sets master volume (clamped 0..1) and persists it.</summary>
+        public void SetMasterVolume(float value)
+        {
+            MasterVolume = Mathf.Clamp01(value);
+            SaveSettings();
+        }
+
+        /// <summary>M13.2: sets SFX volume (clamped 0..1) and persists it.</summary>
+        public void SetSfxVolume(float value)
+        {
+            SfxVolume = Mathf.Clamp01(value);
+            SaveSettings();
+        }
+
+        /// <summary>
+        /// Loads persisted volumes from SaveManager. Missing/corrupt save
+        /// yields default SaveData (1.0/1.0) via SaveManager.Load — no crash.
+        /// </summary>
+        private void LoadSettings()
+        {
+            if (SaveManager.Instance == null) return;
+
+            var data = SaveManager.Instance.Load();
+            MasterVolume = Mathf.Clamp01(data.masterVolume);
+            SfxVolume = Mathf.Clamp01(data.sfxVolume);
+        }
+
+        /// <summary>
+        /// Persists current volumes. Read-modify-write on the existing SaveData
+        /// so unrelated fields (bestWave/bestLevel/bestGold, M13.3) are preserved.
+        /// </summary>
+        private void SaveSettings()
+        {
+            if (SaveManager.Instance == null) return;
+
+            var data = SaveManager.Instance.Load();
+            data.masterVolume = MasterVolume;
+            data.sfxVolume = SfxVolume;
+            SaveManager.Instance.Save(data);
         }
 
         /// <summary>Plays a SFX clip at the default volume.</summary>
