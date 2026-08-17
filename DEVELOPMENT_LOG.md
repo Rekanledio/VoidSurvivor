@@ -942,3 +942,12 @@ M10 — Boss (per milestone list).
 - 验证（临时 M10_2BossAbilityProbe 已删）：**21/22 PASS** — W10 spawn/BossAI/冷却前不发射/冷却后发射 1 颗/source==Boss/damage==29(W10 缩放)/命中玩家 HP 下降(58=接触29+弹道29)/命中后 Release/Boss 死亡后不再发射/池复用技能状态干净重发/BossDefeated+Victory 各一次/No wave11/PulseGun+Boomerang 回归。唯一 FAIL 为 probe 内 DamageApplied 订阅计数时序问题——独立最小验证（反射 Subscribe + CombatSystem.ApplyDamage）确认 DamageApplied 正常发布且 Target==Player，**非生产缺陷**。
 - 最终 Play/Stop×2：0 errors / 0 warnings；字体 asset 未写坏（git diff 空）。
 - 未做：第二阶段/Rage/多技能/AoE/弹幕/血条/UI/VFX/音效/新掉落/新状态机/新 GameState。
+
+### M10.3 — Boss Finalization & Regression — COMPLETE（M10 = COMPLETE / ACCEPTED）
+- **范围**：Boss 最终参数确认 + 完整战斗验收 + 跨系统回归 + 跨 Play Session 稳定性。**无新增 Boss mechanic、无生产代码修改**。
+- **只读检查**：BossData.asset（500/20/1.5/1.5/1.0）、BossAI.cs（追击+接触+技能 3s/6.0/10.0）、Boss.prefab（projectilePrefab=PulseProjectile）、EnemyController/Stats/Health（WaveMultiplier 缩放）、WaveManager（W10 SpawnBossNow/_activeBoss→BossDefeated→Victory）、EnemySpawner（同池）、PulseProjectile（共享池）——与 M8.3/M10.1/M10.2 文档完全一致，无差异。
+- **验证**（临时 M10_3BossFinalRegressionProbe，已删）：**55/55 PASS, 0 FAILURES** — BossData 最终参数 / W10 runtime 725·29·2.175（×1.45）/ 范围门（玩家>10 不发射）/ 追击 / 技能发射恰 1 颗 / 接触伤害 29（HP 71）/ Projectile source==Boss + damage==29（继承 WaveMultiplier）/ 方向锁定不追踪（dot=1.00）/ 命中玩家（HP 71）/ 命中后 Release / 冷却 armed + 冷却中不发射 / 死亡链 EnemyDied·EnemyKilled·BossDefeated·Victory 各一次 / GameState Victory / No Wave11 / pool reuse 干净（IsDead=false·HP=725·velocity=0·multiplier 1.45）+ 技能冷却重置重发 / 跨两 run BossDefeated·Victory 各 2 次 / M6 四武器 + Boomerang ActiveCount / M7 pool 可达 + 无残留弹 / M9 XP·Shop·Upgrade。
+- **probe 调试记录**：①玩家 PulseGun 自动攻击的弹会污染 projectile 计数 → 断言必须按 source==Boss 过滤；②Boss 生成在玩家位置 → spawn 帧可能先发射 1 颗 baseline 弹 → 用增量断言（baseline+Δ）；③反射 SetField 清零 `_nextSkillTime` 可控制发射时机（等效 OnSpawn 重置语义）。
+- **平衡观察（实测）**：接触 29/次 ≈ 3.4 次致命；弹道 29/次、6.0 弹速、方向锁定可横向躲避；boss 移速 2.175 慢、725 HP 配合玩家四武器 DPS 约 20-35s 击杀 —— **适合作为 5~10 分钟 MVP run 的最终收尾**。**参数确认：No production parameter changes required**。
+- **3× 独立 Play/Stop：全 0 errors / 0 warnings**；字体 asset 未写坏（git diff 空）；probe 已删；跨 session Boss/projectile/EventBus/GameState 干净。
+- **M10 = COMPLETE / ACCEPTED**（M10.1 + M10.2 + M10.3 全部完成）。
