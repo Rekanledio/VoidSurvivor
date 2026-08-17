@@ -974,3 +974,16 @@ M10 — Boss (per milestone list).
 - **视觉**：截图 `D:/Work/m112_hud_playing.png` Playing 状态确认左上 HP 75/100 / XP 10/200 / Lv.2 + 右上 Gold 100 / Wave 1，字体清晰无 □，不遮挡战斗区域。
 - **2× 独立 Play/Stop：全 0 errors / 0 warnings**；字体 asset 未写坏（git diff 空）；probe 已删。
 - **M11 整体 IN PROGRESS**（仅 M11.1+M11.2 完成；M11.3/4 pending）。
+
+### M11.3 — Result Screens — COMPLETE
+- 范围：GameOverPanel + VictoryPanel + RunRestarter（最小 Run Restart API，Core 层）+ ResultPanel 通用组件。
+- **修改**：PlayerProgress.cs 新增 `ResetForRun()`（XP=0/Level=1/Gold=0）；SC_Main.unity 加 GameOverPanel + VictoryPanel。
+- **新增**：`Assets/Scripts/Core/RunRestarter.cs`（static `RestartRun()`：PlayerProgress.ResetForRun + PlayerStats.ResetForRun + 遍历 WeaponManager 调用 weapon.ResetWeaponUpgrades + `gm.TryChangeState(MainMenu→Playing)`，WaveManager 自动 StartWave(1)）；`Assets/Scripts/UI/ResultPanel.cs`（showInState + title + Restart/MainMenu 按钮，GameStateChanged 驱动显隐）。
+- **不修改**：GameManager / SceneFlow / PlayerStats / WeaponController / WeaponManager / WaveManager / LevelUpPanel / ShopPanel / GameEvents。
+- **重启链路**：RestartRun 重置 PlayerProgress/Stats/武器升级 → `MainMenu→Playing`（合法转换），WaveManager.OnGameStateChanged 检测 `_hasStartedRun=false → StartWave(1)` 自动新 run（M8.1 已支持）。
+- **Victory 进入**保持 M8.3：`WaveManager.OnEnemyKilled` 匹配 `_activeBoss` → `BossDefeated` → `TryChangeState(Victory)`。**GameOver 自动触发**当前**不存在**（PlayerDied 事件发布但无消费者切 GameOver）——属 M11.4 全流程集成范畴；M11.3 面板经合法转换 Playing→GameOver 验证。
+- **验证**（临时 M11_3ResultScreensProbe，已删）：**46/46 PASS, 0 FAILURES** — Canvas/EventSystem 各 1 / GameOverPanel+VictoryPanel 存在+按钮+标题中文（"游戏结束"/"胜利"）/ MainMenu+Playing 两面板隐藏 / GameOverPanel 在 GameOver 显示 / VictoryPanel 在 Victory 显示 / HUD 隐藏 / **GameOver MainMenuButton 真实点击→MainMenu（流程 B）** / **GameOver RestartButton 真实点击→Playing+HUD 显示+Level=1+XP=0+Gold=0+stats bonuses 清零+WeaponLevel=1+Wave=1（流程 A + reset 全部验证）** / **W10 BossDefeated→Victory→VictoryPanel 显示→Restart 真实点击→Playing（流程 C + M10 Victory 保持）** / **Victory MainMenuButton 真实点击→MainMenu（流程 D）** / LevelUpPanel+ShopPanel 存在（M9 回归）。
+- **probe 技巧**：①用反射 `SetField` 给 PlayerStats._damageBonus/WeaponController._weaponLevel 模拟"脏状态"以验证 Restart 后清零；②Battle→GameOver 后 wave 不可再 StartWave(10) 测流程 C（因 GameOver→MainMenu→Playing → StartWave(1) 第一次自动新 run，Restart 再 StartWave(10) 测流程 C）；③M9 UI 回归仅验证 LevelUpPanel/ShopPanel 存在（M9 已全面验证）。
+- **视觉**：截图 `D:/Work/m113_gameover.png` 深红背景 + "游戏结束" + 重新开始/主菜单；`D:/Work/m113_victory.png` 深蓝背景 + "胜利" + 重新开始/主菜单；中文渲染无 □。
+- **2× 独立 Play/Stop：全 0 errors / 0 warnings**；字体 asset 未写坏（git diff 空）；probe 已删。
+- **M11 整体 IN PROGRESS**（仅 M11.1+M11.2+M11.3 完成；M11.4 pending）。

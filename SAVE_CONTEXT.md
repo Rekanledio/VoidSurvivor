@@ -1,7 +1,7 @@
 # Void Survivor — Save Context
 
 ## Last Updated
-2026-08-17 (M11.2 Gameplay HUD COMPLETE — M11 IN PROGRESS；M11.3/4 pending)
+2026-08-17 (M11.3 Result Screens COMPLETE — M11 IN PROGRESS；M11.4 pending)
 
 ## Current Phase
 Phase 1 — Core framework development
@@ -31,7 +31,7 @@ M11 — UI（M10 — Boss COMPLETE / ACCEPTED；M11 NOT STARTED）
 - M10.3 (2026-08-17): Boss Finalization & Regression — **Boss 最终参数确认（500/20/1.5/1.5/1.0 + W10 ×1.45 → 725/29/2.175，技能 3s/6.0/3.0s/10.0）确认适合作为 MVP 最终值，No production parameter changes required；无新增 mechanic、无生产代码修改**。完整战斗验收（W10 spawn/追击/接触伤害 29/技能发射/方向锁定不追踪/命中/Release/冷却/死亡链各一次/Victory/No Wave11/pool reuse 干净+技能重置/跨两 run 各 2 次）+ M6/M7/M9 回归。M10_3BossFinalRegressionProbe **55/55 PASS**；3× Play/Stop 全 0/0；probe 已删；字体未写坏。**M10 = COMPLETE / ACCEPTED。** HEAD f815d71（docs: M10.3 boss finalization and regression）。
 - M11.1 (2026-08-17): Main Menu — 最小 Main Menu（Game Title "虚空幸存者" + PlayButton "开始游戏" + QuitButton "退出游戏"）；Play → MainMenu→Playing；Quit → Application.Quit (Editor 下 EditorApplication.isPlaying=false)；复用现有 Canvas/EventSystem/InputSystemUIInputModule（唯一确认）/ GameState / EventBus (GameStateChanged) / TMP NotoSansSC，不创建第二套。M11_1MainMenuProbe 23/23 PASS；2× Play/Stop 0/0；字体未写坏；probe 已删。**M11 整体 IN PROGRESS**（仅 M11.1 完成；M11.2/3/4 pending）。HEAD 67f2ce0（feat: M11.1 main menu ui）。## In Progress
 - M11.2 (2026-08-17): Gameplay HUD — 最小 HUD 5 文本（HPText/XPText/LevelText 左上 + GoldText/WaveText 右上）锚顶 100 高条；显隐 GameStateChanged 驱动（Playing/LevelUp/Shop/Paused 显示，GameOver/Victory/MainMenu 隐藏）；数据 Update 每帧读缓存引用（PlayerHealth/PlayerProgress/WaveManager），不修改任何 gameplay、不建第二套事件系统、不每帧 Find。M11_2GameplayHUDProbe 26/26 PASS；2× Play/Stop 0/0；字体未写坏；probe 已删。**M11 整体 IN PROGRESS**（仅 M11.1+M11.2 完成；M11.3/4 pending）。- Nothing. M3 (incl. bug fix) is fully complete.
-
+- M11.3 (2026-08-17): Result Screens — GameOverPanel（深红 + "游戏结束" + 重新开始/主菜单）+ VictoryPanel（深蓝 + "胜利" + 重新开始/主菜单）；ResultPanel 通用组件（showInState + GameStateChanged 显隐）；Restart → RunRestarter.RestartRun()（Core 层：PlayerProgress.ResetForRun + PlayerStats.ResetForRun + 全武器 ResetWeaponUpgrades + GameManager MainMenu→Playing 让 WaveManager 自动 StartWave(1)）。**新增 PlayerProgress.ResetForRun + RunRestarter.cs + ResultPanel.cs**；不修改 GameManager/PlayerStats/WeaponController/WeaponManager/WaveManager/SceneFlow。M11_3ResultScreensProbe 46/46 PASS（25 项验证 + 4 条流程 A/B/C/D 全 PASS）；2× Play/Stop 0/0；字体未写坏；probe 已删。**M11 整体 IN PROGRESS**（仅 M11.1+M11.2+M11.3 完成；M11.4 pending）。
 ## M3 Bug Fix (2026-08-14)
 - Reported: (1) small movement range + apparent pull-back near edges; (2) jitter/blur when holding WASD.
 - Root causes (verified): (2) Rigidbody2D.interpolation was None → physics-stepped positions vs per-frame camera smoothing. (1) no pull-back code exists (verified in play); perception came from jitter + small viewport (orthographicSize 5). Latent defect found: InputActionReference created at runtime was NOT persisted to scene/prefab (would break movement after editor restart).
@@ -298,7 +298,7 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - Commit `12f17e4`. Normal Weapon / StatBonus cards visually unchanged.
 
 ## Next Step
-M11.3 — Result Screens（M11.1+M11.2 COMPLETE；M11 整体 IN PROGRESS；M11.4 待任务）
+M11.4 — Full UI Integration & Acceptance（M11.1+M11.2+M11.3 COMPLETE；M11 整体 IN PROGRESS）
 
 ## M10.1 — Boss Base Framework (2026-08-17)
 - 现有 M8.3 Boss 实现已完整覆盖 M10.1 职责（BossData/BossAI/W10 流程/事件/pool），M10.1 不修改任何生产代码，仅正式验证。
@@ -309,7 +309,7 @@ M11.3 — Result Screens（M11.1+M11.2 COMPLETE；M11 整体 IN PROGRESS；M11.4
 - BossAI 唯一主动技能：每 3s 向玩家当前位置发射 1 个 PulseProjectile（复用共享池+CombatSystem，source=Boss，damage=runtime Stats.Damage 继承 WaveMultiplier，lifetime 3s 命中一次 Release，方向锁定不追踪）。Boss prefab 挂 projectilePrefab。
 - M10_2BossAbilityProbe 21/22 PASS（唯一 FAIL 为 probe 订阅时序，独立验证确认 DamageApplied 正常）；2× Play/Stop 0/0；字体未写坏。
 - M10.1 + M10.2 + M10.3 COMPLETE；**M10 = COMPLETE / ACCEPTED**。
-- M11.1+M11.2 COMPLETE；**M11 整体 IN PROGRESS**（M11.3/4 pending）。
+- M11.1+M11.2+M11.3 COMPLETE；**M11 整体 IN PROGRESS**（仅 M11.4 pending）。
 
 ## M10.2 — Boss Projectile Skill 参数（implementation parameters，非 GAME_DESIGN balance）
 - BossSkillCooldown = 3.0 s；BossProjectileSpeed = 6.0；BossProjectileLifetime = 3.0 s；BossSkillRange = 10.0；BossProjectileDamage = Boss 当前 runtime Stats.Damage（自动继承 WaveMultiplier）。
