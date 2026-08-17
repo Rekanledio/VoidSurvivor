@@ -26,6 +26,17 @@ namespace VoidSurvivor.Player
         public int CurrentGold => _currentGold;
         public int Level => _level;
 
+        /// <summary>
+        /// Resets the run-scoped progression to a brand-new run (M11.3):
+        /// XP = 0, Level = 1, Gold = 0. Serialized data is untouched.
+        /// </summary>
+        public void ResetForRun()
+        {
+            _currentXP = 0;
+            _currentGold = 0;
+            _level = 1;
+        }
+
         /// <summary>M9.1 placeholder threshold: 100 × level (not final game design).</summary>
         public int XPToNextLevel => 100 * _level;
 
