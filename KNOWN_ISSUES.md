@@ -28,6 +28,12 @@
 3. mcp find_gameobjects does not return objects in the DontDestroyOnLoad scene during play mode.
    - Impact: Use execute_code + UnityEngine queries to verify DontDestroyOnLoad objects.
    - Status: Documented; workaround in place.
+4. Unity Windows Build `-logfile` not captured for extensionless exe (manage_build output_path treated as full filename).
+   - Impact: Runtime-build log detail unavailable; runtime health verified via process stability (3x 20-25s runs, no crash).
+   - Status: Documented (M12.4, environment/tooling limitation, NOT a game defect).
+5. M6 legacy ScriptableObject scene references (WeaponData/ArcBladeData/BoomerangData attached to scene GameObjects) produce transient auto-fix warnings on Play.
+   - Impact: None on runtime; Unity auto-fixes on each Play (warnings only, scene not modified persistently).
+   - Status: Documented (historical legacy from M6, NOT introduced by M12; revisit if scene SO wiring is refactored).
 4. mcp manage_gameobject resolves project component types only by fully-qualified name (e.g. "VoidSurvivor.Player.PlayerStats").
    - Impact: Short names fail with "not found" — always pass full names.
    - Status: Documented; workaround in place.

@@ -1041,3 +1041,12 @@ M10 — Boss (per milestone list).
 - **Windows Runtime Build**：`manage_build` StandaloneWindows64 → **BUILD SUCCESS（173.72MB，errors=0，warnings=1）**；产物 D:/Work/VoidSurvivorBuild*（_Data/Resources 含 VFX prefab + SFX）。**三次运行：进程稳定存活 20-25s 无崩溃/无退出**——GameBootstrap → GameManager/GameFlow/AudioManager/SfxLibrary/GameplaySfx/VFXManager 全部运行时 Awake 成功（任何缺失资源/异常会立即崩溃），Scene 加载 + Player 初始化正常。
 - **3× Play/Stop：0 errors**（warning 为 M6 遗留 SO 场景引用自动修复 + 已删 probe 编译缓存引用——非 M12.4 引入）；字体未写坏（git diff 空）；probe 已删。
 - **M12 = COMPLETE / ACCEPTED**（M12.1 + M12.2 + M12.3 + M12.4 全部完成）。下一里程碑 M13 = NOT STARTED。
+
+### M13.1 — Save Foundation — COMPLETE
+- 范围：通用 Save Foundation（SaveData 模型 + SaveManager 持久化服务）；M13.1 只做对象↔JSON↔文件，不保存 Run Data、不接业务（M13.2 Settings / M13.3 Best Record 后续通过它实现）。
+- **新增**：`Assets/Scripts/Save/SaveData.cs`（[Serializable]，预留 masterVolume/sfxVolume/bestWave/bestLevel/bestGold，默认 1/1/0/0/0）；`Assets/Scripts/Save/SaveManager.cs`（单例 + 挂 GameManager GO（GameBootstrap，DontDestroyOnLoad）；`Save()`=JsonUtility.ToJson(data,true)+File.WriteAllText；`Load()`=缺文件/损坏 JSON 自动回退默认（try-catch，不崩溃）；`HasSave()`；`DeleteSave()`=存在则删、不存在 no-op；保存路径 `Path.Combine(Application.persistentDataPath, "VoidSurvivorSave.json")`）。
+- **修改**：`GameBootstrap.cs` 挂 SaveManager（与 GameFlow/AudioManager/VFXManager 同生命周期）。
+- **不修改**：PlayerProgress/PlayerStats/WeaponController/WaveManager/GameManager/GameFlow/AudioManager/VFXManager/所有 UI/Scene/ScriptableObject。RunRestarter.ResetForRun 语义不变（新局重置 ≠ Save）。
+- **验证**（临时 M13_1SaveFoundationProbe，已删）：**23/23 PASS, 0 FAILURES** — SaveManager 存在+唯一(1) / SaveData 默认值（1/1/0/0/0）/ Save path 正确（C:/Users/Lenovo/AppData/LocalLow/DefaultCompany/VoidSurvivor/VoidSurvivorSave.json）/ Save() 创建文件 + JSON 含全部字段 / **Load() 精确恢复测试值 0.73·0.41·8·12·350** / 修改后 Re-save·Load 一致 / DeleteSave 删除 + 缺文件 no-op / 缺文件 Load 默认 / **损坏 JSON 不崩溃 + 回退默认** / PlayerProgress·PlayerStats·WaveManager 不受影响 / MainMenu·LevelUp·Shop 面板正常 / AudioManager·VFXManager 正常。测试 save 文件已删。
+- **Unity Recovery 关联**：本任务在 MemoryStream Fatal Error 恢复后执行（-force-d3d11 启动），Unity MCP 恢复、Library 重建、Console 0/0。
+- **M13 整体 IN PROGRESS**（仅 M13.1 完成；M13.2/3/4 pending）。

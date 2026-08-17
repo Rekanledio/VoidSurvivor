@@ -1,13 +1,13 @@
 # Void Survivor — Save Context
 
 ## Last Updated
-2026-08-17 (M12.4 Audio/VFX Integration & Acceptance COMPLETE — **M12 = COMPLETE / ACCEPTED**；M13 pending)
+2026-08-17 (M13.1 Save Foundation COMPLETE — M13 IN PROGRESS；M13.2/3/4 pending)
 
 ## Current Phase
 Phase 1 — Core framework development
 
 ## Current Milestone
-M12 — Audio/VFX — COMPLETE / ACCEPTED（M11 — UI COMPLETE；M13 尚未开始）
+M13 — Save (Local persistence)（M12 — Audio/VFX COMPLETE / ACCEPTED；M13 NOT STARTED）
 
 ## Completed (overview)
 - M0: concept, MVP scope, delivery strategy, documentation strategy.
@@ -34,9 +34,12 @@ M12 — Audio/VFX — COMPLETE / ACCEPTED（M11 — UI COMPLETE；M13 尚未开�
 - M11.3 (2026-08-17): Result Screens — GameOverPanel（深红 + "游戏结束" + 重新开始/主菜单）+ VictoryPanel（深蓝 + "胜利" + 重新开始/主菜单）；ResultPanel 通用组件（showInState + GameStateChanged 显隐）；Restart → RunRestarter.RestartRun()（Core 层：PlayerProgress.ResetForRun + PlayerStats.ResetForRun + 全武器 ResetWeaponUpgrades + GameManager MainMenu→Playing 让 WaveManager 自动 StartWave(1)）。**新增 PlayerProgress.ResetForRun + RunRestarter.cs + ResultPanel.cs**；不修改 GameManager/PlayerStats/WeaponController/WeaponManager/WaveManager/SceneFlow。M11_3ResultScreensProbe 46/46 PASS（25 项验证 + 4 条流程 A/B/C/D 全 PASS）；2× Play/Stop 0/0；字体未写坏；probe 已删。**M11 整体 IN PROGRESS**（仅 M11.1+M11.2+M11.3 完成；M11.4 pending）。
 - M11.4 (2026-08-17): Full UI Integration & Acceptance — **两个核心修复**：①`GameFlow.cs`（新建，Core 层）PlayerDied→仅在 Playing 时 TryChangeState(GameOver) 自动触发；②非 Playing 暂停 simulation（WeaponController/EnemyController 加 `GameplayActive` 守卫：4 武器 Update + 4 Enemy AI + BossAI FixedUpdate/OnTriggerEnter2D——MainMenu/GameOver/Victory 无新攻击）+ Restart 补齐（PlayerHealth.ResetForRun 复活 + RunRestarter 调用）。M11_4FullUIRegressionProbe **48/48 PASS**（26 项验收 + UI 状态矩阵 + PlayerDied→GameOver 自动 + 非 Playing 无新武器攻击量化 0->0/2->0/3->3 + Restart 重置 + W10 Boss Victory + Boss Projectile + M9 回归）；3× Play/Stop 0/0；字体未写坏；probe 已删。**M11 = COMPLETE / ACCEPTED**（M12 Audio/VFX pending）。HEAD a30bde3（docs: update latest commit to M11.4 acceptance）。## M3 Bug Fix (2026-08-14)
 - M12.1 (2026-08-17): Audio Foundation — 最小 SFX 基础架构（AudioManager 单例 + 1 可复用 AudioSource + PlaySfx(clip)/(clip,volume) + Master/Sfx volume 默认 1.0；PlayOneShot 支持重叠；null clip no-op）。GameBootstrap 挂 GameManager 同 GO（persistent）。不修改 GameManager/GameFlow/GameEvents/UI/武器/敌人/Boss/Scene。M12_1AudioFoundationProbe 16/16 PASS；2× Play/Stop 0/0；字体未写坏；probe 已删。**M12 整体 IN PROGRESS**（仅 M12.1 完成；M12.2/3/4 pending）。- Reported: (1) small movement range + apparent pull-back near edges; (2) jitter/blur when holding WASD.
-- M12.2 (2026-08-17): Core Gameplay SFX — 程序化生成 9 个 WAV（Assets/Resources/Audio/SFX/，无版权）；新增 SfxLibrary（SfxType→AudioClip 显式映射）+ GameplaySfx（8 事件 + Victory 接入，DamageApplied 0.05s 限频）；4 个 UI Panel 按钮加 PlayUiClick（同一 click）。M12_2CoreSfxProbe 19/19 PASS；2× Play/Stop 0/0；字体未写坏；probe 已删。**M12 整体 IN PROGRESS**（M12.1+M12.2 完成；M12.3/4 pending）。- Root causes (verified): (2) Rigidbody2D.interpolation was None → physics-stepped positions vs per-frame camera smoothing. (1) no pull-back code exists (verified in play); perception came from jitter + small viewport (orthographicSize 5). Latent defect found: InputActionReference created at runtime was NOT persisted to scene/prefab (would break movement after editor restart).
-- M12.3 (2026-08-17): Basic VFX Feedback — 8 个 ParticleSystem prefab（Assets/Prefabs/VFX/，短生命周期 0.15-0.6s，autoDestroy）+ `VFXManager.cs`（事件订阅 DamageApplied/EnemyDied/PickupCollected/PlayerLevelUp/BossSpawned/BossDefeated/PlayerDied/GameStateChanged(Victory) → prefab Instantiate + Play；DamageApplied 0.05s 限频；缓存 Player 一次 Find）。M12_3BasicVfxProbe 22/22 PASS；2× Play/Stop 0/0；字体未写坏；probe 已删。**M12 整体 IN PROGRESS**（M12.1+M12.2+M12.3 完成；M12.4 pending）。- Fixed: Rigidbody2D.interpolation = Interpolate; Camera orthographicSize 5 → 8; PlayerController switched to serializable `InputActionAsset` + `FindAction("Move")`.
-- M12.4 (2026-08-17): Audio/VFX Integration & Acceptance — **VFX Runtime 修复**（AssetDatabase→Resources.Load，8 prefab 移至 Assets/Resources/VFX/，删 UnityEditor 依赖）+ 全链路验收（M12_4AudioVfxAcceptanceProbe **40/40 PASS**：9 SFX+8 VFX Runtime Load/8 事件 SFX+VFX 双链路/双限频 50→1/VFX 自动销毁/M9·M10·M11 回归/Restart clean）+ **Windows Standalone64 Build SUCCESS**（173.72MB，errors=0，三次运行进程稳定 20-25s 无崩溃）。3× Play/Stop 0 errors；字体未写坏；probe 已删。**M12 = COMPLETE / ACCEPTED**（M13 NOT STARTED）。- Verified: W/A/D covered -20..+20 through center (no pull-back), bounds hold, camera follows; 0 console errors/warnings. Files: PlayerController.cs, Player.prefab, SC_Main.unity.
+- M12.2 (2026-08-17): Core Gameplay SFX — 程序化生成 9 个 WAV（Assets/Resources/Audio/SFX/，无版权）；新增 SfxLibrary（SfxType→AudioClip 显式映射）+ GameplaySfx（8 事件 + Victory 接入，DamageApplied 0.05s 限频）；4 个 UI Panel 按钮加 PlayUiClick（同一 click）。M12_2CoreSfxProbe 19/19 PASS；2× Play/Stop 0/0；字体未写坏；probe 已删。**M12 整体 IN PROGRESS**（M12.1+M12.2 完成；M12.3/4 pending）。
+- Root causes (verified): (2) Rigidbody2D.interpolation was None → physics-stepped positions vs per-frame camera smoothing. (1) no pull-back code exists (verified in play); perception came from jitter + small viewport (orthographicSize 5). Latent defect found: InputActionReference created at runtime was NOT persisted to scene/prefab (would break movement after editor restart).
+- M12.3 (2026-08-17): Basic VFX Feedback — 8 个 ParticleSystem prefab（Assets/Prefabs/VFX/，短生命周期 0.15-0.6s，autoDestroy）+ `VFXManager.cs`（事件订阅 DamageApplied/EnemyDied/PickupCollected/PlayerLevelUp/BossSpawned/BossDefeated/PlayerDied/GameStateChanged(Victory) → prefab Instantiate + Play；DamageApplied 0.05s 限频；缓存 Player 一次 Find）。M12_3BasicVfxProbe 22/22 PASS；2× Play/Stop 0/0；字体未写坏；probe 已删。**M12 整体 IN PROGRESS**（M12.1+M12.2+M12.3 完成；M12.4 pending）。
+- Fixed: Rigidbody2D.interpolation = Interpolate; Camera orthographicSize 5 → 8; PlayerController switched to serializable `InputActionAsset` + `FindAction("Move")`.
+- M12.4 (2026-08-17): Audio/VFX Integration & Acceptance — **VFX Runtime 修复**（AssetDatabase→Resources.Load，8 prefab 移至 Assets/Resources/VFX/，删 UnityEditor 依赖）+ 全链路验收（M12_4AudioVfxAcceptanceProbe **40/40 PASS**：9 SFX+8 VFX Runtime Load/8 事件 SFX+VFX 双链路/双限频 50→1/VFX 自动销毁/M9·M10·M11 回归/Restart clean）+ **Windows Standalone64 Build SUCCESS**（173.72MB，errors=0，三次运行进程稳定 20-25s 无崩溃）。3× Play/Stop 0 errors；字体未写坏；probe 已删。**M12 = COMPLETE / ACCEPTED**（M13 NOT STARTED）。HEAD d2f435c（docs: M12.4 audio vfx acceptance）。
+- M13.1 (2026-08-17): Save Foundation — SaveData（masterVolume/sfxVolume/bestWave/bestLevel/bestGold 预留字段）+ SaveManager（单例挂 GameManager GO；Save/Load/HasSave/DeleteSave；JsonUtility+persistentDataPath/VoidSurvivorSave.json；缺文件/损坏 JSON 回退默认不崩溃；不保存 Run Data）。M13_1SaveFoundationProbe **23/23 PASS**（含精确恢复 0.73·0.41·8·12·350、损坏 JSON 容错、M9/M10/M11/M12 回归）；测试 save 文件已清理；字体未写坏。**M13 整体 IN PROGRESS**（仅 M13.1 完成；M13.2/3/4 pending）。- Verified: W/A/D covered -20..+20 through center (no pull-back), bounds hold, camera follows; 0 console errors/warnings. Files: PlayerController.cs, Player.prefab, SC_Main.unity.
 
 ## Modified / Added Files (M3 bug fix)
 - Assets/Scripts/Player/PlayerController.cs (InputActionAsset reference)
@@ -298,7 +301,7 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - Commit `12f17e4`. Normal Weapon / StatBonus cards visually unchanged.
 
 ## Next Step
-M13 — （M12 COMPLETE / ACCEPTED；M13 尚未开始，等待任务指令）
+M13.2 — Settings Persistence（M13.1 COMPLETE；M13 整体 IN PROGRESS；M13.3/4 待任务）
 
 ## M10.1 — Boss Base Framework (2026-08-17)
 - 现有 M8.3 Boss 实现已完整覆盖 M10.1 职责（BossData/BossAI/W10 流程/事件/pool），M10.1 不修改任何生产代码，仅正式验证。
@@ -310,7 +313,8 @@ M13 — （M12 COMPLETE / ACCEPTED；M13 尚未开始，等待任务指令）
 - M10_2BossAbilityProbe 21/22 PASS（唯一 FAIL 为 probe 订阅时序，独立验证确认 DamageApplied 正常）；2× Play/Stop 0/0；字体未写坏。
 - M10.1 + M10.2 + M10.3 COMPLETE；**M10 = COMPLETE / ACCEPTED**。
 - M11.1+M11.2+M11.3+M11.4 COMPLETE；**M11 = COMPLETE / ACCEPTED**。
-- M12.1+M12.2+M12.3+M12.4 COMPLETE；**M12 = COMPLETE / ACCEPTED**（M13 NOT STARTED）。
+- M12.1+M12.2+M12.3+M12.4 COMPLETE；**M12 = COMPLETE / ACCEPTED**。
+- M13.1 COMPLETE；**M13 整体 IN PROGRESS**（M13.2/3/4 pending）。
 
 ## M10.2 — Boss Projectile Skill 参数（implementation parameters，非 GAME_DESIGN balance）
 - BossSkillCooldown = 3.0 s；BossProjectileSpeed = 6.0；BossProjectileLifetime = 3.0 s；BossSkillRange = 10.0；BossProjectileDamage = Boss 当前 runtime Stats.Damage（自动继承 WaveMultiplier）。
