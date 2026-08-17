@@ -1075,3 +1075,14 @@ M10 — Boss (per milestone list).
 - **probe 调试记录**：AddXP 触发 PlayerLevelUp → PlayerLevelSystem 自动切 LevelUp 状态 → GameOver 转换非法 → 改用反射 SetField 直接设置 progress 数据（不触发升级事件，state 保持 Playing）。
 - **测试清理**：测试 save（8/6/300）已删除；probe 已删；字体未写坏（git diff 空）。
 - **M13 整体 IN PROGRESS**（M13.1+M13.2+M13.3 完成；M13.4 pending）。
+
+### M13.4 — Save Integration & Acceptance — COMPLETE（M13 = COMPLETE / ACCEPTED）
+- 范围：M13.1 Foundation + M13.2 Settings + M13.3 Best Record 最终集成验收。**生产代码零修改（纯验收）**；不新增 Save 功能/UI/slots/云/加密/迁移。
+- **架构确认**：SaveData 五字段（masterVolume/sfxVolume/bestWave/bestLevel/bestGold）；Settings 链 SetMasterVolume/SetSfxVolume → Clamp01 → SaveSettings（Load→改 volume→Save，保留 best*）；Best 链 GameStateChanged(To==GameOver/Victory) → BestRunRecorder → Load→max(best*)→Save（保留 volume）；GameBootstrap 顺序 SaveManager→AudioManager→…→BestRunRecorder 未调整；read-modify-write 双向互不覆盖。
+- **验证**（临时 M13_4SaveIntegrationAcceptanceProbe，已删）：
+  - **Session A（Play #1，无 save）**：13/13 PASS — 三 Manager 唯一 / 五字段 / 默认 / Settings 保存 0.73·0.41（真实 setter）/ Best 经真实 GameOver 记录 5/3/120 / **Settings+Best 共存一个 SaveData** / M9-M12 回归。
+  - **Session B（Play #2，跨会话）**：22/22 PASS — 加载 0.73·0.41+5/3/120 / Settings 改 0.55·0.25 **不覆盖 Best** / 高 run 10/12/500 GameOver 更新 **不覆盖 Settings** / 低 run 保持 10/12/500（max）/ **Restart 不覆盖 Best + run 重置（Level=1/Gold=0/Wave=1）** / MainMenu 不重复 / **corrupt JSON 默认不崩溃** / DeleteSave+默认 / M9-M12 回归。
+  - **Session C（Play #3）**：execute_code 验证 AudioManager 恢复 Master=0.55/Sfx=0.25 + SaveData best=8/6/300（跨 Play 会话真实持久化）。
+- **真实 Flow**：Flow A（GameOver→Best→Restart→Playing）、Flow B（W10→Victory→Best→VictoryPanel→MainMenu，Victory 触发 M13.3 已验证 + M11 面板存在 PASS）、Flow C（GameOver→MainMenu 不改变 Best）全过。
+- **测试清理**：测试 save（0.55/0.25+8/6/300）已删除；probe 已删；字体未写坏（git diff 空）；git diff --check exit=0。
+- **M13 = COMPLETE / ACCEPTED**（M13.1+M13.2+M13.3+M13.4 全部完成）。下一里程碑 M14 尚未开始（不定义不实现）。
