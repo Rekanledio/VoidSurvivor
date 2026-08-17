@@ -909,3 +909,19 @@ M9.5 — Weapon Upgrade (Weapon runtime level/bonus + Shop WeaponUpgrade product
 
 ### Next
 M10 — Boss (per milestone list).
+
+## 2026-08-17
+### M9 Final Regression & Acceptance — M9 COMPLETE / ACCEPTED
+- M9.1～M9.5 全部通过；**82/82 PASS, 0 FAILURES**（临时 M9FinalRegressionProbe，已删除）。
+- 覆盖：完整 M9 链（XP→LevelUp→真实 UI 点击→Shop 购买/刷新/继续→W9 Shop→W10 不进店→Boss）、M6/M7/M8 回归（四武器、三池、Boomerang ActiveCount、WaveStarted 无重复）、GameOver XP 隔离、跨会话状态干净。
+- **3× 独立 Play/Stop：0 errors / 0 warnings 每次**；跨会话无残留（PulseGun Lv1、Boomerang 0、面板隐藏）。
+- 回归期间未改任何生产代码；最终 Git clean。**M9 ACCEPTED。**
+
+### Shop WeaponUpgrade UI Final Layout Fix
+- **最终问题**：原 WeaponUpgrade 卡片把 武器名 / 升级：属性 / 等级：Lv.X → Lv.X+1 三行塞进普通 Name slot（360×32），造成文本上溢出（≈34.5 canvas）与等级/价格重叠。
+- **最终修复**（commit `12f17e4`）：
+  - WeaponUpgrade Name 改为两行单 TMP：第一行武器名 **24px**（与普通卡一致），第二行 `升级：{属性}  等级：Lv.{X} → Lv.{X+1}` 用 rich text `<size=15>`（15px，动态 WeaponLevel）。
+  - Name rect 运行时 360×32 → **360×60**（TopLeft；仅 WeaponUpgrade 卡，普通卡保持 360×32 fs24）。
+  - Price 22px / Type 15px / BuyButton 24px 不变；独立 Level row 删除（4 个 Level 子物体移除、ShopPanel.levelTexts 清空）。
+  - 修复过程中发现的真实缺陷：①Name/Label 是 stretch 子物，改 Label sizeDelta 无效 → 必须改 Name（父）RectTransform；②levelTexts 数组 ClearArray 后 `[i]` 越界 → 加 `i < levelTexts.Length` 防御。
+- **验证**：Damage / AttackCooldown / Range 三种 WeaponUpgrade 均 Name 完整在卡内、无 textBounds 重叠（Name vs Price/Type/BuyButton 全分离）、最长文本"升级：攻击速度"不越界；普通 Weapon / StatBonus 零变化；中文正常无 □；Console 0/0；Git clean。

@@ -43,7 +43,7 @@
 Phase 1 — Core framework development
 
 ## Current Milestone
-M9 — Roguelite / Upgrade (XP Level Up, upgrades, shop)
+M9 — Roguelite / Upgrade (XP Level Up, upgrades, shop) — COMPLETE / ACCEPTED
 
 ## Completed Milestones
 - M0 — Project Documentation Initialization
@@ -60,12 +60,25 @@ M9 — Roguelite / Upgrade (XP Level Up, upgrades, shop)
 - M6.3 — Scatter Blaster (2026-08-16): multi-pellet fan weapon — ScatterBlasterData (:WeaponData, count 5/spread 45), ScatterBlaster fires N PulseProjectiles in a deterministic uniform symmetric fan; WeaponController.Owner lazy-resolve fix. ScatterBlasterData (dmg 3/cd 0.8/range 7) + prefab. Verified 42/42 probe PASS + manual play, 0 errors/warnings.
 - M6.4 — Boomerang (2026-08-16): out-and-return weapon — BoomerangData (:WeaponData, maxDistance/outSpeed/returnSpeed), Boomerang single-flight auto-throw, BoomerangProjectile two-phase (out to maxDistance, return re-aims at player's current position, hit-once per enemy). BoomerangData (dmg 7/cd 1.2/range 8) + prefabs. Verified 37/37 probe PASS, 0 errors/warnings.
 - M6.5 — Arc Blade (2026-08-16): close-range area weapon — ArcBladeData (:WeaponData, Range = radius), ArcBlade one OverlapCircleAll strike per cooldown, every live in-range enemy hit once via PlayerAttack → CombatSystem. ArcBladeData (dmg 8/cd 0.9/range 2.5) + prefab (no projectile). Verified 29/29 probe PASS, 0 errors/warnings. **M6 — Weapon System: COMPLETE (all 4 weapons).**
+- M7 — Object Pool (COMPLETE): ObjectPool<T> + IPoolable; PulseProjectile / BoomerangProjectile / Enemy / Pickup pooled via static shared pools; ResetStatic* on SubsystemRegistration; verified pool reuse + clean state across Play/Stop.
+- M8 — Wave System (COMPLETE): WaveManager (10 waves, time/section-based, WaveStarted/WaveCompleted), EnemySpawner (scaling difficulty), W10 boss wave → Victory; LevelUp/Shop/Pause freeze wave time without re-publishing WaveStarted.
+- M9 — Roguelite / Upgrade (2026-08-17, COMPLETE / ACCEPTED):
+  - M9.1 XP Level Up: PlayerProgress Level/XP/XPToNextLevel + AddXP carry-over/multi-level + PlayerLevelUp event + PlayerLevelSystem (Playing → LevelUp). 41/41 PASS.
+  - M9.2 Upgrade Chooser: UpgradeData (10 assets) + PlayerStats runtime bonus layer (ApplyUpgrade/ResetForRun) + UpgradeManager (pending queue, 3 unique options, SetForcedOptions, Select guards, UpgradeSelected). 58/58 PASS.
+  - M9.3 LevelUp UI: UpgradeOptionsGenerated + LevelUpPanel (active Canvas, 3 buttons, event-driven labels, real clicks, consecutive-level refresh, panel instance reuse). 55/55 PASS.
+  - M9.4 Shop: PlayerProgress.TrySpendGold (only spend entry) + ShopItemData + ShopManager (W1..W9 → Shop, 4 products, weapon/stat purchase, refresh, continue, already-owned/no-slot rejection) + ShopPanel. 58/58 PASS + layout fixes + weapon-purchase Owner fix (51/51).
+  - M9.5 Weapon Upgrade: WeaponController runtime level/bonus (EffectiveDamage/EffectiveAttackCooldown/EffectiveRange) + WeaponUpgradeData (12 assets) + ShopItemType.WeaponUpgrade + shop weapon-upgrade purchase (target must be equipped). 42/42 PASS.
+  - M9 Final Regression & Acceptance: 82/82 PASS, 0 FAILURES; M6/M7/M8 regression PASS; full M9 integration PASS; 3× independent Play/Stop 0 errors/0 warnings; temporary probe deleted; final Git clean. **M9 ACCEPTED.**
+  - Shop WeaponUpgrade UI Final Layout Fix: WeaponUpgrade Name = two-line single TMP (line1 weapon name 24px, line2 upgrade+level 15px via rich text), Price 22px unchanged, independent Level row removed, normal Weapon/StatBonus cards unaffected, no overlap, Chinese UI OK.
 
 ## Next Milestone
-M9 — Roguelite / Upgrade (XP Level Up, upgrades, shop)
+M10 — Boss (Final boss encounter)
 
 ## Current Task
-M10 — Boss (M4–M9.5 complete).
+M10 — Boss（M4–M9.5 全部 COMPLETE；M10 尚未开始）
+
+## Latest Commit
+12f17e4 fix: shop WeaponUpgrade UI final layout — two lines in Name TMP, remove Level row
 
 ## Important Decisions
 - Do not add special differentiation mechanics for MVP.

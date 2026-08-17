@@ -1,26 +1,31 @@
 # Void Survivor — Save Context
 
 ## Last Updated
-2026-08-14 (M3 complete + M3 bug fix)
+2026-08-17 (M9 COMPLETE / ACCEPTED + Shop WeaponUpgrade UI Final Layout Fix)
 
 ## Current Phase
 Phase 1 — Core framework development
 
 ## Current Milestone
-M4 — Enemy System
+M9 — Roguelite / Upgrade — COMPLETE / ACCEPTED（M10 — Boss 尚未开始）
 
-## Completed
+## Completed (overview)
 - M0: concept, MVP scope, delivery strategy, documentation strategy.
 - M1: Unity project (6000.3.21f1) verified; Git initialized; Assets skeleton; SC_Main scene; minimal Core entry; Unity MCP verified.
 - M2: Core Framework — GameManager state machine (TryChangeState + legal-transition table + GameStateChanged), EventBus (type-safe generic static), GameEvents, SceneFlow/SceneIds, lifecycle docs. 33/33 smoke checks passed.
-- M3 (this session): Player System.
-  - PlayerController: reads Move from the existing InputSystem_Actions asset (Player/Move, WASD + arrows + gamepad, reused — no new input config). Movement math via public static helpers (NormalizeMoveInput caps diagonal magnitude at 1 → consistent diagonal speed; analog sticks keep partial range). Physics movement via Rigidbody2D.MovePosition (no Transform writes). Configurable arena bounds clamp (default ±20,0,20,0). Movement stops when dead. No GetComponent/Find in FixedUpdate (all cached in Awake).
-  - PlayerStats: all 10 MVP stats from GAME_DESIGN.md (MaxHP/HPRegen/MoveSpeed/Damage/AttackSpeed/CritChance/CritDamage/Range/PickupRange/Armor), base values + read accessors only (modifiers deferred to M9).
-  - PlayerHealth: CurrentHP/MaxHP/IsDead; TakeDamage (flat reduction: max(0, damage - Armor), armor from PlayerStats); Heal/FullHeal; HP clamped to [0, MaxHP]; death fires once (IsDead guard) and publishes PlayerDied via EventBus. No Game Over flow.
-  - CameraFollow: exponential smoothing (frame-rate independent, followSpeed=8), X/Y follow with Z kept at offset -10, optional bounds reserved for the real arena. No Cinemachine.
-  - GameEvents: added PlayerDied (empty payload).
-- Assets: Assets/Prefabs/Player.prefab (7 components), Assets/Art/PlayerPlaceholder.png (64x64 cyan circle, Python-generated, auto-imported as Sprite). Player instance placed in SC_Main; Main Camera has CameraFollow targeting Player.
-- M3 verification: in-play smoke test (temporary PlayerSmokeTest.cs) — 29 checks, 0 failures (stats read, TakeDamage/Heal/FullHeal, HP clamps, single death + event count, movement math, bounds math). Dynamic play checks via MCP: camera converged smoothly to a teleported target (30,30 → target (5,5) → cam (5,5) after 2s, no teleport snap), full component set verified on Player GO and prefab, clean session shows hp=100/100, dead=False, moveInput=(0,0). Temp test code deleted.
+- M3 (2026-08-14): Player System — PlayerController (Input System Move, 8-way diagonal-consistent, MovePosition, bounds clamp), PlayerStats (10 MVP stats), PlayerHealth (TakeDamage flat armor / Heal / single death + PlayerDied), CameraFollow (exponential, no Cinemachine). Player prefab + placeholder; SC_Main camera size 8. Verified 29/29 + dynamic checks + M3 bug fixes (interpolation, camera size, persisted InputActionAsset, Ground reference).
+- M4 (2026-08-14): Enemy System — Chaser/Runner/Shooter/Tank AI + EnemySpawner minimal spawn. Verified 27/15/20/27/23/22 PASS.
+- M5 (2026-08-14): Combat System — IDamageable/DamageRequest/DamageResult/CombatSystem + EnemyKilled attribution + PickupSystem (XP/Gold) + PlayerAttack path. Verified 23/28/25/23 PASS.
+- M6 (2026-08-16): Weapon System — 4 weapons (Pulse Gun / Scatter Blaster / Boomerang / Arc Blade) + 4 slots + WeaponManager. Verified 32/27/42/37/29 PASS.
+- M7 (2026-08-16): Object Pool — ObjectPool<T> + IPoolable; Projectile/Enemy/Pickup pooled. Verified 19/38/31/34/45 PASS.
+- M8 (2026-08-16): Wave System — WaveManager 10 waves + difficulty growth + W10 Boss → Victory. Verified 42/39/47/58 PASS.
+- M9.1 (2026-08-16): XP Level Up — PlayerProgress Level/XP/XPToNextLevel + AddXP carry-over/multi-level + PlayerLevelUp + PlayerLevelSystem. 41/41 PASS.
+- M9.2 (2026-08-16): Upgrade Chooser — UpgradeData (10 assets) + PlayerStats bonus layer + UpgradeManager (pending queue, 3 unique options, Select guards). 58/58 PASS.
+- M9.3 (2026-08-16): LevelUp UI — UpgradeOptionsGenerated + LevelUpPanel (active Canvas, 3 buttons, event labels, real clicks). 55/55 PASS.
+- M9.4 (2026-08-16): Shop — TrySpendGold + ShopItemData + ShopManager (W1..W9 → Shop, 4 products, purchase/refresh/continue, rejections) + ShopPanel. 58/58 PASS + layout fixes + weapon-purchase Owner fix 51/51.
+- M9.5 (2026-08-16): Weapon Upgrade — WeaponController runtime level/bonus + Effective* + WeaponUpgradeData (12 assets) + Shop WeaponUpgrade products. 42/42 PASS.
+- M9 Final Regression & Acceptance (2026-08-17): 82/82 PASS, 0 FAILURES; M6/M7/M8 regression PASS; full M9 integration PASS; 3× Play/Stop 0/0; temp probe deleted; Git clean. **M9 = COMPLETE / ACCEPTED.**
+- Shop WeaponUpgrade UI Final Layout Fix (2026-08-17): WeaponUpgrade Name = two-line single TMP (24px name + 15px upgrade/level via rich text), Price 22px unchanged, independent Level row removed, normal cards untouched, no overlap, Chinese OK. Commit 12f17e4.
 
 ## In Progress
 - Nothing. M3 (incl. bug fix) is fully complete.
@@ -276,3 +281,19 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - ShopPanel: WeaponUpgrade multi-line 武器名/升级：属性/等级：Lv.X→Lv.X+1/价格.
 - 12 ShopItemData WeaponUpgrade products (price 30) added to pool (26 total). No level cap (design未规定).
 - Verified: M95WeaponUpgradeProbe 42/42 PASS; final play/stop x2 0/0.
+
+## M9 Final Regression & Acceptance (2026-08-17) — M9 COMPLETE / ACCEPTED
+- Full M9 chain verified end-to-end: XP→LevelUp→UI real clicks→Shop (stat/weapon/upgrade purchases)→Refresh→Continue→W9 Shop→W10 no-shop→Boss; M6/M7/M8 regression PASS (4 weapons, pools, Boomerang ActiveCount, no duplicate WaveStarted, W10 no shop).
+- **82/82 PASS, 0 FAILURES** (temporary M9FinalRegressionProbe, deleted).
+- 3× independent Play/Stop: 0 errors / 0 warnings each; cross-session state clean (PulseGun Lv1, Boomerang ActiveCount 0, panels hidden, MainMenu).
+- Final Git clean; no production code changed during regression.
+- **M9 = COMPLETE / ACCEPTED.** No new blocking issues.
+
+## Shop WeaponUpgrade UI Final Layout Fix (2026-08-17)
+- WeaponUpgrade card Name = single two-line TMP: line1 weapon name **24px** (identical to normal cards), line2 `升级：{属性}  等级：Lv.{X} → Lv.{X+1}` at **15px** via rich text `<size=15>` (dynamic WeaponLevel, never hardcoded). Name rect 360×32→360×60 at runtime (WeaponUpgrade only; normal cards stay 360×32 fs24 MiddleLeft).
+- Price 22px / Type 15px / BuyButton 24px unchanged; independent Level row removed (4 Level children deleted, ShopPanel.levelTexts cleared).
+- Verified Damage / AttackCooldown / Range variants: Name fully in-card, no textBounds overlap (Name vs Price/Type/BuyButton separated), longest text "升级：攻击速度" fits, Chinese renders without □, Console 0/0, Git clean.
+- Commit `12f17e4`. Normal Weapon / StatBonus cards visually unchanged.
+
+## Next Step
+M10 — Boss（M4–M9.5 全部 COMPLETE；M10 尚未开始，等待任务指令）
