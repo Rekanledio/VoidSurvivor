@@ -42,13 +42,9 @@ namespace VoidSurvivor.VFX
             Instance = this;
             DontDestroyOnLoad(gameObject);
 
-            // Load prefabs from Resources-free path (Assets/Prefabs is editor-only
-            // at runtime in builds, so load via Resources for runtime availability).
-            // NOTE: prefabs live under Assets/Prefabs/VFX; loaded via AssetDatabase
-            // in-editor. For runtime builds they must be assigned in the scene or
-            // loaded from Resources; here we load from Resources/Audio? No —
-            // keep them in Assets/Prefabs and assign via code below (editor run).
-            LoadViaAssetDatabase();
+            // Load prefabs via Resources (runtime-safe, works in Editor and
+            // standalone builds). Prefabs live under Assets/Resources/VFX.
+            LoadViaResources();
 
             // Cache the player ONCE (PlayerLevelUp / PlayerDied / Victory events
             // carry no object reference).
@@ -77,24 +73,23 @@ namespace VoidSurvivor.VFX
             EventBus.Unsubscribe<GameStateChanged>(OnGameStateChanged);
         }
 
-        private void LoadViaAssetDatabase()
+        private void LoadViaResources()
         {
-            var dir = "Assets/Prefabs/VFX/";
-            vfxHit = Load(dir + "VFX_Hit.prefab");
-            vfxEnemyDeath = Load(dir + "VFX_EnemyDeath.prefab");
-            vfxPickup = Load(dir + "VFX_Pickup.prefab");
-            vfxLevelUp = Load(dir + "VFX_LevelUp.prefab");
-            vfxBossSpawn = Load(dir + "VFX_BossSpawn.prefab");
-            vfxBossDefeat = Load(dir + "VFX_BossDefeat.prefab");
-            vfxPlayerDeath = Load(dir + "VFX_PlayerDeath.prefab");
-            vfxVictory = Load(dir + "VFX_Victory.prefab");
+            vfxHit = Load("VFX/VFX_Hit");
+            vfxEnemyDeath = Load("VFX/VFX_EnemyDeath");
+            vfxPickup = Load("VFX/VFX_Pickup");
+            vfxLevelUp = Load("VFX/VFX_LevelUp");
+            vfxBossSpawn = Load("VFX/VFX_BossSpawn");
+            vfxBossDefeat = Load("VFX/VFX_BossDefeat");
+            vfxPlayerDeath = Load("VFX/VFX_PlayerDeath");
+            vfxVictory = Load("VFX/VFX_Victory");
         }
 
-        private static GameObject Load(string path)
+        private static GameObject Load(string resName)
         {
-            var go = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>(path);
+            var go = Resources.Load<GameObject>(resName);
             if (go == null)
-                Debug.LogWarning($"[VFXManager] Missing VFX prefab: {path}");
+                Debug.LogWarning($"[VFXManager] Missing VFX resource: {resName}");
             return go;
         }
 
