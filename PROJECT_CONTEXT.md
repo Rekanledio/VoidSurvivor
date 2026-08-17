@@ -79,7 +79,7 @@ M14 — （待 ChatGPT 定义）
 M14 — （尚未开始，等待任务指令；M13 — Save COMPLETE / ACCEPTED）
 
 ## Latest Commit
-fb576c8 docs: M13.3 best run record documentation
+276eb9e docs: M13.4 save integration and acceptance
 
 ## Important Decisions
 - Do not add special differentiation mechanics for MVP.
