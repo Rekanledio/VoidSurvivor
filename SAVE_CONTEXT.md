@@ -1,7 +1,7 @@
 # Void Survivor — Save Context
 
 ## Last Updated
-2026-08-17 (M10.3 Boss Finalization & Regression COMPLETE — M10 = COMPLETE / ACCEPTED)
+2026-08-17 (M11.1 Main Menu COMPLETE — M11 IN PROGRESS；M11.2/3/4 pending)
 
 ## Current Phase
 Phase 1 — Core framework development
@@ -29,7 +29,7 @@ M11 — UI（M10 — Boss COMPLETE / ACCEPTED；M11 NOT STARTED）
 - M10.1 (2026-08-17): Boss Base Framework — **验证/正式化**。现有 M8.3 Boss 实现（BossData : EnemyData / BossAI / W10 SpawnBossNow / EnemyKilled→BossDefeated→Victory / BossSpawned+BossDefeated 事件 / 复用 EnemySpawner 同一 ObjectPool / IPoolable）已完整覆盖 M10.1 职责，**无生产代码修改**。M10_1BossProbe 29/29 PASS（数据/prefab 组件链/W10 缩放 725·29·2.175/死亡链各一次/State Victory/No wave11/pool reuse 干净/reused chain 1/1/1/1/回归），2× Play/Stop 0/0。HEAD 1f5369e。**M10.1 = COMPLETE**（M10 整体 IN PROGRESS）。
 - M10.2 (2026-08-17): Boss Projectile Skill — BossAI 唯一主动技能：每 3.0s（skillCooldown）存活+Playing+玩家存活+距离≤10.0 时向玩家**当前位置**发射 1 个 PulseProjectile（speed 6.0，lifetime 3.0s，方向锁定不追踪，Source=Boss，Damage=Boss runtime Stats.Damage 继承 WaveMultiplier，命中一次即 Release）。**复用共享 PulseProjectile ObjectPool + CombatSystem.ApplyDamage + DamageRequest + IPoolable**——无第二套 Damage/Pool/HP 框架。Boss prefab 挂 projectilePrefab=PulseProjectile.prefab。数值 3.0s/6.0/3.0s/10.0 为 implementation parameters 非 GAME_DESIGN balance。M10_2BossAbilityProbe 21/22 PASS（唯一 FAIL 为 probe DamageApplied 订阅时序，独立验证确认 CombatSystem 正常发布 DamageApplied；玩家 HP 实际正确下降），2× Play/Stop 0/0，M8 回归 PASS。HEAD 1fc45fc。**M10.2 = COMPLETE**。
 - M10.3 (2026-08-17): Boss Finalization & Regression — **Boss 最终参数确认（500/20/1.5/1.5/1.0 + W10 ×1.45 → 725/29/2.175，技能 3s/6.0/3.0s/10.0）确认适合作为 MVP 最终值，No production parameter changes required；无新增 mechanic、无生产代码修改**。完整战斗验收（W10 spawn/追击/接触伤害 29/技能发射/方向锁定不追踪/命中/Release/冷却/死亡链各一次/Victory/No Wave11/pool reuse 干净+技能重置/跨两 run 各 2 次）+ M6/M7/M9 回归。M10_3BossFinalRegressionProbe **55/55 PASS**；3× Play/Stop 全 0/0；probe 已删；字体未写坏。**M10 = COMPLETE / ACCEPTED。** HEAD f815d71（docs: M10.3 boss finalization and regression）。
-## In Progress
+- M11.1 (2026-08-17): Main Menu — 最小 Main Menu（Game Title "虚空幸存者" + PlayButton "开始游戏" + QuitButton "退出游戏"）；Play → MainMenu→Playing；Quit → Application.Quit (Editor 下 EditorApplication.isPlaying=false)；复用现有 Canvas/EventSystem/InputSystemUIInputModule（唯一确认）/ GameState / EventBus (GameStateChanged) / TMP NotoSansSC，不创建第二套。M11_1MainMenuProbe 23/23 PASS；2× Play/Stop 0/0；字体未写坏；probe 已删。**M11 整体 IN PROGRESS**（仅 M11.1 完成；M11.2/3/4 pending）。HEAD 67f2ce0（feat: M11.1 main menu ui）。## In Progress
 - Nothing. M3 (incl. bug fix) is fully complete.
 
 ## M3 Bug Fix (2026-08-14)
@@ -298,7 +298,7 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - Commit `12f17e4`. Normal Weapon / StatBonus cards visually unchanged.
 
 ## Next Step
-M11 — UI（M10 COMPLETE / ACCEPTED；M11 尚未开始，等待任务指令）
+M11.2 — Gameplay HUD（M11.1 COMPLETE；M11 整体 IN PROGRESS；M11.3/4 待任务）
 
 ## M10.1 — Boss Base Framework (2026-08-17)
 - 现有 M8.3 Boss 实现已完整覆盖 M10.1 职责（BossData/BossAI/W10 流程/事件/pool），M10.1 不修改任何生产代码，仅正式验证。
@@ -308,7 +308,8 @@ M11 — UI（M10 COMPLETE / ACCEPTED；M11 尚未开始，等待任务指令）
 ## M10.2 — Boss Projectile Skill (2026-08-17)
 - BossAI 唯一主动技能：每 3s 向玩家当前位置发射 1 个 PulseProjectile（复用共享池+CombatSystem，source=Boss，damage=runtime Stats.Damage 继承 WaveMultiplier，lifetime 3s 命中一次 Release，方向锁定不追踪）。Boss prefab 挂 projectilePrefab。
 - M10_2BossAbilityProbe 21/22 PASS（唯一 FAIL 为 probe 订阅时序，独立验证确认 DamageApplied 正常）；2× Play/Stop 0/0；字体未写坏。
-- M10.1 + M10.2 + M10.3 COMPLETE；**M10 = COMPLETE / ACCEPTED**（M11 NOT STARTED）。
+- M10.1 + M10.2 + M10.3 COMPLETE；**M10 = COMPLETE / ACCEPTED**。
+- M11.1 COMPLETE；**M11 整体 IN PROGRESS**（M11.2/3/4 pending）。
 
 ## M10.2 — Boss Projectile Skill 参数（implementation parameters，非 GAME_DESIGN balance）
 - BossSkillCooldown = 3.0 s；BossProjectileSpeed = 6.0；BossProjectileLifetime = 3.0 s；BossSkillRange = 10.0；BossProjectileDamage = Boss 当前 runtime Stats.Damage（自动继承 WaveMultiplier）。

@@ -951,3 +951,15 @@ M10 — Boss (per milestone list).
 - **平衡观察（实测）**：接触 29/次 ≈ 3.4 次致命；弹道 29/次、6.0 弹速、方向锁定可横向躲避；boss 移速 2.175 慢、725 HP 配合玩家四武器 DPS 约 20-35s 击杀 —— **适合作为 5~10 分钟 MVP run 的最终收尾**。**参数确认：No production parameter changes required**。
 - **3× 独立 Play/Stop：全 0 errors / 0 warnings**；字体 asset 未写坏（git diff 空）；probe 已删；跨 session Boss/projectile/EventBus/GameState 干净。
 - **M10 = COMPLETE / ACCEPTED**（M10.1 + M10.2 + M10.3 全部完成）。
+
+### M11.1 — Main Menu — COMPLETE
+- 范围：最小 Main Menu（Game Title "虚空幸存者" + PlayButton "开始游戏" + QuitButton "退出游戏"）；Play → MainMenu→Playing；Quit → Application.Quit (Editor 下 EditorApplication.isPlaying=false)。
+- **复用**：现有 Canvas / EventSystem / InputSystemUIInputModule（唯一确认）/ GameState / EventBus (GameStateChanged) / TMP NotoSansSC。**不创建第二套 Canvas/EventSystem/GameState/UI 事件系统**。
+- **新文件**：`Assets/Scripts/UI/MainMenuPanel.cs`（仿 LevelUpPanel 模式：GameStateChanged 驱动显隐，Awake 订阅+初始显隐，OnPlayPressed→TryChangeState(Playing)，OnQuitPressed→#if UNITY_EDITOR ... #else Application.Quit()）。
+- **场景**：SC_Main.unity Canvas 下新增 MainMenuPanel 子物体（深色 Image 背景 + Title TMP + PlayButton + QuitButton，绑定 MainMenuPanel 组件）。
+- **验证**（临时 M11_1MainMenuProbe，已删）：**23/23 PASS, 0 FAILURES** — Canvas 唯一(1) / EventSystem 唯一(1) / MainMenuPanel 存在 / 初始可见（state=MainMenu）/ Title="虚空幸存者" / PlayButton+QuitButton 存在+onClick 各 1 个 listener（反射 m_Calls in UnityEventBase 沿基类链）/ Label "开始游戏"/"退出游戏" / **真实点击 PlayButton.onClick.Invoke() → GameState=Playing + MainMenuPanel 隐藏** / Playing→GameOver→MainMenu 合法返回 + MainMenuPanel 重新显示 / LevelUpPanel+ShopPanel 存在且在 MainMenu 隐藏（M9 回归）。
+- **probe 调试记录**：①`Playing→MainMenu` 不是合法转换（M2 设计 Playing 只能去 Paused/LevelUp/Shop/GameOver/Victory）→ probe 改走 `Playing→GameOver→MainMenu` 合法路径；②`Button.onClick.GetRuntimeEventCount()` Unity 6 无此 API → 反射 `m_Calls` 沿基类链查找 UnityEventBase.Count。
+- **视觉**：截图 `D:/Work/m11_mainmenu.png` 确认 "虚空幸存者"/"开始游戏"/"退出游戏" 中文渲染正常无 □；"开始游戏" 被 MainMenu 状态下 Player PulseGun 自动攻击循环发射的 PulseProjectile 覆盖——Player weapon pause 属更大范围（M11.1 严格限制只做 MainMenu 本身，不修改武器逻辑），不影响功能验证。
+- **2× 独立 Play/Stop：全 0 errors / 0 warnings**；字体 asset 未写坏（git diff 空）；probe 已删。
+- **M11 整体 IN PROGRESS**（仅 M11.1 完成；M11.2/3/4 待任务）。
+- Commit 67f2ce0（feat: M11.1 main menu ui）。
