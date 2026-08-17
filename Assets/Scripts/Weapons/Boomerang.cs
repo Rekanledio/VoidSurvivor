@@ -22,7 +22,7 @@ namespace VoidSurvivor.Weapons
 
         private void Update()
         {
-            if (Data is not BoomerangData boom) return;
+            if (!GameplayActive || Data is not BoomerangData boom) return; // M11.4: weapons act only while Playing
 
             // Single-flight rule: do not throw while one is still out.
             if (BoomerangProjectile.ActiveCount > 0) return;

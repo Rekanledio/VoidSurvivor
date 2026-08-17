@@ -58,6 +58,7 @@ namespace VoidSurvivor.Enemy
 
         private void FixedUpdate()
         {
+            if (!EnemyController.GameplayActive) return; // M11.4: boss acts only while Playing
             if (_controller == null || _controller.Health == null || _controller.Health.IsDead) return;
             if (_controller.Body == null || _controller.Stats == null || _controller.Target == null) return;
 
@@ -92,6 +93,7 @@ namespace VoidSurvivor.Enemy
 
         private void OnTriggerEnter2D(Collider2D other)
         {
+            if (!EnemyController.GameplayActive) return; // M11.4: no new contact damage outside Playing
             // Contact attack: only the player is a valid target.
             if (!other.TryGetComponent(out PlayerHealth _)) return;
             if (Time.time < _nextContactAttackTime) return;

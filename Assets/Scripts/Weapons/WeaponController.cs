@@ -1,5 +1,6 @@
 using UnityEngine;
 using VoidSurvivor.Combat;
+using VoidSurvivor.Core;
 using VoidSurvivor.Player;
 
 namespace VoidSurvivor.Weapons
@@ -33,6 +34,14 @@ namespace VoidSurvivor.Weapons
 
         public WeaponData Data => data;
         public bool IsValid => data != null;
+
+        /// <summary>
+        /// M11.4: weapons only act while the game is Playing. Non-gameplay states
+        /// (MainMenu / GameOver / Victory / Paused / LevelUp / Shop) never start
+        /// a new attack. In-flight projectiles keep their own pooled lifecycle.
+        /// </summary>
+        protected static bool GameplayActive =>
+            GameManager.Instance != null && GameManager.Instance.CurrentState == GameState.Playing;
 
         // ---- M9.5 upgrade state (read-only for UI / shop) ----
         public int WeaponLevel => _weaponLevel;

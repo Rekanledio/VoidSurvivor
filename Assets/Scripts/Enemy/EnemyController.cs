@@ -29,6 +29,15 @@ namespace VoidSurvivor.Enemy
         private ObjectPool<EnemyController> _myPool;
 
         public EnemyStats Stats => _stats;
+
+        /// <summary>
+        /// M11.4: enemies act only while the game is Playing. Non-gameplay states
+        /// (MainMenu / GameOver / Victory / Paused / LevelUp / Shop) freeze enemy
+        /// AI (no movement, no shooting). Existing projectiles keep their pooled
+        /// lifecycle.
+        /// </summary>
+        public static bool GameplayActive =>
+            GameManager.Instance != null && GameManager.Instance.CurrentState == GameState.Playing;
         public EnemyHealth Health => _health;
         public Rigidbody2D Body => _body;
         public PlayerHealth Target => _target;

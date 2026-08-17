@@ -21,6 +21,7 @@ namespace VoidSurvivor.Enemy
 
         private void FixedUpdate()
         {
+            if (!EnemyController.GameplayActive) return; // M11.4
             if (_controller == null || _controller.Health == null || _controller.Health.IsDead) return;
             if (_controller.Body == null || _controller.Stats == null || _controller.Target == null) return;
 

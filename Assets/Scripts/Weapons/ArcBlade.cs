@@ -19,7 +19,7 @@ namespace VoidSurvivor.Weapons
 
         private void Update()
         {
-            if (Data == null) return;
+            if (!GameplayActive || Data == null) return; // M11.4: weapons act only while Playing
             if (Time.time < _nextAttackTime) return;
 
             Strike();

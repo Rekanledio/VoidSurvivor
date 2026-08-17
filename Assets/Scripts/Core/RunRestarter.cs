@@ -23,6 +23,10 @@ namespace VoidSurvivor.Core
             var gm = GameManager.Instance;
             if (gm == null) return;
 
+            // Player health: alive again with full HP (a fresh run never starts dead).
+            var health = Object.FindFirstObjectByType<PlayerHealth>();
+            if (health != null) health.ResetForRun();
+
             // Player progression: XP = 0, Level = 1, Gold = 0.
             var progress = Object.FindFirstObjectByType<PlayerProgress>();
             if (progress != null) progress.ResetForRun();

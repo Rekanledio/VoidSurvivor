@@ -63,6 +63,16 @@ namespace VoidSurvivor.Player
             _currentHP = MaxHP;
         }
 
+        /// <summary>
+        /// Resets to a brand-new run (M11.4): alive again with full HP.
+        /// Serialized data is untouched.
+        /// </summary>
+        public void ResetForRun()
+        {
+            _isDead = false;
+            _currentHP = MaxHP;
+        }
+
         private void Die()
         {
             if (_isDead) return; // guard against duplicate death

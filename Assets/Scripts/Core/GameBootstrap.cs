@@ -20,6 +20,9 @@ namespace VoidSurvivor.Core
             {
                 var go = new GameObject("GameManager");
                 go.AddComponent<GameManager>();
+                // M11.4: game-flow handler (PlayerDied -> GameOver) lives on the
+                // same persistent object as the GameManager.
+                go.AddComponent<GameFlow>();
             }
         }
     }

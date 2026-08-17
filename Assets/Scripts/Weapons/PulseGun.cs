@@ -37,7 +37,7 @@ namespace VoidSurvivor.Weapons
 
         private void Update()
         {
-            if (Data == null) return;
+            if (!GameplayActive || Data == null) return; // M11.4: weapons act only while Playing
 
             // Re-acquire only when we have no valid in-range target (not every frame).
             if (!HasValidTarget())

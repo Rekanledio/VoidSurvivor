@@ -26,7 +26,7 @@ namespace VoidSurvivor.Weapons
 
         private void Update()
         {
-            if (Data is not ScatterBlasterData scatter) return;
+            if (!GameplayActive || Data is not ScatterBlasterData scatter) return; // M11.4: weapons act only while Playing
 
             // Re-acquire only when the current target is gone/invalid (not every frame).
             if (!HasValidTarget())
