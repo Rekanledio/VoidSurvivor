@@ -1020,3 +1020,15 @@ M10 — Boss (per milestone list).
 - **probe 调试记录**：①enum ToString 推断资源名失败（`EnemyDeath`→"enemydeath" 无下划线）→ 改为**显式 ResourceName 映射**（snake_case）；②UI click 走 `SfxLibrary.PlayUiClick()` 直接 AudioManager（不经过 GameplaySfx.PlayCount）→ 断言改用 AudioSource.isPlaying；③probe 状态序列冗余转换 warning → 加 CurrentState 判断。
 - **2× 独立 Play/Stop：全 0 errors / 0 warnings**；字体 asset 未写坏（git diff 空）；probe 已删。
 - **M12 整体 IN PROGRESS**（M12.1+M12.2 完成；M12.3/4 pending）。
+
+### M12.3 — Basic VFX Feedback — COMPLETE
+- 范围：8 类基础 2D VFX + 事件驱动；不做 VFX Graph/Shader/后处理/Cinemachine/Screen Shake/复杂动画/大型粒子/Boss 第二阶段/新 GameState/新 EventBus。
+- **新增 8 个 prefab**（Assets/Prefabs/VFX/，ParticleSystem，burst 模式 + autoDestroy）：VFX_Hit/EnemyDeath/Pickup/LevelUp/BossSpawn/BossDefeat/PlayerDeath/Victory（不同颜色 + burst count + scale + duration 0.15-0.6s）。
+- **新增** `Assets/Scripts/VFX/VFXManager.cs`（VoidSurvivor.VFX，单例 + DontDestroyOnLoad；Awake AssetDatabase 加载 prefab + 缓存 Player 一次 Find；订阅 8 事件 → Play(prefab, pos, scale) → Instantiate + Play + auto-Destroy；DamageApplied 0.05s cooldown 限频）。
+- **修改**：`GameBootstrap.cs` 挂 VFXManager 到 GameManager GO。
+- **不修改**：GameEvents / GameplaySfx / AudioManager / 所有 gameplay 系统 / Scene / UI。
+- **位置来源**：DamageApplied→Target；EnemyDied→Enemy；PickupCollected→Collector(Player)；PlayerLevelUp/PlayerDied/Victory→缓存 Player（事件无对象，Awake 一次 Find 不每帧查）；BossSpawned/BossDefeated→Boss。
+- **验证**（临时 M12_3BasicVfxProbe，已删）：**22/22 PASS, 0 FAILURES** — VFXManager 唯一 / **8 prefab 全部加载（missing=0）** / 8 事件 + Victory 全触发 ParticleSystem / **DamageApplied 限频（50 次→1 VFX）** / **所有 VFX 生命周期到后自动销毁** / 不修改 GameState/PlayerHealth / M9 LevelUp·Shop / **M10 W10 BossSpawn 真实触发** / M12.2 SFX 回归。
+- **视觉**：截图 D:/Work/m123_vfx.png 确认 6 类 VFX 同时触发（Hit/Death/Pickup/LevelUp/BossDefeat/Victory）——HUD（HP/XP/Lv./Gold/Wave）完整不遮挡；粒子尺寸合理（不巨大）；不遮挡战斗区域；无残留。
+- **2× 独立 Play/Stop：全 0 errors / 0 warnings**；字体 asset 未写坏（git diff 空）；probe 已删。
+- **M12 整体 IN PROGRESS**（M12.1+M12.2+M12.3 完成；M12.4 pending）。
