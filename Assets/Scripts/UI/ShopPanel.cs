@@ -26,6 +26,7 @@ namespace VoidSurvivor.UI
         [SerializeField] private TextMeshProUGUI[] nameTexts = new TextMeshProUGUI[4];
         [SerializeField] private TextMeshProUGUI[] typeTexts = new TextMeshProUGUI[4];
         [SerializeField] private TextMeshProUGUI[] priceTexts = new TextMeshProUGUI[4];
+        [SerializeField] private TextMeshProUGUI[] levelTexts = new TextMeshProUGUI[4];
         [SerializeField] private Button[] buyButtons = new Button[4];
         [SerializeField] private TextMeshProUGUI[] buyLabels = new TextMeshProUGUI[4];
         [SerializeField] private Button refreshButton;
@@ -101,9 +102,35 @@ namespace VoidSurvivor.UI
             for (int i = 0; i < buyButtons.Length; i++)
             {
                 bool valid = i < products.Length && products[i] != null;
-                if (nameTexts[i] != null) nameTexts[i].text = valid ? ProductName(products[i]) : "—";
+                bool isWeaponUpgrade = valid && products[i].ItemType == ShopItemType.WeaponUpgrade;
+
+                if (nameTexts[i] != null)
+                {
+                    nameTexts[i].text = valid ? ProductName(products[i]) : "—";
+                    // WeaponUpgrade: two-line name in a compact top-aligned font so it
+                    // fits the ProductCard without overflowing the top edge (M9.5 UI fix).
+                    // Other product types keep the original single-line style untouched.
+                    nameTexts[i].fontSize = isWeaponUpgrade ? 16f : 24f;
+                    nameTexts[i].alignment = isWeaponUpgrade
+                        ? TextAlignmentOptions.TopLeft
+                        : TextAlignmentOptions.Left;
+                }
                 if (typeTexts[i] != null) typeTexts[i].text = valid ? ProductTypeName(products[i]) : "";
                 if (priceTexts[i] != null) priceTexts[i].text = valid ? $"价格：{products[i].Price} 金币" : "";
+
+                // WeaponUpgrade level line (own child, below Name, above Price).
+                if (levelTexts[i] != null)
+                {
+                    var levelGo = levelTexts[i].transform.parent;
+                    if (levelGo != null) levelGo.gameObject.SetActive(isWeaponUpgrade);
+                    if (isWeaponUpgrade && products[i].WeaponUpgrade != null)
+                    {
+                        int lvl = shopManager != null
+                            ? shopManager.LevelOfEquipped(products[i].WeaponUpgrade.TargetWeapon)
+                            : 1;
+                        levelTexts[i].text = $"等级：Lv.{lvl} → Lv.{lvl + 1}";
+                    }
+                }
 
                 if (buyButtons[i] != null)
                 {
@@ -165,8 +192,9 @@ namespace VoidSurvivor.UI
         }
 
         /// <summary>
-        /// Multi-line label for a WeaponUpgrade product (M9.5):
-        /// weapon name / 升级：stat / 等级：Lv.X → Lv.X+1 (X from the equipped weapon).
+        /// WeaponUpgrade product name (M9.5, UI layout fix): two lines only —
+        /// weapon name / 升级：stat. The level line is rendered by the separate
+        /// Level child (levelTexts), not packed into Name (which would overflow).
         /// </summary>
         private static string WeaponUpgradeName(ShopItemData item)
         {
@@ -177,10 +205,7 @@ namespace VoidSurvivor.UI
             if (WeaponDataNames.TryGetValue(upgrade.TargetWeapon.name, out string zn)) weaponZh = zn;
             else if (WeaponNames.TryGetValue(upgrade.TargetWeapon.name, out zn)) weaponZh = zn;
             string statZh = WeaponUpgradeStatName(upgrade.StatType);
-            int level = FindFirstObjectByType<ShopManager>() is { } sm
-                ? sm.LevelOfEquipped(upgrade.TargetWeapon)
-                : 1;
-            return $"{weaponZh}\n升级：{statZh}\n等级：Lv.{level} → Lv.{level + 1}";
+            return $"{weaponZh}\n升级：{statZh}";
         }
 
         private static string ProductTypeName(ShopItemData item)
