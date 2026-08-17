@@ -28,6 +28,8 @@ namespace VoidSurvivor.Core
                 // M12.2: SFX library (clip mapping) + event wiring (gameplay + UI).
                 go.AddComponent<VoidSurvivor.Audio.SfxLibrary>();
                 go.AddComponent<VoidSurvivor.Audio.GameplaySfx>();
+                // M12.3: minimal event-driven 2D VFX.
+                go.AddComponent<VoidSurvivor.VFX.VFXManager>();
             }
         }
     }
