@@ -43,7 +43,7 @@
 Phase 1 — Core framework development
 
 ## Current Milestone
-M13 — Save (Local persistence)（IN PROGRESS；M13.1 Save Foundation COMPLETE；M13.2 尚未开始）
+M13 — Save (Local persistence)（IN PROGRESS；M13.1+M13.2 COMPLETE；M13.3 尚未开始）
 
 ## Completed Milestones
 - M0 — Project Documentation Initialization
@@ -76,10 +76,10 @@ M13 — Save (Local persistence)（IN PROGRESS；M13.1 Save Foundation COMPLETE�
 M13 — Save (Local persistence)
 
 ## Current Task
-M13.2 — Settings Persistence（尚未开始，等待任务指令；M13.1 Save Foundation COMPLETE）
+M13.3 — Best Run Record（尚未开始，等待任务指令；M13.1+M13.2 COMPLETE）
 
 ## Latest Commit
-9ca61c3 docs: M13.1 save foundation documentation
+376ca21 docs: M13.2 settings persistence documentation
 
 ## Important Decisions
 - Do not add special differentiation mechanics for MVP.

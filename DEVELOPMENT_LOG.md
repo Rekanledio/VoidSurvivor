@@ -1062,3 +1062,16 @@ M10 — Boss (per milestone list).
   - **Session C（删 save 后 Play #3）**：execute_code 直接验证 Master=1/Sfx=1 + probe 20/20（A-fresh 分支全项）。
 - **测试清理**：测试 save（0.73/0.41）已删除（persistentDataPath 无残留）；probe 已删；字体未写坏（git diff 空）。
 - **M13 整体 IN PROGRESS**（M13.1+M13.2 完成；M13.3/4 pending）。
+
+### M13.3 — Best Run Record — COMPLETE
+- 范围：历史最佳记录（bestWave/bestLevel/bestGold）永久持久化；不新增 UI、不新增 Save System。
+- **新增**：`Assets/Scripts/Save/BestRunRecorder.cs`（MonoBehaviour，订阅 `GameStateChanged`；`To==GameOver || To==Victory` 终局时读取 `WaveManager.CurrentWave`/`PlayerProgress.Level`/`PlayerProgress.CurrentGold`（终局数据未 ResetForRun）→ `SaveManager.Load()` → 三项分别 max 比较 → **有提升才 Save**（不每次写文件）；`_recordedThisRun` 最小防重复（Playing 进入时 reset，同 run 重复终局事件 ignore）；read-modify-write 保留 masterVolume/sfxVolume 字段）。
+- **修改**：`GameBootstrap.cs` 挂 BestRunRecorder（SaveManager 之后，保持 SaveManager→AudioManager 顺序不变）。
+- **不修改**：SaveData/SaveManager/AudioManager/PlayerProgress/PlayerStats/WeaponController/WaveManager/GameManager/GameFlow/ResultPanel/UI/Scene/字体。
+- **验证**（临时 M13_3BestRunRecordProbe，已删）：
+  - **Session A（Play #1，无 save）**：16/16 PASS — 初始 best=0/0/0 / 测试 run（Wave5/Lv3/Gold120）GameOver → best=5/3/120 / save 文件写入。
+  - **Session B（Play #2，跨会话）**：17/17 PASS — 持久化 best=5/3/120 加载 / 低 run（2/2/50）Victory 保持 best / 高 run（8/6/300）GameOver 更新 best / Save·Load 一致 / MasterVolume·SfxVolume 保留 / Restart 不覆盖 / MainMenu 不触发 / 重复终局安全 / M9·M10·M11·M12 回归。
+  - **Session C（Play #3）**：17/17 PASS — 跨会话确认 best=8/6/300。
+- **probe 调试记录**：AddXP 触发 PlayerLevelUp → PlayerLevelSystem 自动切 LevelUp 状态 → GameOver 转换非法 → 改用反射 SetField 直接设置 progress 数据（不触发升级事件，state 保持 Playing）。
+- **测试清理**：测试 save（8/6/300）已删除；probe 已删；字体未写坏（git diff 空）。
+- **M13 整体 IN PROGRESS**（M13.1+M13.2+M13.3 完成；M13.4 pending）。
