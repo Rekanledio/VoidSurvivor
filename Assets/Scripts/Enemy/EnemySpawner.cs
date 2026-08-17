@@ -64,6 +64,21 @@ namespace VoidSurvivor.Enemy
             return EnemyController.Spawn(GetPool(bossPrefab), position, multiplier);
         }
 
+        /// <summary>
+        /// M14 P9 fix: releases every currently-active enemy (across all
+        /// per-prefab pools) back to its pool. Called at the start of a new run
+        /// so no enemy from a previous run survives into the fresh run — GameOver
+        /// only stops the wave (WaveManager), it does not clear enemies.
+        /// Inactive pooled instances are untouched; double-release is guarded.
+        /// </summary>
+        public void ReleaseAllActiveEnemies()
+        {
+            foreach (var pool in _pools.Values)
+            {
+                pool.ReleaseAllActive();
+            }
+        }
+
         private ObjectPool<EnemyController> GetPool(GameObject prefab)
         {
             if (!_pools.TryGetValue(prefab, out var pool))

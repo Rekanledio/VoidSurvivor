@@ -33,6 +33,19 @@ namespace VoidSurvivor.Player
             _currentHP = _stats.MaxHP;
         }
 
+        /// <summary>
+        /// M14 regression fix: consume PlayerStats.HPRegen as passive regeneration
+        /// while Playing (frozen in non-gameplay states), never above MaxHP.
+        /// </summary>
+        private void Update()
+        {
+            if (_isDead || _stats == null) return;
+            if (GameManager.Instance == null || GameManager.Instance.CurrentState != GameState.Playing) return;
+            if (_stats.HPRegen <= 0f || _currentHP >= MaxHP) return;
+
+            _currentHP = Mathf.Min(MaxHP, _currentHP + _stats.HPRegen * Time.deltaTime);
+        }
+
         /// <summary>Applies flat-reduced damage; clamps HP to >= 0; triggers death once.</summary>
         public void TakeDamage(float damage)
         {

@@ -55,8 +55,10 @@ namespace VoidSurvivor.UI
         private void OnPlayPressed()
         {
             SfxLibrary.PlayUiClick(); // M12.2: shared UI click
-            if (GameManager.Instance != null)
-                GameManager.Instance.TryChangeState(GameState.Playing);
+            // M14 P10 fix: start a new run through the unified Core entry
+            // (same reset chain as RestartRun), so MainMenu -> Playing never
+            // resumes a dead/HP=0 player after GameOver -> MainMenu.
+            RunRestarter.StartNewRun();
         }
 
         private void OnQuitPressed()

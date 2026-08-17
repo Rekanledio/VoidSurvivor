@@ -66,6 +66,24 @@ namespace VoidSurvivor.Core
             _available.Push(obj);
         }
 
+        /// <summary>
+        /// M14 P9 fix: releases every currently-active managed object back to
+        /// the pool (stops AI/physics, deactivates). Used at the start of a new
+        /// run so no enemy from a previous run survives into the fresh run.
+        /// Safe to call during iteration: Release mutates _inPool/_available but
+        /// never _all, and double-release is guarded inside Release.
+        /// </summary>
+        public void ReleaseAllActive()
+        {
+            for (int i = 0; i < _all.Count; i++)
+            {
+                if (_all[i] != null && _all[i].gameObject.activeInHierarchy)
+                {
+                    Release(_all[i]);
+                }
+            }
+        }
+
         /// <summary>Destroys every managed object and empties the pool.</summary>
         public void Clear()
         {

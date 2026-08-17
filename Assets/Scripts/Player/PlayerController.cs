@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using VoidSurvivor.Core;
 
 namespace VoidSurvivor.Player
 {
@@ -26,6 +27,14 @@ namespace VoidSurvivor.Player
         private InputAction _moveAction;
 
         public Vector2 LastMoveInput { get; private set; }
+
+        /// <summary>
+        /// M14: player acts only while the game is Playing (freezes Shop /
+        /// LevelUp / Paused / GameOver / Victory / MainMenu) — mirrors the
+        /// EnemyController.GameplayActive guard used by enemies & weapons.
+        /// </summary>
+        public static bool GameplayActive =>
+            GameManager.Instance != null && GameManager.Instance.CurrentState == GameState.Playing;
 
         private void Awake()
         {
@@ -62,6 +71,10 @@ namespace VoidSurvivor.Player
 
         private void FixedUpdate()
         {
+            // M14 regression fix: gameplay simulation (player movement) runs only
+            // while Playing — Shop / LevelUp / Paused / GameOver / Victory /
+            // MainMenu freeze the player (same guard weapons & enemies use).
+            if (!GameplayActive) return;
             if (_stats == null || _body == null || (_health != null && _health.IsDead)) return;
 
             Vector2 raw = _moveAction != null ? _moveAction.ReadValue<Vector2>() : Vector2.zero;

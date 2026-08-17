@@ -1,4 +1,5 @@
 using UnityEngine;
+using VoidSurvivor.Combat;
 using VoidSurvivor.Core;
 using VoidSurvivor.Player;
 
@@ -16,6 +17,12 @@ namespace VoidSurvivor.Enemy
     /// notifies child AI. EventBus subscription happens once in Awake (instance
     /// creation); pool reuse never re-subscribes.
     ///
+    /// M14 regression: contact damage for regular enemies (Chaser/Runner/Tank/
+    /// Shooter) — OnTriggerEnter2D -> DamageRequest -> CombatSystem -> PlayerHealth,
+    /// the same formal path BossAI uses. Requires the enemy collider to be a
+    /// trigger (EnemyBase prefab). The Boss is excluded here (BossAI owns its
+    /// own contact damage with the same cooldown semantics).
+    ///
     /// No AI behavior is implemented here — Chaser / Runner / Shooter / Tank
     /// compose this component in later M4 subtasks.
     /// </summary>
@@ -27,6 +34,7 @@ namespace VoidSurvivor.Enemy
         private Rigidbody2D _body;
         private PlayerHealth _target;
         private ObjectPool<EnemyController> _myPool;
+        private float _nextContactAttackTime;
 
         public EnemyStats Stats => _stats;
 
@@ -87,6 +95,23 @@ namespace VoidSurvivor.Enemy
             {
                 DespawnSelf();
             }
+        }
+
+        /// <summary>
+        /// M14 regression fix: contact damage for regular enemies, routed through
+        /// the unified combat entry (same formal path as BossAI). Fires only while
+        /// Playing, only against the player, on the per-enemy AttackCooldown.
+        /// The Boss handles its own contact damage in BossAI (skipped here).
+        /// </summary>
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (!GameplayActive) return; // M11.4/M14: no contact damage outside Playing
+            if (GetComponent<BossAI>() != null) return; // BossAI owns boss contact damage
+            if (!other.TryGetComponent(out PlayerHealth _)) return;
+            if (Time.time < _nextContactAttackTime) return;
+            _nextContactAttackTime = Time.time + (_stats != null ? _stats.AttackCooldown : 1f);
+
+            CombatSystem.ApplyDamage(new DamageRequest(gameObject, other.gameObject, _stats != null ? _stats.Damage : 0f));
         }
 
         public void OnSpawn()
