@@ -219,3 +219,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 714f222990263214087926169c540a42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VoidSurvivor.Enemy.BossAI
+  projectilePrefab: {fileID: 3117802096195435921, guid: fcf6a12c4be58104189f7ec049d5ed6c, type: 3}
+  skillCooldown: 3
+  projectileSpeed: 6
+  skillRange: 10

@@ -927,9 +927,18 @@ M10 — Boss (per milestone list).
 - **验证**：Damage / AttackCooldown / Range 三种 WeaponUpgrade 均 Name 完整在卡内、无 textBounds 重叠（Name vs Price/Type/BuyButton 全分离）、最长文本"升级：攻击速度"不越界；普通 Weapon / StatBonus 零变化；中文正常无 □；Console 0/0；Git clean。
 
 ## 2026-08-17
-### M10.1 — Boss Base Framework (验证现有 M8.3 Boss 实现)
+### M10.1 — Boss Base Framework — COMPLETE（验证现有 M8.3 Boss 实现）
 - **结论**：M8.3 已完整实现 Boss Base Framework（BossData : EnemyData / BossAI / SpawnBossNow / OnEnemyKilled→BossDefeated→Victory / BossSpawned+BossDefeated 事件 / Boss 复用 EnemySpawner 同一 pool / WaveManager W10 独立逻辑）。按"不要重复创建已存在的东西"原则，M10.1 **不修改任何生产代码**，仅正式验证 + 文档化。
 - 验证（临时 M10_1BossProbe，已删除）：**29/29 PASS, 0 FAILURES** — BossData 加载、prefab 组件链（EnemyController/Stats/Health/BossAI/Rigidbody2D + data 引用）、W10 真实路径 SpawnBoss（MaxHP 725/Damage 29/MoveSpeed 2.175，W10 WaveMultiplier 1.45 缩放正确）、死亡链 via CombatSystem（EnemyDied/EnemyKilled/BossDefeated/Victory 各一次）、State Victory、No wave 11（wave=10）、pool reuse 干净（IsDead=false/HP=MaxHP/velocity=0/WaveMultiplier 1.45）、Reused boss death chain 1/1/1/1、PulseGun 不受影响、Boomerang ActiveCount sane。
 - probe 调试记录：①直接调 EnemyHealth.TakeDamage 只触发 EnemyDied（绕过 CombatSystem 无 EnemyKilled/BossDefeated）—— 验证必须走 CombatSystem.ApplyDamage；②直接 spawner.SpawnBoss 的 boss 不是 WaveManager._activeBoss → 无 BossDefeated —— 验证必须走 wave.StartWave(10) 真实路径；③W10 真实路径注入 WaveMultiplier 1.45 → 断言用缩放值（725/29/2.175）。
 - 最终 Play/Stop×2：0 errors / 0 warnings；字体 asset 未被 Play 写坏（git diff 空）。
 - M10.1 范围确认：无新 Boss 技能/多阶段/UI/VFX/掉落规则/新武器/新敌人/新波次机制；M8 Boss 行为完全保持。
+
+## 2026-08-17
+### M10.2 — Boss Projectile Skill — COMPLETE
+- BossAI 新增唯一主动技能：每 skillCooldown(3s) 存活+Playing+玩家存活+距离≤skillRange(10) 时，向玩家**当前位置**发射 1 个 PulseProjectile（方向发射瞬间锁定，不追踪；source=Boss；damage=runtime Stats.Damage 自动继承 WaveMultiplier；lifetime 3s；命中一次即 Release）。数值 3s/6.0/10.0 为 implementation parameters 非 GAME_DESIGN 值。
+- **复用**：PulseProjectile 共享静态 ObjectPool（Boss prefab 挂同一 PulseProjectile.prefab，无第二套 Pool）+ CombatSystem.ApplyDamage + DamageRequest + IPoolable。未建第二套 Damage/Pool/HP 框架。
+- Boss prefab：BossAI 新增 projectilePrefab/skillCooldown/projectileSpeed/skillRange 序列化字段（skillRange 10）。
+- 验证（临时 M10_2BossAbilityProbe 已删）：**21/22 PASS** — W10 spawn/BossAI/冷却前不发射/冷却后发射 1 颗/source==Boss/damage==29(W10 缩放)/命中玩家 HP 下降(58=接触29+弹道29)/命中后 Release/Boss 死亡后不再发射/池复用技能状态干净重发/BossDefeated+Victory 各一次/No wave11/PulseGun+Boomerang 回归。唯一 FAIL 为 probe 内 DamageApplied 订阅计数时序问题——独立最小验证（反射 Subscribe + CombatSystem.ApplyDamage）确认 DamageApplied 正常发布且 Target==Player，**非生产缺陷**。
+- 最终 Play/Stop×2：0 errors / 0 warnings；字体 asset 未写坏（git diff 空）。
+- 未做：第二阶段/Rage/多技能/AoE/弹幕/血条/UI/VFX/音效/新掉落/新状态机/新 GameState。

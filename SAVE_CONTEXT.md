@@ -1,13 +1,13 @@
 # Void Survivor — Save Context
 
 ## Last Updated
-2026-08-17 (M9 COMPLETE / ACCEPTED + Shop WeaponUpgrade UI Final Layout Fix)
+2026-08-17 (M10.1 Boss Base Framework COMPLETE — 验证/正式化，无生产代码修改)
 
 ## Current Phase
 Phase 1 — Core framework development
 
 ## Current Milestone
-M9 — Roguelite / Upgrade — COMPLETE / ACCEPTED（M10 — Boss 尚未开始）
+M10 — Boss（M10.1 COMPLETE；M10 整体 IN PROGRESS；M10.2 NOT STARTED）
 
 ## Completed (overview)
 - M0: concept, MVP scope, delivery strategy, documentation strategy.
@@ -26,6 +26,7 @@ M9 — Roguelite / Upgrade — COMPLETE / ACCEPTED（M10 — Boss 尚未开始�
 - M9.5 (2026-08-16): Weapon Upgrade — WeaponController runtime level/bonus + Effective* + WeaponUpgradeData (12 assets) + Shop WeaponUpgrade products. 42/42 PASS.
 - M9 Final Regression & Acceptance (2026-08-17): 82/82 PASS, 0 FAILURES; M6/M7/M8 regression PASS; full M9 integration PASS; 3× Play/Stop 0/0; temp probe deleted; Git clean. **M9 = COMPLETE / ACCEPTED.**
 - Shop WeaponUpgrade UI Final Layout Fix (2026-08-17): WeaponUpgrade Name = two-line single TMP (24px name + 15px upgrade/level via rich text), Price 22px unchanged, independent Level row removed, normal cards untouched, no overlap, Chinese OK. Commit 12f17e4.
+- M10.1 (2026-08-17): Boss Base Framework — **验证/正式化**。现有 M8.3 Boss 实现（BossData : EnemyData / BossAI / W10 SpawnBossNow / EnemyKilled→BossDefeated→Victory / BossSpawned+BossDefeated 事件 / 复用 EnemySpawner 同一 ObjectPool / IPoolable）已完整覆盖 M10.1 职责，**无生产代码修改**。M10_1BossProbe 29/29 PASS（数据/prefab 组件链/W10 缩放 725·29·2.175/死亡链各一次/State Victory/No wave11/pool reuse 干净/reused chain 1/1/1/1/回归），2× Play/Stop 0/0。HEAD 1f5369e。**M10.1 = COMPLETE**（M10 整体 IN PROGRESS）。
 
 ## In Progress
 - Nothing. M3 (incl. bug fix) is fully complete.
@@ -296,9 +297,14 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - Commit `12f17e4`. Normal Weapon / StatBonus cards visually unchanged.
 
 ## Next Step
-M10 — Boss（M4–M9.5 全部 COMPLETE；M10 尚未开始，等待任务指令）
+M10.2 — Boss 后续任务（M4–M10.1 完成；M10 整体 IN PROGRESS，M10.2 NOT STARTED）
 
 ## M10.1 — Boss Base Framework (2026-08-17)
 - 现有 M8.3 Boss 实现已完整覆盖 M10.1 职责（BossData/BossAI/W10 流程/事件/pool），M10.1 不修改任何生产代码，仅正式验证。
 - M10_1BossProbe 29/29 PASS（数据/prefab/缩放/死亡链/State Victory/No wave11/pool reuse 干净/reused chain 1/1/1/1/回归），最终 Play/Stop×2 0/0，字体未写坏。
 - M10 = IN PROGRESS（仅 M10.1 完成，M10 整体未 COMPLETE）。Next: M10.2（待任务）。
+
+## M10.2 — Boss Projectile Skill (2026-08-17)
+- BossAI 唯一主动技能：每 3s 向玩家当前位置发射 1 个 PulseProjectile（复用共享池+CombatSystem，source=Boss，damage=runtime Stats.Damage 继承 WaveMultiplier，lifetime 3s 命中一次 Release，方向锁定不追踪）。Boss prefab 挂 projectilePrefab。
+- M10_2BossAbilityProbe 21/22 PASS（唯一 FAIL 为 probe 订阅时序，独立验证确认 DamageApplied 正常）；2× Play/Stop 0/0；字体未写坏。
+- M10.1 + M10.2 COMPLETE；M10 整体 IN PROGRESS（M10.3 NOT STARTED）。

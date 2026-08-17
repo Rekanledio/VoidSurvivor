@@ -70,12 +70,13 @@ M9 — Roguelite / Upgrade (XP Level Up, upgrades, shop) — COMPLETE / ACCEPTED
   - M9.5 Weapon Upgrade: WeaponController runtime level/bonus (EffectiveDamage/EffectiveAttackCooldown/EffectiveRange) + WeaponUpgradeData (12 assets) + ShopItemType.WeaponUpgrade + shop weapon-upgrade purchase (target must be equipped). 42/42 PASS.
   - M9 Final Regression & Acceptance: 82/82 PASS, 0 FAILURES; M6/M7/M8 regression PASS; full M9 integration PASS; 3× independent Play/Stop 0 errors/0 warnings; temporary probe deleted; final Git clean. **M9 ACCEPTED.**
   - Shop WeaponUpgrade UI Final Layout Fix: WeaponUpgrade Name = two-line single TMP (line1 weapon name 24px, line2 upgrade+level 15px via rich text), Price 22px unchanged, independent Level row removed, normal Weapon/StatBonus cards unaffected, no overlap, Chinese UI OK.
+- M10.1 — Boss Base Framework (2026-08-17, COMPLETE — 验证/正式化): 现有 M8.3 Boss 实现已完整覆盖 M10.1 职责 — `BossData : EnemyData` (SO 静态配置) + `BossAI` (追击 + 接触伤害 via CombatSystem, IPoolable) + Boss runtime 复用 EnemyController/EnemyStats/EnemyHealth + W10 Boss spawn (SpawnBossNow) + pooled lifecycle (复用 EnemySpawner 同一 ObjectPool) + death attribution (EnemyKilled) → `BossDefeated` → `Victory` + BossSpawned/BossDefeated 事件。**无生产代码修改**（不重复实现 Boss）。M10_1BossProbe 29/29 PASS（数据/prefab/W10 缩放 725·29·2.175/死亡链各一次/State Victory/No wave11/pool reuse 干净/reused chain 1/1/1/1/回归），2× Play/Stop 0/0。M10 整体 IN PROGRESS。M10.2 — Boss Projectile Skill (2026-08-17, COMPLETE): BossAI 唯一主动技能（每 3s 向玩家当前位置发射 1 个 PulseProjectile，复用共享 ObjectPool+CombatSystem，source=Boss/damage=runtime Stats.Damage 继承 WaveMultiplier/lifetime 3s 命中一次 Release/方向锁定不追踪；Boss prefab 挂 projectilePrefab；21/22 PASS 唯一 FAIL 为 probe 订阅时序、独立验证确认 DamageApplied 正常；2× Play/Stop 0/0）。M10.3 NOT STARTED。
 
 ## Next Milestone
 M10 — Boss (Final boss encounter)
 
 ## Current Task
-M10 — Boss（M4–M9.5 全部 COMPLETE；M10.1 Boss Base Framework 完成，M10 整体 IN PROGRESS，M10.2 待任务）
+M10 — Boss（M4–M9.5 全部 COMPLETE；M10.1 + M10.2 COMPLETE，M10 整体 IN PROGRESS，M10.3 待任务）
 
 ## Latest Commit
 12f17e4 fix: shop WeaponUpgrade UI final layout — two lines in Name TMP, remove Level row
