@@ -34,6 +34,8 @@ namespace VoidSurvivor.Core
                 go.AddComponent<VoidSurvivor.Audio.GameplaySfx>();
                 // M12.3: minimal event-driven 2D VFX.
                 go.AddComponent<VoidSurvivor.VFX.VFXManager>();
+                // M13.3: best-run record persistence (needs SaveManager; order after it is enough).
+                go.AddComponent<VoidSurvivor.Save.BestRunRecorder>();
             }
         }
     }
