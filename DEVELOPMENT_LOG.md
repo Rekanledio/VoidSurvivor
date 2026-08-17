@@ -987,3 +987,15 @@ M10 — Boss (per milestone list).
 - **视觉**：截图 `D:/Work/m113_gameover.png` 深红背景 + "游戏结束" + 重新开始/主菜单；`D:/Work/m113_victory.png` 深蓝背景 + "胜利" + 重新开始/主菜单；中文渲染无 □。
 - **2× 独立 Play/Stop：全 0 errors / 0 warnings**；字体 asset 未写坏（git diff 空）；probe 已删。
 - **M11 整体 IN PROGRESS**（仅 M11.1+M11.2+M11.3 完成；M11.4 pending）。
+
+### M11.4 — Full UI Integration & Acceptance — COMPLETE（M11 = COMPLETE / ACCEPTED）
+- **修复 A — PlayerDied → GameOver 自动触发**：新建 `Assets/Scripts/Core/GameFlow.cs`（订阅 PlayerDied；仅在 `CurrentState == Playing` 时 `TryChangeState(GameOver)`——非 Playing 不误触发、GameOver 不重复触发（PlayerHealth 死亡一次性 + GameManager 同状态拒绝）、Victory/MainMenu 不受影响）。由 `GameBootstrap.EnsureGameManager` 挂到 GameManager 同 GO（DontDestroyOnLoad）。
+- **修复 B — 非 Playing 暂停 Gameplay simulation**：
+  - `WeaponController.GameplayActive`（protected static，`GameManager.CurrentState == Playing`）：PulseGun / ScatterBlaster / Boomerang / ArcBlade 的 Update 开头守卫——MainMenu/GameOver/Victory 不再产生新攻击（已有 projectile 按 ObjectPool 生命周期继续飞行）。
+  - `EnemyController.GameplayActive`（public static）：ChaserAI / RunnerAI / ShooterAI / TankAI 的 FixedUpdate 守卫（非 Playing 不移动/不射击）；BossAI.FixedUpdate 守卫（不追击）+ BossAI.OnTriggerEnter2D 守卫（非 Playing 无新接触伤害）。
+  - WaveManager 已按 M8 规则控制（LevelUp/Shop/Paused 冻结、GameOver/Victory/MainMenu 停止）——未改动。
+- **Restart 补齐（M11.4 真实流程发现缺口）**：`PlayerHealth.ResetForRun()`（复活：IsDead=false + HP=MaxHP）；`RunRestarter.RestartRun()` 调用它。M11.3 的 Restart 未重置玩家死亡状态（当时 GameOver 手动进入、玩家未死）——真实 PlayerDied→GameOver→Restart 流程暴露并修复。
+- **验证**（临时 M11_4FullUIRegressionProbe，已删）：**48/48 PASS, 0 FAILURES** — 26 项验收全 PASS：Canvas=1 / EventSystem=1 / InputSystemUIInputModule 存在 / 6 面板存在 / UI 状态矩阵全对（MainMenu 仅 MainMenuPanel；Playing/LevelUp/Shop 仅 HUD+各自面板；GameOver 仅 GameOverPanel；Victory 仅 VictoryPanel）/ **PlayerDied→GameOver 自动（真实 TakeDamage 9999 致死）** / **MainMenu 1s 无新 player projectile（0->0）** / **GameOver 无新（2->0）** / **Victory 无新（3->3）** / Wave Playing 推进 + LevelUp/Shop 冻结 / Restart 重置（Level=1/XP=0/Gold=0/Wave=1 + 复活）/ W10 Boss Victory + Boss Projectile（修复后 count=1）/ LevelUp·Shop 回归。
+- **probe 调试记录**：①Boss 生成在玩家位置 → 发射的 projectile 距离≈0 立即命中消失 → 1.2s 后数不到 → 改为 spawn 后先把玩家移 30 外、再拉进 +7、0.5s 内计数（未命中仍在飞）；②**关键**：真实 PlayerDied→GameOver→Restart 后玩家仍 IsDead=true → BossAI.Target.IsDead 拦截发射（count=0）→ 修复 RunRestarter 复活玩家。
+- **3× 独立 Play/Stop：全 0 errors / 0 warnings**；字体 asset 未写坏（git diff 空）；probe 已删。
+- **M11 = COMPLETE / ACCEPTED**（M11.1 + M11.2 + M11.3 + M11.4 全部完成）。下一里程碑 M12 = Audio/VFX。

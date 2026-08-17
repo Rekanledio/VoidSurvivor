@@ -13,7 +13,7 @@
 | M8 | Wave System | 10-wave combat progression | Completed |
 | M9 | Roguelite System | XP, levels, upgrades, stats | Completed |
 | M10 | Boss | Final boss encounter | Completed |
-| M11 | UI | Complete game flow UI | Pending |
+| M11 | UI | Complete game flow UI | Completed |
 | M12 | Audio/VFX | Basic presentation feedback | Pending |
 | M13 | Save | Local persistence | Pending |
 | M14 | Optimization | Performance and stability pass | Pending |
