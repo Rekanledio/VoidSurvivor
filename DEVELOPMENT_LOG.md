@@ -925,3 +925,11 @@ M10 — Boss (per milestone list).
   - Price 22px / Type 15px / BuyButton 24px 不变；独立 Level row 删除（4 个 Level 子物体移除、ShopPanel.levelTexts 清空）。
   - 修复过程中发现的真实缺陷：①Name/Label 是 stretch 子物，改 Label sizeDelta 无效 → 必须改 Name（父）RectTransform；②levelTexts 数组 ClearArray 后 `[i]` 越界 → 加 `i < levelTexts.Length` 防御。
 - **验证**：Damage / AttackCooldown / Range 三种 WeaponUpgrade 均 Name 完整在卡内、无 textBounds 重叠（Name vs Price/Type/BuyButton 全分离）、最长文本"升级：攻击速度"不越界；普通 Weapon / StatBonus 零变化；中文正常无 □；Console 0/0；Git clean。
+
+## 2026-08-17
+### M10.1 — Boss Base Framework (验证现有 M8.3 Boss 实现)
+- **结论**：M8.3 已完整实现 Boss Base Framework（BossData : EnemyData / BossAI / SpawnBossNow / OnEnemyKilled→BossDefeated→Victory / BossSpawned+BossDefeated 事件 / Boss 复用 EnemySpawner 同一 pool / WaveManager W10 独立逻辑）。按"不要重复创建已存在的东西"原则，M10.1 **不修改任何生产代码**，仅正式验证 + 文档化。
+- 验证（临时 M10_1BossProbe，已删除）：**29/29 PASS, 0 FAILURES** — BossData 加载、prefab 组件链（EnemyController/Stats/Health/BossAI/Rigidbody2D + data 引用）、W10 真实路径 SpawnBoss（MaxHP 725/Damage 29/MoveSpeed 2.175，W10 WaveMultiplier 1.45 缩放正确）、死亡链 via CombatSystem（EnemyDied/EnemyKilled/BossDefeated/Victory 各一次）、State Victory、No wave 11（wave=10）、pool reuse 干净（IsDead=false/HP=MaxHP/velocity=0/WaveMultiplier 1.45）、Reused boss death chain 1/1/1/1、PulseGun 不受影响、Boomerang ActiveCount sane。
+- probe 调试记录：①直接调 EnemyHealth.TakeDamage 只触发 EnemyDied（绕过 CombatSystem 无 EnemyKilled/BossDefeated）—— 验证必须走 CombatSystem.ApplyDamage；②直接 spawner.SpawnBoss 的 boss 不是 WaveManager._activeBoss → 无 BossDefeated —— 验证必须走 wave.StartWave(10) 真实路径；③W10 真实路径注入 WaveMultiplier 1.45 → 断言用缩放值（725/29/2.175）。
+- 最终 Play/Stop×2：0 errors / 0 warnings；字体 asset 未被 Play 写坏（git diff 空）。
+- M10.1 范围确认：无新 Boss 技能/多阶段/UI/VFX/掉落规则/新武器/新敌人/新波次机制；M8 Boss 行为完全保持。

@@ -133,3 +133,6 @@ Runtime objects consume configuration assets and maintain mutable state at runti
 
 ## Architecture Rule
 Do not introduce a new cross-system dependency without documenting the reason.
+
+## Boss (M10, M10.1 verified)
+- M10.1 — Boss Base Framework: the EXISTING M8.3 Boss implementation already provides the full base framework — `BossData : EnemyData` (SO, static config), `BossAI` (pursuit + contact damage via CombatSystem, IPoolable OnSpawn/OnDespawn), WaveManager W10 boss encounter (SpawnBossNow once, no normal schedule), `OnEnemyKilled` matching the active boss → `BossDefeated` → `Victory`, `BossSpawned`/`BossDefeated` events, boss reuses the EnemySpawner shared ObjectPool (no second pool), IPoolable lifecycle keeps pool reuse clean. No production code changed in M10.1 (verified 29/29 probe); no skills/phases/UI/VFX/new drops (deferred).

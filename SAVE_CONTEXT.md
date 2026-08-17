@@ -297,3 +297,8 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 
 ## Next Step
 M10 — Boss（M4–M9.5 全部 COMPLETE；M10 尚未开始，等待任务指令）
+
+## M10.1 — Boss Base Framework (2026-08-17)
+- 现有 M8.3 Boss 实现已完整覆盖 M10.1 职责（BossData/BossAI/W10 流程/事件/pool），M10.1 不修改任何生产代码，仅正式验证。
+- M10_1BossProbe 29/29 PASS（数据/prefab/缩放/死亡链/State Victory/No wave11/pool reuse 干净/reused chain 1/1/1/1/回归），最终 Play/Stop×2 0/0，字体未写坏。
+- M10 = IN PROGRESS（仅 M10.1 完成，M10 整体未 COMPLETE）。Next: M10.2（待任务）。

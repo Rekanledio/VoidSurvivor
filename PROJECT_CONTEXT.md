@@ -75,7 +75,7 @@ M9 — Roguelite / Upgrade (XP Level Up, upgrades, shop) — COMPLETE / ACCEPTED
 M10 — Boss (Final boss encounter)
 
 ## Current Task
-M10 — Boss（M4–M9.5 全部 COMPLETE；M10 尚未开始）
+M10 — Boss（M4–M9.5 全部 COMPLETE；M10.1 Boss Base Framework 完成，M10 整体 IN PROGRESS，M10.2 待任务）
 
 ## Latest Commit
 12f17e4 fix: shop WeaponUpgrade UI final layout — two lines in Name TMP, remove Level row
