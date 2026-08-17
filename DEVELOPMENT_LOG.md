@@ -1009,3 +1009,14 @@ M10 — Boss (per milestone list).
 - **probe 调试记录**：`AudioSource.clip == clip` 断言 FAIL → **PlayOneShot 是 Unity 标准重叠 SFX 播放方式，不设置 AudioSource.clip 属性**（播放由 isPlaying 验证）→ 断言改为"PlayOneShot 播放启动"。
 - **2× 独立 Play/Stop：全 0 errors / 0 warnings**；字体 asset 未写坏（git diff 空）；probe 已删。
 - **M12 整体 IN PROGRESS**（仅 M12.1 完成；M12.2/3/4 pending）。
+
+### M12.2 — Core Gameplay SFX — COMPLETE
+- 范围：核心 gameplay 事件 + UI 基础反馈音（9 个 SFX）；不做 BGM/音乐系统/AudioMixer/设置 UI/3D spatial/音频对象池/新 AudioManager。
+- **音频资源**：程序化生成 9 个 WAV（44100Hz/16-bit/mono，无版权、小文件、短时长）到 `Assets/Resources/Audio/SFX/`（sfx_hit/enemy_death/pickup/level_up/boss_spawn/boss_defeat/player_death/victory/ui_click）——非下载素材，M12.3 之前的正式基础音效。
+- **新增**：`Assets/Scripts/Audio/SfxLibrary.cs`（SfxType 枚举→AudioClip 显式 Resources 映射 + `PlayUiClick()` 静态辅助）；`Assets/Scripts/Audio/GameplaySfx.cs`（事件订阅：DamageApplied→Hit（**0.05s cooldown 限频**）、EnemyDied→EnemyDeath、PickupCollected→Pickup、PlayerLevelUp→LevelUp、BossSpawned→BossSpawn、BossDefeated→BossDefeat、PlayerDied→PlayerDeath、GameStateChanged(Victory)→Victory；统一 → SfxLibrary → AudioManager.PlaySfx；public PlayCount 调试辅助）。
+- **修改**：GameBootstrap 挂 SfxLibrary + GameplaySfx；MainMenuPanel（Play/Quit）/ResultPanel（Restart/MainMenu）/LevelUpPanel（Select）/ShopPanel（Purchase/Refresh/Continue）按钮绑定处加 `SfxLibrary.PlayUiClick()`（同一 click，不重新设计 UI 系统）。
+- **不修改**：AudioManager（保持纯播放）/ GameManager / GameFlow / GameEvents / 武器 / 敌人 / Boss / Player / Scene / ScriptableObject。
+- **验证**（临时 M12_2CoreSfxProbe，已删）：**19/19 PASS, 0 FAILURES** — AudioManager 唯一 / **All 9 clips loaded** / 8 事件 + Victory 全触发播放（PlayCount 增量）/ **高频 DamageApplied 限频（50 次同帧→1 次播放）** / **UI click（真实 Play 按钮点击）isPlaying=True** / GameOver·Victory·MainMenu 循环后 AudioManager 健康 / M9 LevelUp·Shop UI 正常 / **M10 W10 Boss spawn（BossSpawned SFX 真实触发）+ Boss 死亡→Victory**。
+- **probe 调试记录**：①enum ToString 推断资源名失败（`EnemyDeath`→"enemydeath" 无下划线）→ 改为**显式 ResourceName 映射**（snake_case）；②UI click 走 `SfxLibrary.PlayUiClick()` 直接 AudioManager（不经过 GameplaySfx.PlayCount）→ 断言改用 AudioSource.isPlaying；③probe 状态序列冗余转换 warning → 加 CurrentState 判断。
+- **2× 独立 Play/Stop：全 0 errors / 0 warnings**；字体 asset 未写坏（git diff 空）；probe 已删。
+- **M12 整体 IN PROGRESS**（M12.1+M12.2 完成；M12.3/4 pending）。
