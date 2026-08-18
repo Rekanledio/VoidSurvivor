@@ -3,7 +3,7 @@
 ## Project
 - Name: Void Survivor
 - Type: 2D Top-down Arena Roguelite
-- Status: In development / M16 IN PROGRESS
+- Status: GitHub Showcase COMPLETE / ACCEPTED（M16 final, 2026-08-18）
 - Target: Job-seeking portfolio + GitHub open source + Web playable + Windows build
 - Local Repository: D:\Work\UnityProject\VoidSurvivor
 - Unity Version: 6000.3.21f1 (Unity 6.3 LTS, verified 2026-08-14)
@@ -43,10 +43,10 @@
 Phase 2 — Release & GitHub Showcase
 
 ## Current Milestone
-M16 — GitHub Showcase（README / docs / screenshots / demo）— **IN PROGRESS**
-- 已完成：M16 Scope Precheck = COMPLETE / ACCEPTED；Release / Docs State Sync = COMPLETE / ACCEPTED；GitHub baseline synchronization = COMPLETE / ACCEPTED（2026-08-18，正常 FF push，无 force）；M16 README = COMPLETE / ACCEPTED（根目录 `README.md` + `Screenshots/` 5 张正式 Showcase）；M16 Screenshot Showcase Review / Packaging = COMPLETE / ACCEPTED（5 图逐张审核通过，PNG byte-identical，NO ADDITIONAL SCREENSHOTS REQUIRED）；**M16 WebGL Online Demo / Deployment = COMPLETE / ACCEPTED**（Cloudflare Pages Direct Upload，URL: **https://void-survivor-9vg.pages.dev/**，HTTP 头验证 PASS，Unity 启动链 PASS，0 page error，ORIGINAL M15 Build byte-identical 保护；Full Browser Gameplay Acceptance = PARTIAL，headless 沙箱 GPU 限制，真实浏览器人工复核 outstanding）
-- 当前阶段：**M16 — Final GitHub Showcase Acceptance**
-- 后续阶段（pending，未执行）：Full browser gameplay acceptance（real-browser 人工复核）/ Showcase visual cleanup / final GitHub showcase acceptance
+M16 — GitHub Showcase（README / docs / screenshots / demo）— **COMPLETE / ACCEPTED**（2026-08-18）
+- 全部子项 COMPLETE：Scope Precheck / Release & Docs State Sync / GitHub Baseline Synchronization / README / Screenshot Showcase Review & Packaging / WebGL Online Deployment（Cloudflare Pages, https://void-survivor-9vg.pages.dev/）/ Full Browser Gameplay Acceptance（真实浏览器人工验收 PASS）/ Final GitHub Showcase Acceptance
+- 已知非阻塞残留（accepted for current showcase baseline）：MainMenu QuitButton XPPickupPlaceholder（presentation residue）；EnemyBase 默认 sprite EnemyPlaceholder（structural residue，variant 覆盖不可见）——用户决定 M16 不进一步修改
+- 下一里程碑：**No next milestone assigned.**（不自动创建 M17）
 
 ## Completed Milestones
 - M0 — Project Documentation Initialization
@@ -83,7 +83,7 @@ M16 — GitHub Showcase（README / docs / screenshots / demo）— **IN PROGRESS
 —（M16 为最终展示里程碑；以下为 M16 内部后续阶段，非独立里程碑）GitHub baseline synchronization → Showcase visual cleanup → README → Showcase screenshots → WebGL online deployment → final GitHub showcase acceptance
 
 ## Current Task
-M16 — Final GitHub Showcase Acceptance（WebGL Online Demo / Deployment = COMPLETE / ACCEPTED，URL https://void-survivor-9vg.pages.dev/；M16 README = COMPLETE / ACCEPTED；GitHub baseline synchronization = COMPLETE / ACCEPTED；M15 = COMPLETE / ACCEPTED；M14 = STOPPED / CLOSED WITHOUT FURTHER OPTIMIZATION；M13 = Save COMPLETE / ACCEPTED）
+M16 — Final GitHub Showcase Acceptance = **COMPLETE / ACCEPTED**（2026-08-18；真实浏览器 Full Gameplay PASS；Pupkin Assets license 已确认；Final Checklist S1–S12 全 PASS）。项目当前状态：**M16 GitHub Showcase COMPLETE / ACCEPTED**。Next Milestone: No next milestone assigned.
 
 ## Latest Commit
 Latest Verified Release Baseline: 2dd971c feat: replace placeholder assets and prepare release（2026-08-18）

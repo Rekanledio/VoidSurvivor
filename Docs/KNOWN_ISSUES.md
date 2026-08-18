@@ -3,16 +3,10 @@
 ## Current
 1. MainMenu QuitButton still uses XPPickupPlaceholder.png.
    - Impact: Visible showcase residue (screenshots would reveal the placeholder).
-   - Status: Open (M16 visual cleanup). Recorded only; not fixed this round.
+   - Status: **Known non-blocking presentation residue, accepted for the current showcase baseline** (M16 final: user decided not to modify further). Recorded for a future cleanup pass, not an M16 blocker.
 2. EnemyBase.prefab default sprite still references EnemyPlaceholder.
    - Impact: Structurally present, but Chaser/Runner/Shooter/Tank variants all override it — runtime visuals unaffected.
-   - Status: Open (low priority, structural residue). Recorded only.
-3. Full WebGL gameplay browser acceptance is partially complete (headless GPU limit; real-browser manual recheck outstanding).
-   - Impact: Online demo deployed (https://void-survivor-9vg.pages.dev/) and Unity 启动链 verified (UnityCache / Input System / UnloadTime / 0 page error), but full W1–W11 chain (MainMenu → Movement → Combat → XP → LevelUp → Shop → Persistence → Audio → Continue) was not completed in headless agent-browser (software-GL shader fallback; canvas not rendered). Same Build rendered MainMenu successfully in M15.2 headless session, so deployment is sound; a final manual real-browser pass is needed to close this item.
-   - Status: PARTIAL / Outstanding (Final GitHub Showcase Acceptance).
-4. Roguelike Dungeon Asset Bundle — license/source still needs manual confirmation.
-   - Impact: No `License.txt` / `credits.txt` in the asset bundle directory; origin and license terms must be confirmed from the original source before public distribution.
-   - Status: Open (Final Showcase / Public Distribution review item). Not a deployment blocker.
+   - Status: **Known non-blocking structural residue, accepted for the current showcase baseline** (low priority). Recorded; not an M16 blocker.
 
 ## Resolved (M1 / M2 / M3 / M3-bugfix / M15 / M16)
 - Unity project not yet created → Created (Unity 6000.3.21f1).
@@ -27,6 +21,8 @@
 - GitHub remote main still behind local Release baseline → **Resolved (2026-08-18)**: GitHub baseline synchronization completed — local main fast-forwarded to GitHub origin/main (no force push); GitHub main now synchronized with the local M16 branch.
 - Web build has not yet been tested → Resolved: WebGL Release Build verified (M15.2, 2026-08-18) — Brotli output, browser smoke validation PASS (MainMenu rendered / 0 page error / IndexedDB /idbfs / WebAudio). Full browser gameplay acceptance remains an open current item (see Current #3).
 - Online Demo URL not yet available → **Resolved (2026-08-18)**: Cloudflare Pages Direct Upload deployed; production URL = `https://void-survivor-9vg.pages.dev/`. HTTP 头验证 PASS; Unity 启动链 PASS; 0 page error; ORIGINAL M15 Build byte-identical protected.
+- Full WebGL gameplay browser acceptance outstanding (headless PARTIAL) → **Resolved (2026-08-18, M16 Final)**: real-browser manual validation PASS — MainMenu / Start Game / Movement / Combat / XP / Level Up / Shop / Audio / Continued Gameplay all PASS, browser console red errors 0. (WebGL persistence initialization had already been validated during M15 browser smoke testing — IndexedDB / persistentDataPath.) Headless agent-browser canvas/shader limitation was an environment-only restriction, superseded by real-browser acceptance.
+- Roguelike Dungeon Asset Bundle license/source needs manual confirmation → **Resolved (2026-08-18)**: original release page identified and confirmed — *Roguelike Dungeon - Asset Bundle FREE* by **Pupkin Assets** (https://trevor-pupkin.itch.io/roguelike-dungeon-asset-bundle); usage terms allow free and commercial projects, modification allowed, credit not required but appreciated. No standard license name (CC0/MIT/CC-BY/GPL) is applied — evidence supports the original page's terms only.
 
 ## Observations (no action needed now)
 1. Transient "The referenced script (Unknown) on this Behaviour is missing!" console pairs appear during script recompile cycles (observed M1–M3 right after script changes/removals).

@@ -1,21 +1,21 @@
 # Void Survivor — Save Context
 
 ## Last Updated
-2026-08-18（M16 — GitHub Showcase IN PROGRESS；当前阶段 Final GitHub Showcase Acceptance）
+2026-08-18（M16 — GitHub Showcase **COMPLETE / ACCEPTED**）
 
 ## Current Phase
-Phase 2 — Release & GitHub Showcase
+Phase 2 — Release & GitHub Showcase（M16 final）
 
 ## Current Milestone
-M16 — GitHub Showcase — **IN PROGRESS**（M16 Scope Precheck = COMPLETE / ACCEPTED；GitHub baseline synchronization = COMPLETE / ACCEPTED；M16 README = COMPLETE / ACCEPTED；Screenshot Showcase Review / Packaging = COMPLETE / ACCEPTED；M16 WebGL Online Demo / Deployment = COMPLETE / ACCEPTED；当前阶段 = Final GitHub Showcase Acceptance；M14 = STOPPED / CLOSED WITHOUT FURTHER OPTIMIZATION；M15 = COMPLETE / ACCEPTED；M13 = Save COMPLETE / ACCEPTED）
+M16 — GitHub Showcase — **COMPLETE / ACCEPTED**（2026-08-18）—— Scope Precheck / Release & Docs State Sync / GitHub Baseline Synchronization / README / Screenshot Showcase / WebGL Online Deployment（https://void-survivor-9vg.pages.dev/）/ Full Browser Gameplay Acceptance（真实浏览器 PASS）/ Final GitHub Showcase Acceptance 全部 COMPLETE / ACCEPTED。（M14 = STOPPED / CLOSED WITHOUT FURTHER OPTIMIZATION；M15 = COMPLETE / ACCEPTED；M13 = Save COMPLETE / ACCEPTED）
 
 ## Release / M14-M16 State（2026-08-18）
 - **Release Baseline**：`2dd971c`（feat: replace placeholder assets and prepare release）。GitHub baseline synchronization = **COMPLETE / ACCEPTED**（2026-08-18 正常 FF push，无 force；GitHub main 已与本地 main 同步）。
 - **M14**：Pre-Baseline Functional Regression COMPLETE / ACCEPTED（commit `817851c`）；Profiler baseline 尝试后无可用的优化 baseline；M14.2/3/4 NOT EXECUTED；**STOPPED / CLOSED WITHOUT FURTHER OPTIMIZATION**。
-- **M15**：Windows Release COMPLETE（`D:\Work\UnityBuilds\VoidSurvivor\Windows\`，2026-08-18）；WebGL Release Build COMPLETE（`D:\Work\UnityBuilds\VoidSurvivor\WebGL\`，Brotli，browser smoke PASS；完整浏览器 Gameplay 人工验收待复核）。
+- **M15**：Windows Release COMPLETE（`D:\Work\UnityBuilds\VoidSurvivor\Windows\`，2026-08-18）；WebGL Release Build COMPLETE（`D:\Work\UnityBuilds\VoidSurvivor\WebGL\`，Brotli，browser smoke PASS；**Full browser gameplay acceptance = COMPLETE / ACCEPTED，真实浏览器人工验收 2026-08-18**）。
 - **Runner**：moveSpeed = **5.5**（RunnerData.asset），最终 KEEP。
 - **Final Art**：Player/Ground/Chaser/Runner/Shooter/Tank/Boss/弹丸全部替换为正式美术（Release baseline `2dd971c`）。
-- **M16 产出状态**：README = 已创建（`README.md`，中文专业风格，COMPLETE / ACCEPTED，README 含真实 Online Demo URL）；Showcase screenshots = 已提供 + ACCEPTED（`Screenshots/` 5 张正式截图：Main Menu / Gameplay / Boss / Shop / Game Over；hero=Normal_Gameplay；Review / Packaging COMPLETE）；**Online demo = 已部署**（Cloudflare Pages Direct Upload，URL: **https://void-survivor-9vg.pages.dev/**；HTTP 头验证 PASS；Unity 启动链 PASS；0 page error；ORIGINAL M15 Build byte-identical 保护）；GitHub baseline sync = COMPLETE（main 已同步）。**Full Browser Gameplay Acceptance = PARTIAL**（headless 沙箱 GPU 限制；real-browser 复核 outstanding）。
+- **M16 产出状态**：README = 已创建（`README.md`，COMPLETE / ACCEPTED，含真实 Online Demo URL + 完整 Credits：Kenney CC0 + Pupkin Assets 确认）；Showcase screenshots = 已提供 + ACCEPTED（`Screenshots/` 5 张）；**Online demo = 已部署**（Cloudflare Pages，URL: **https://void-survivor-9vg.pages.dev/**）；**Full Browser Gameplay Acceptance = COMPLETE / ACCEPTED**（真实浏览器人工验收 2026-08-18：MainMenu/Start/Movement/Combat/XP/LevelUp/Shop/Audio/Continue 全 PASS，console red errors 0；headless 限制被真实浏览器验收取代）；GitHub baseline sync = COMPLETE。**M16 = COMPLETE / ACCEPTED。**
 
 ## Completed (overview)
 - M0: concept, MVP scope, delivery strategy, documentation strategy.
@@ -313,7 +313,7 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - Commit `12f17e4`. Normal Weapon / StatBonus cards visually unchanged.
 
 ## Next Step
-M16 — Final GitHub Showcase Acceptance（IN PROGRESS；M16 WebGL Online Demo / Deployment COMPLETE / ACCEPTED，URL https://void-survivor-9vg.pages.dev/；Screenshot Showcase Review / Packaging COMPLETE / ACCEPTED；M16 README COMPLETE / ACCEPTED；GitHub baseline synchronization COMPLETE / ACCEPTED；M15 — Release COMPLETE / ACCEPTED；M14 — STOPPED / CLOSED WITHOUT FURTHER OPTIMIZATION；M13 COMPLETE / ACCEPTED）。后续：Full browser gameplay acceptance（real-browser 复核 outstanding）/ Showcase visual cleanup / final showcase acceptance（pending）。
+M16 — Final GitHub Showcase Acceptance = **COMPLETE / ACCEPTED（2026-08-18）**：真实浏览器 Full Gameplay PASS；Pupkin Assets license 已确认；Final Checklist S1–S12 全 PASS。**M16 = COMPLETE / ACCEPTED**。Next milestone: No next milestone assigned（不自动创建 M17）。后续可选（非 M16 blocker）：Showcase visual cleanup（QuitButton/EnemyBase residue，用户决定当前 baseline 不处理）。
 
 ## M10.1 — Boss Base Framework (2026-08-17)
 - 现有 M8.3 Boss 实现已完整覆盖 M10.1 职责（BossData/BossAI/W10 流程/事件/pool），M10.1 不修改任何生产代码，仅正式验证。

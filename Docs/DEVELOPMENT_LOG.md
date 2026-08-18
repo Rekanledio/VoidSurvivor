@@ -1169,3 +1169,16 @@ M10 — Boss (per milestone list).
 - ORIGINAL M15 Build 最终完整性：5 文件 SHA256 与 baseline 完全一致（7fbe7452/532ae15e/f167a598/c3e80acb/66d45014），byte-identical 保护。
 - README 真实 URL：加 `Play Online: https://void-survivor-9vg.pages.dev/`；Development Status 改"WebGL online demo is live"。
 - 下一阶段：Final GitHub Showcase Acceptance（待 Full browser gameplay acceptance 真实浏览器复核完成）。
+
+### M16 Full Browser Gameplay Acceptance — COMPLETE / ACCEPTED (2026-08-18, real-browser manual validation)
+- 用户于真实正常浏览器中对 https://void-survivor-9vg.pages.dev/ 完成最终人工验收：
+  - MainMenu PASS / Start Game PASS / Movement PASS / Combat PASS / XP PASS / Level Up PASS / Shop PASS / Audio PASS / Continued Gameplay PASS / Browser Console red errors = 0。
+- WebGL persistence 初始化已在 M15 browser smoke testing 验证（IndexedDB / persistentDataPath）——本次人工验收不伪造重新验证完整 Save persistence。
+- 注：此前 headless agent-browser 的 canvas=false / software-GL shader 限制为自动化环境限制，已被真实浏览器验收取代，不再作为 Gameplay blocker。
+
+### M16 Final GitHub Showcase Acceptance — COMPLETE / ACCEPTED (2026-08-18)
+- Final Showcase Checklist S1–S12 全 PASS：GitHub remote / Release baseline `2dd971c` / Windows Release / WebGL Release / Online Demo（https://void-survivor-9vg.pages.dev/）/ Browser Gameplay（真实浏览器 PASS）/ README / Screenshots（5 图）/ Technical Docs / Asset Credits（Kenney CC0 + Pupkin Assets 确认）/ Public Links / Gameplay Blockers。
+- Roguelike Dungeon Asset Bundle 最终许可确认：*Roguelike Dungeon - Asset Bundle FREE* by **Pupkin Assets**，原始页面 https://trevor-pupkin.itch.io/roguelike-dungeon-asset-bundle（已 WebFetch 核验）：free & commercial 可用、可修改、credit 非必须但欢迎；不套用 CC0/MIT/CC-BY/GPL 等标准名称（证据只支持原始页面条款）。
+- README Credits 已更新（Pupkin Assets 来源/条款）；README Online Demo URL 保持 https://void-survivor-9vg.pages.dev/。
+- 已知非阻塞残留（accepted for current showcase baseline）：MainMenu QuitButton XPPickupPlaceholder（presentation）；EnemyBase 默认 sprite EnemyPlaceholder（structural，variant 覆盖不可见）。
+- **M16 = COMPLETE / ACCEPTED**。Next milestone: No next milestone assigned（不自动创建 M17）。Release Baseline 保持 `2dd971c`（与 repository HEAD 区分）。

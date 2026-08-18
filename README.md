@@ -172,8 +172,11 @@ This project uses third-party art assets. License information below reflects wha
 - License file: `Assets/Art/kenney_desert-shooter-pack_1.0/License.txt` is present in the repository and identifies the pack as **CC0 (Creative Commons Zero, Public Domain Dedication)**. Original creator: [Kenney](https://www.kenney.nl). Used for UI / interface tile art.
 
 ### Roguelike Dungeon — Asset Bundle
-- Source: `Assets/Art/Roguelike Dungeon - Asset Bundle/`
-- License: **NEEDS MANUAL CONFIRMATION.** No `License.txt`, `license.md`, `credits.txt`, or equivalent attribution file was found anywhere inside the asset bundle directory. Origin and license terms must be confirmed from the original source (Asset Store / itch.io / creator website) before public distribution.
+- Pack: Roguelike Dungeon - Asset Bundle
+- Creator: **Pupkin Assets**
+- Original Source: [trevor-pupkin.itch.io/roguelike-dungeon-asset-bundle](https://trevor-pupkin.itch.io/roguelike-dungeon-asset-bundle)
+- Usage terms (as stated on the original asset page): free to use in free and commercial projects; assets may be modified to fit project needs; credit is not required but is appreciated.
+- Status: origin and usage terms confirmed from the original release page (2026-08-18). No standard open-source license name (CC0 / MIT / CC-BY / GPL) is applied, because the evidence supports the original page's usage terms only.
 
 ## License
 
