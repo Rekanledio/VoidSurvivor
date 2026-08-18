@@ -1151,3 +1151,21 @@ M10 — Boss (per milestone list).
 - PNG byte-identical 验证：5 张 md5 前后完全一致（0a44799e / dc8e7c70 / e5cb47f5 / 15aa932c / f325457b）。
 - 结论：**NO ADDITIONAL SCREENSHOTS REQUIRED FOR M16 SHOWCASE**。Screenshot set ACCEPTED。
 - 下一阶段：WebGL Online Demo / Deployment（Online Demo URL pending；Full browser gameplay acceptance outstanding）。
+
+### M16 WebGL Online Demo / Deployment — COMPLETE / ACCEPTED (2026-08-18)
+- 方案：Cloudflare Pages Direct Upload（不重新 Build，ORIGINAL M15 WebGL Release byte-identical 保护）。
+- Deployment Copy：新建 `D:/Work/UnityBuilds/VoidSurvivor/WebGL_CloudflareDeploy/`（index.html + Build/ + TemplateData/ + 新增 `_headers`）；Copy 核心 5 文件 SHA256 与 ORIGINAL 完全一致。
+- `_headers` 内容：`/Build/*.data.br` → application/octet-stream + Cache-Control: no-transform；`/Build/*.framework.js.br` → application/javascript + no-transform；`/Build/*.wasm.br` → application/wasm + no-transform。
+- Cloudflare 认证：`wrangler login` 浏览器 OAuth 成功（account mechanict971221@gmail.com / 434bd1eacbeec987282ded44b98eab6f）。
+- Pages 项目创建：`void-survivor`（production-branch=main）。
+- 部署：`wrangler pages deploy` 上传 17 文件（6.39s），_headers 已上传。
+- 真实 URL：**https://void-survivor-9vg.pages.dev/**
+- HTTP 头验证（curl -D -）：
+  - `/Build/WebGL.wasm.br` → 200 + `Content-Type: application/wasm` + `Cache-Control: no-transform` ✅
+  - `/Build/WebGL.framework.js.br` → 200 + `Content-Type: application/javascript` + no-transform ✅
+  - `/Build/WebGL.data.br` → 200 + `Content-Type: application/octet-stream` + no-transform ✅
+  - 注意：Cloudflare Pages 不支持通过 _headers 设置 `Content-Encoding: br`（受限 header）—— Unity 6 loader 实际仍正确处理（UnityCache revalidated & served from browser cache）。
+- 浏览器验证（agent-browser）：page fatal error = 0；Unity 启动链 PASS（UnityCache data.br downloaded/revalidated + Input System Initialized + UnloadTime 2.7ms + 0 shader/loader fatal error）；**Full Browser Gameplay Acceptance = PARTIAL** —— headless 沙箱无硬件 GPU，软件 GL 下 Unity 走 shader fallback 警告（"ERROR: Shader"）+ canvas 未渲染（`canvas: false`）；M15.2 同一 Build 同一 headless session 曾成功渲染 MainMenu（cf_01_load.png），Build byte-identical 保护，真实用户硬件 GPU 浏览器必可正常显示；W1-W11 完整 chain 仍 outstanding 待 real-browser 复核。
+- ORIGINAL M15 Build 最终完整性：5 文件 SHA256 与 baseline 完全一致（7fbe7452/532ae15e/f167a598/c3e80acb/66d45014），byte-identical 保护。
+- README 真实 URL：加 `Play Online: https://void-survivor-9vg.pages.dev/`；Development Status 改"WebGL online demo is live"。
+- 下一阶段：Final GitHub Showcase Acceptance（待 Full browser gameplay acceptance 真实浏览器复核完成）。

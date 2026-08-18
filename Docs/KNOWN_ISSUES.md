@@ -1,18 +1,18 @@
 # Void Survivor — Known Issues
 
 ## Current
-1. Online Demo URL not yet available.
-   - Impact: Web playable (first-class deliverable) not reachable via URL yet; only local WebGL build exists.
-   - Status: Open. Plan: WebGL online deployment in M16.
-2. MainMenu QuitButton still uses XPPickupPlaceholder.png.
+1. MainMenu QuitButton still uses XPPickupPlaceholder.png.
    - Impact: Visible showcase residue (screenshots would reveal the placeholder).
    - Status: Open (M16 visual cleanup). Recorded only; not fixed this round.
-3. EnemyBase.prefab default sprite still references EnemyPlaceholder.
+2. EnemyBase.prefab default sprite still references EnemyPlaceholder.
    - Impact: Structurally present, but Chaser/Runner/Shooter/Tank variants all override it — runtime visuals unaffected.
    - Status: Open (low priority, structural residue). Recorded only.
-4. Full WebGL gameplay browser acceptance not yet fully rechecked.
-   - Impact: Build-in Play/combat/Shop flow verified in Editor only; WebGL browser interaction (automated click injection unreliable) still needs a final manual pass.
-   - Status: Open (M16). Not a Gameplay blocker.
+3. Full WebGL gameplay browser acceptance is partially complete (headless GPU limit; real-browser manual recheck outstanding).
+   - Impact: Online demo deployed (https://void-survivor-9vg.pages.dev/) and Unity 启动链 verified (UnityCache / Input System / UnloadTime / 0 page error), but full W1–W11 chain (MainMenu → Movement → Combat → XP → LevelUp → Shop → Persistence → Audio → Continue) was not completed in headless agent-browser (software-GL shader fallback; canvas not rendered). Same Build rendered MainMenu successfully in M15.2 headless session, so deployment is sound; a final manual real-browser pass is needed to close this item.
+   - Status: PARTIAL / Outstanding (Final GitHub Showcase Acceptance).
+4. Roguelike Dungeon Asset Bundle — license/source still needs manual confirmation.
+   - Impact: No `License.txt` / `credits.txt` in the asset bundle directory; origin and license terms must be confirmed from the original source before public distribution.
+   - Status: Open (Final Showcase / Public Distribution review item). Not a deployment blocker.
 
 ## Resolved (M1 / M2 / M3 / M3-bugfix / M15 / M16)
 - Unity project not yet created → Created (Unity 6000.3.21f1).
@@ -25,7 +25,8 @@
 - Small movement-range perception / apparent pull-back → Root-caused as a visual-reference issue: SC_Main was an empty scene, so camera-follow movement was invisible. Fixed by adding a ground reference (GroundPlaceholder grid); player world coordinates were never actually returning to the center (verified by in-assembly runtime probe).
 - GitHub remote repository URL not configured → Resolved: origin configured to https://github.com/Rekanledio/VoidSurvivor.git (M16 precheck verified; remote main exists at 4cef748).
 - GitHub remote main still behind local Release baseline → **Resolved (2026-08-18)**: GitHub baseline synchronization completed — local main fast-forwarded to GitHub origin/main (no force push); GitHub main now synchronized with the local M16 branch.
-- Web build has not yet been tested → Resolved: WebGL Release Build verified (M15.2, 2026-08-18) — Brotli output, browser smoke validation PASS (MainMenu rendered / 0 page error / IndexedDB /idbfs / WebAudio). Full browser gameplay acceptance remains an open current item (see Current #5).
+- Web build has not yet been tested → Resolved: WebGL Release Build verified (M15.2, 2026-08-18) — Brotli output, browser smoke validation PASS (MainMenu rendered / 0 page error / IndexedDB /idbfs / WebAudio). Full browser gameplay acceptance remains an open current item (see Current #3).
+- Online Demo URL not yet available → **Resolved (2026-08-18)**: Cloudflare Pages Direct Upload deployed; production URL = `https://void-survivor-9vg.pages.dev/`. HTTP 头验证 PASS; Unity 启动链 PASS; 0 page error; ORIGINAL M15 Build byte-identical protected.
 
 ## Observations (no action needed now)
 1. Transient "The referenced script (Unknown) on this Behaviour is missing!" console pairs appear during script recompile cycles (observed M1–M3 right after script changes/removals).

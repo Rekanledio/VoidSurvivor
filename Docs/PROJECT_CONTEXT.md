@@ -44,9 +44,9 @@ Phase 2 — Release & GitHub Showcase
 
 ## Current Milestone
 M16 — GitHub Showcase（README / docs / screenshots / demo）— **IN PROGRESS**
-- 已完成：M16 Scope Precheck = COMPLETE / ACCEPTED；Release / Docs State Sync = COMPLETE / ACCEPTED；GitHub baseline synchronization = COMPLETE / ACCEPTED（2026-08-18，正常 FF push，无 force）；M16 README = COMPLETE / ACCEPTED（根目录 `README.md` + `Screenshots/` 5 张正式 Showcase）；M16 Screenshot Showcase Review / Packaging = COMPLETE / ACCEPTED（5 图逐张审核通过，PNG byte-identical，NO ADDITIONAL SCREENSHOTS REQUIRED）
-- 当前阶段：**M16 — WebGL Online Demo / Deployment**
-- 后续阶段（pending，未执行）：Full browser gameplay acceptance / Showcase visual cleanup / final GitHub showcase acceptance
+- 已完成：M16 Scope Precheck = COMPLETE / ACCEPTED；Release / Docs State Sync = COMPLETE / ACCEPTED；GitHub baseline synchronization = COMPLETE / ACCEPTED（2026-08-18，正常 FF push，无 force）；M16 README = COMPLETE / ACCEPTED（根目录 `README.md` + `Screenshots/` 5 张正式 Showcase）；M16 Screenshot Showcase Review / Packaging = COMPLETE / ACCEPTED（5 图逐张审核通过，PNG byte-identical，NO ADDITIONAL SCREENSHOTS REQUIRED）；**M16 WebGL Online Demo / Deployment = COMPLETE / ACCEPTED**（Cloudflare Pages Direct Upload，URL: **https://void-survivor-9vg.pages.dev/**，HTTP 头验证 PASS，Unity 启动链 PASS，0 page error，ORIGINAL M15 Build byte-identical 保护；Full Browser Gameplay Acceptance = PARTIAL，headless 沙箱 GPU 限制，真实浏览器人工复核 outstanding）
+- 当前阶段：**M16 — Final GitHub Showcase Acceptance**
+- 后续阶段（pending，未执行）：Full browser gameplay acceptance（real-browser 人工复核）/ Showcase visual cleanup / final GitHub showcase acceptance
 
 ## Completed Milestones
 - M0 — Project Documentation Initialization
@@ -83,7 +83,7 @@ M16 — GitHub Showcase（README / docs / screenshots / demo）— **IN PROGRESS
 —（M16 为最终展示里程碑；以下为 M16 内部后续阶段，非独立里程碑）GitHub baseline synchronization → Showcase visual cleanup → README → Showcase screenshots → WebGL online deployment → final GitHub showcase acceptance
 
 ## Current Task
-M16 — WebGL Online Demo / Deployment（Screenshot Showcase Review / Packaging = COMPLETE / ACCEPTED；M16 README = COMPLETE / ACCEPTED；GitHub baseline synchronization = COMPLETE / ACCEPTED；M15 = COMPLETE / ACCEPTED；M14 = STOPPED / CLOSED WITHOUT FURTHER OPTIMIZATION；M13 = Save COMPLETE / ACCEPTED）
+M16 — Final GitHub Showcase Acceptance（WebGL Online Demo / Deployment = COMPLETE / ACCEPTED，URL https://void-survivor-9vg.pages.dev/；M16 README = COMPLETE / ACCEPTED；GitHub baseline synchronization = COMPLETE / ACCEPTED；M15 = COMPLETE / ACCEPTED；M14 = STOPPED / CLOSED WITHOUT FURTHER OPTIMIZATION；M13 = Save COMPLETE / ACCEPTED）
 
 ## Latest Commit
 Latest Verified Release Baseline: 2dd971c feat: replace placeholder assets and prepare release（2026-08-18）

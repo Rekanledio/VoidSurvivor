@@ -146,11 +146,15 @@ A verified Windows standalone build (Mono runtime, x64) is available locally at 
 
 ### WebGL
 
-A verified WebGL build is available locally at `D:\Work\UnityBuilds\VoidSurvivor\WebGL\`. Browser-side hosting and an online demo URL are part of the final showcase acceptance and are not yet attached to this repository.
+A verified WebGL build is available locally at `D:\Work\UnityBuilds\VoidSurvivor\WebGL\`.
+
+**Play Online:** [void-survivor-9vg.pages.dev](https://void-survivor-9vg.pages.dev/)
+
+The online demo is hosted on Cloudflare Pages (Brotli-precompressed assets, IL2CPP build, `persistentDataPath` backed by IndexedDB, WebAudio). Open it in a modern desktop browser (Chrome / Edge / Firefox / Safari) with hardware GPU acceleration enabled.
 
 ## Development Status
 
-Core gameplay systems, the Windows release build, and the WebGL release build are complete. GitHub showcase packaging and online WebGL deployment are the remaining showcase steps.
+Core gameplay systems, the Windows release build, and the WebGL release build are complete. The WebGL online demo is live. The remaining showcase step is the final GitHub showcase acceptance.
 
 For detailed design and engineering documentation, see `Docs/`. The key entry points are:
 
