@@ -22,11 +22,11 @@
 - [x] **M16 Scope Precheck — COMPLETE / ACCEPTED**：Repository baseline VERIFIED（HEAD 2dd971c = main）；Docs 11/11 VERIFIED；Windows Release VERIFIED；WebGL Release VERIFIED；README NOT FOUND；Showcase Screenshots NOT FOUND；Online Demo URL NOT FOUND；Final Art MOSTLY VERIFIED；Docs 曾过期（本阶段已同步）。
 - [x] **Release / Docs State Sync（当前阶段）**：M14 STOPPED / M15 COMPLETE / M16 IN PROGRESS 状态同步至全部正式 Docs。
 - [x] **GitHub baseline synchronization — COMPLETE / ACCEPTED（2026-08-18）**：fetch 核验 FF 关系（origin/main=4cef748 为本地 HEAD ancestor）→ 正常 push（无 force）→ GitHub main 与本地 main 同步。Release baseline 保持 `2dd971c`。
+- [x] **M16 README — COMPLETE / ACCEPTED（2026-08-18）**：基于正式 Docs + 已验证双平台 Build + 用户提供的 `Screenshots/` 5 张正式截图（Main Menu / Gameplay / Boss / Shop / Game Over）创建根目录 `README.md`（中文专业 + GitHub 求职/Portfolio 风格）。无 TODO/fake URL/placeholder；hero=Normal_Gameplay；Screenshots table 排布；Roguelike 资产 license 报告为 NEEDS MANUAL CONFIRMATION（仓库内无 license 文件）。
 - [ ] **后续任务（pending，未执行）**：
+  - Screenshot Showcase Review / Packaging（核对 README 中截图与最终 Showcase 一致性；不重新截图）
   - Showcase visual cleanup（MainMenu QuitButton 仍用 XPPickupPlaceholder；EnemyBase 默认 sprite 仍为 EnemyPlaceholder——variant 覆盖不可见）
-  - README 创建（当前 NOT FOUND）
-  - Showcase screenshots（当前无任何项目内 showcase 资产）
-  - WebGL online deployment（当前 Online Demo URL NOT FOUND）
+  - WebGL online deployment（Online Demo URL pending）
   - final GitHub showcase acceptance
 
 ## P9 / P10 Functional Regression Fix — COMPLETE (2026-08-17, Commit NO)

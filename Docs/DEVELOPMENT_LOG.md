@@ -1134,3 +1134,12 @@ M10 — Boss (per milestone list).
 - 恢复 upstream tracking（`git push -u origin main`；本地 origin/main ref 因环境未落盘，仅 tracking 显示异常，不影响 push）。
 - 无代码/资产/Build 改动；Release baseline 保持 `2dd971c`（Release baseline 与 repository HEAD 是两个概念）。
 - 下一阶段：Showcase visual cleanup（不在此阶段开始）。
+
+### M16 GitHub Showcase README — COMPLETE / ACCEPTED (2026-08-18)
+- 创建根目录 `README.md`（183 行，中文专业 + GitHub 求职/Portfolio 风格）。无 TODO/fake URL/placeholder；hero=Normal_Gameplay。
+- Screenshot 集成：用户提供 5 张正式 Showcase 截图（Main_Menu / Normal_Gameplay / Boss / Shop / Game_Over）已纳入 `Screenshots/`，README table 排布 2×2 + 1。`Game _Over.png` → `Game_Over.png`（重命名仅去空格+命名一致性，未修改图片内容）。
+- Technical Highlights 8 节（Data-driven / Modular Enemies / Weapon Architecture / Centralized Game State / Object Pooling / Event-driven / Persistent Data / WebGL Compatibility）全部基于真实实现（`Docs/ARCHITECTURE.md` + 代码实查）。
+- Credits 诚实声明：kenney `License.txt` 存在（CC0，creator Kenney）；**Roguelike Dungeon 资产包在仓库内无 license/credits 文件** → README 报告为 NEEDS MANUAL CONFIRMATION（公开分发前必须从原始来源确认）。
+- Source code license：仓库根目录无 `LICENSE` 文件 → README 报告"all rights reserved until explicit license is added"。
+- 5 截图引用全部真实存在；所有图片均 `Screenshots/*.png` 相对路径（无 `D:/Work/`、无 file://）。
+- M16 Docs 同步：PROJECT_CONTEXT 当前阶段 → Screenshot Showcase Review / Packaging；TASKS README → COMPLETE；SAVE_CONTEXT README/screenshots → 已提供；MILESTONES 补充 README 完成。
