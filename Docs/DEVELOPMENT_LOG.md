@@ -1086,3 +1086,43 @@ M10 — Boss (per milestone list).
 - **真实 Flow**：Flow A（GameOver→Best→Restart→Playing）、Flow B（W10→Victory→Best→VictoryPanel→MainMenu，Victory 触发 M13.3 已验证 + M11 面板存在 PASS）、Flow C（GameOver→MainMenu 不改变 Best）全过。
 - **测试清理**：测试 save（0.55/0.25+8/6/300）已删除；probe 已删；字体未写坏（git diff 空）；git diff --check exit=0。
 - **M13 = COMPLETE / ACCEPTED**（M13.1+M13.2+M13.3+M13.4 全部完成）。下一里程碑 M14 尚未开始（不定义不实现）。
+
+### M14 Pre-Baseline Functional Regression — COMPLETE / ACCEPTED (2026-08-17, commit 817851c)
+- 人工 Play Test 发现 6 个功能问题（P1 敌人接触不掉血 / P2 HPRegen 不生效 / P3 Restart 越界 / P4 敌人子弹不可见 / P5 Shop 后仍可移动 / P6 Boss 外形不显示），根因分析 + 最小修复 + 干净环境验证全部 PASS。
+- 联合验证 M14PFProbe：Flow A（GameOver→Restart）与 Flow B（GameOver→MainMenu→Play）全 PASS（HP=100/IsDead=false/全重置/无残留敌人立即掉血/二次死亡正常）。
+- Final Acceptance：P1–P6 PASS；P7 Runner KEEP；P8 Shooter KEEP；P9/P10 PASS；W10 Boss PASS；GameOver→Restart PASS；GameOver→MainMenu→Play PASS；clean play/stop 0 error / 0 warning；Save 未触碰。
+- Commit: `817851c`（fix: M14 pre-baseline functional regression）。
+
+### M14 Optimization — STOPPED / CLOSED WITHOUT FURTHER OPTIMIZATION (2026-08-18)
+- Profiler baseline 曾尝试，但**未得到可用于继续优化的有效 baseline**（无可用 FPS/Frame Time/GC 基线数据用于指导优化）。
+- M14.2 / M14.3 / M14.4 = **NOT EXECUTED**；未实施任何优化改动。
+- 项目决定停止继续 M14 optimization，转入 Release 工作。**不伪造任何 profiler 数字或 FPS benchmark**。
+
+### Final Art Replacement / Release Preparation (2026-08-18, commit 2dd971c)
+- 正式美术替换（全部经 prefab/scene 序列化引用实查确认）：Player=Player_Idle_Sword_Defence0_0（Roguelike）、Ground=preview-village、Chaser=Goblin_Walk_0、Runner=Slime_Walk_1、Shooter=DungeonMaster_Walk_0、Tank=Skeleton_Walk_0、Boss=SkeletonKing_Walk_1、PulseProjectile=Special_0、BoomerangProjectile=Axe_0。
+- 美术包入库：`Assets/Art/kenney_desert-shooter-pack_1.0` + `Assets/Art/Roguelike Dungeon - Asset Bundle`。
+- Gameplay Balance：Runner moveSpeed **6 → 5.5**（RunnerData.asset，最终 KEEP）；Shooter KEEP；其余敌人参数不变。
+- 文档结构：11 个根目录 md 迁移至 `Docs/`（git mv，内容 hash 不变，历史可追踪）。
+- Commit: `2dd971c`（feat: replace placeholder assets and prepare release）—— 当前 Release baseline。
+
+### M15.1 Windows Release Build — COMPLETE (2026-08-18)
+- 输出：`D:/Work/UnityBuilds/VoidSurvivor/Windows/`（2026-08-18 12:57:33→12:58:40，66.6s，约 115MB）。
+- 关键文件：VoidSurvivor.exe（667KB）+ VoidSurvivor_Data/（66M）+ UnityPlayer.dll（36.7M）+ MonoBleedingEdge/ + D3D12/ + UnityCrashHandler64.exe + Burst 副产物。
+- 验证：Build errors=0 / warnings=0；运行冒烟（进程稳定 2min、窗口 title=VoidSurvivor Responding=True、Player.log 0 error、Save hash 三测一致零修改、CloseMainWindow 优雅退出无崩溃）。
+- 局限：环境禁止按键注入，Build 内 UI 交互自动化受限；游戏内链路已由 Editor Play 全面验证，建议人工快速复核。
+
+### M15.2 WebGL Release Build — COMPLETE (2026-08-18)
+- 输出：`D:/Work/UnityBuilds/VoidSurvivor/WebGL/`（2026-08-18 13:09:07→13:19:28，620.7s，约 20MB）。
+- 关键文件：index.html + Build/（WebGL.data.br 11.5M / WebGL.wasm.br 9M / WebGL.framework.js.br / WebGL.loader.js）+ TemplateData/。**Brotli 压缩 VERIFIED**。
+- Browser smoke validation = PASS：MainMenu rendered（"虚空幸存者"主菜单）、0 page error、IndexedDB `/idbfs` + UnityCache、WebAudio 初始化、FPS 正常（MainMenu 空闲 180fps）。
+- 注意：完整 WebGL Gameplay 浏览器人工验收尚未最终复核（非 blocker；自动化点击注入对 WebGL Input System 不可靠）。
+
+### M16 Scope Precheck — COMPLETE / ACCEPTED (2026-08-18)
+- Repository baseline VERIFIED（HEAD `2dd971c` = main）；Docs 11/11 VERIFIED；Windows Release VERIFIED；WebGL Release VERIFIED。
+- README = NOT FOUND；Showcase Screenshots = NOT FOUND（仅项目外 D:/Work/ 诊断图）；Online Demo URL = NOT FOUND；Final Art MOSTLY VERIFIED（EnemyBase 默认 sprite + MainMenu QuitButton 占位残留已记录）。
+- Docs 曾与仓库状态不同步（M14/M15 状态过期）——本阶段已同步。
+- 本地 main 领先 GitHub origin/main（`4cef748`）约 10 commits，**未 push**。
+
+### M16 Release / Docs State Sync — IN PROGRESS (2026-08-18)
+- 当前阶段：将正式 Docs 同步至已验证的真实仓库状态（M14 STOPPED / M15 COMPLETE / M16 IN PROGRESS / Release baseline 2dd971c / Runner 5.5 KEEP / WebGL smoke PASS）。
+- 后续（pending，未执行）：GitHub sync / visual showcase cleanup / README / screenshots / Web demo deployment / final showcase acceptance。

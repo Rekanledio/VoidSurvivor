@@ -1,14 +1,23 @@
 # Void Survivor — Known Issues
 
 ## Current
-1. GitHub remote repository URL not yet configured.
-   - Impact: No remote backup / showcase yet.
-   - Status: Open. Plan: add remote when GitHub repo is created (before M17 at the latest).
-2. Web build has not yet been tested.
-   - Impact: Web is a first-class deliverable; late discovery of Web-only issues would be costly.
-   - Status: Open. Plan: first Web build smoke test during M2 or M3, earlier than M16.
+1. GitHub remote main still behind local Release baseline.
+   - Impact: Local Release baseline `2dd971c` is ~10 commits ahead of GitHub origin/main (`4cef748`); remote does not yet contain M13.1–M15 Release work.
+   - Status: Open. Plan: GitHub baseline synchronization in M16 (push after docs sync accepted).
+2. Online Demo URL not yet available.
+   - Impact: Web playable (first-class deliverable) not reachable via URL yet; only local WebGL build exists.
+   - Status: Open. Plan: WebGL online deployment in M16.
+3. MainMenu QuitButton still uses XPPickupPlaceholder.png.
+   - Impact: Visible showcase residue (screenshots would reveal the placeholder).
+   - Status: Open (M16 visual cleanup). Recorded only; not fixed this round.
+4. EnemyBase.prefab default sprite still references EnemyPlaceholder.
+   - Impact: Structurally present, but Chaser/Runner/Shooter/Tank variants all override it — runtime visuals unaffected.
+   - Status: Open (low priority, structural residue). Recorded only.
+5. Full WebGL gameplay browser acceptance not yet fully rechecked.
+   - Impact: Build-in Play/combat/Shop flow verified in Editor only; WebGL browser interaction (automated click injection unreliable) still needs a final manual pass.
+   - Status: Open (M16). Not a Gameplay blocker.
 
-## Resolved (M1 / M2 / M3 / M3-bugfix)
+## Resolved (M1 / M2 / M3 / M3-bugfix / M15 / M16)
 - Unity project not yet created → Created (Unity 6000.3.21f1).
 - Actual repository path not recorded → Recorded in PROJECT_CONTEXT.md (D:\Work\UnityProject\VoidSurvivor).
 - Unity MCP connection unverified → Verified 2026-08-14 (CoplayDev unity-mcp via WorkBuddy).
@@ -17,6 +26,8 @@
 - Player jitter while moving → Fixed (Rigidbody2D interpolation = Interpolate; see DEVELOPMENT_LOG).
 - InputActionReference not persisted in scene/prefab (would break movement after reopening the project) → Fixed by switching PlayerController to a serializable InputActionAsset reference.
 - Small movement-range perception / apparent pull-back → Root-caused as a visual-reference issue: SC_Main was an empty scene, so camera-follow movement was invisible. Fixed by adding a ground reference (GroundPlaceholder grid); player world coordinates were never actually returning to the center (verified by in-assembly runtime probe).
+- GitHub remote repository URL not configured → Resolved: origin configured to https://github.com/Rekanledio/VoidSurvivor.git (M16 precheck verified; remote main exists at 4cef748).
+- Web build has not yet been tested → Resolved: WebGL Release Build verified (M15.2, 2026-08-18) — Brotli output, browser smoke validation PASS (MainMenu rendered / 0 page error / IndexedDB /idbfs / WebAudio). Full browser gameplay acceptance remains an open current item (see Current #5).
 
 ## Observations (no action needed now)
 1. Transient "The referenced script (Unknown) on this Behaviour is missing!" console pairs appear during script recompile cycles (observed M1–M3 right after script changes/removals).
@@ -40,10 +51,10 @@
 7. `ProjectSettings/~UnityDirMonSyncFile~...` is a Unity directory-monitor temp file.
    - Impact: None; untracked by git, Unity-managed. Do NOT delete, add, or commit it.
    - Status: Documented; harmless.
-4. mcp manage_gameobject resolves project component types only by fully-qualified name (e.g. "VoidSurvivor.Player.PlayerStats").
+8. mcp manage_gameobject resolves project component types only by fully-qualified name (e.g. "VoidSurvivor.Player.PlayerStats").
    - Impact: Short names fail with "not found" — always pass full names.
    - Status: Documented; workaround in place.
-5. mcp execute_code (CodeDom) has a restricted UnityEditor API surface (e.g. AssetDatabase.GetAtPath unavailable); LoadAssetAtPath/Refresh/ImportAsset, SerializedObject, InputActionReference.Create are available.
+9. mcp execute_code (CodeDom) has a restricted UnityEditor API surface (e.g. AssetDatabase.GetAtPath unavailable); LoadAssetAtPath/Refresh/ImportAsset, SerializedObject, InputActionReference.Create are available.
    - Impact: Asset/importer tweaks via execute_code are limited; use file-level or MCP manage_asset operations instead.
    - Status: Documented; workaround in place.
 

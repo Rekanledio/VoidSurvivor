@@ -1,14 +1,33 @@
 # Void Survivor — Tasks
 
-## M14 — Optimization | Performance and stability pass — IN PROGRESS (2026-08-17)
-- 正式启动 M14。**无预设性能目标**（FPS/Frame Time/GC/CPU/Draw Call/Memory 门槛均未定义，仅记录真实 Baseline，不将经验值写成验收标准）。M14.2 / M14.3 / M14.4 NOT STARTED。
+## M14 — Optimization | Performance and stability pass — STOPPED / CLOSED WITHOUT FURTHER OPTIMIZATION (2026-08-18)
+- **最终结论（2026-08-18）**：M14 Pre-Baseline Functional Regression = **COMPLETE / ACCEPTED**（P1–P6 PASS；P7 Runner KEEP；P8 Shooter KEEP；P9/P10 PASS；W10 Boss PASS；GameOver→Restart PASS；GameOver→MainMenu→Play PASS；clean play/stop 0 error / 0 warning；save untouched；commit `817851c`）。Profiler baseline 尝试后**未得到可用于继续优化的有效 baseline**；M14.2 / M14.3 / M14.4 = **NOT EXECUTED**。项目决定停止继续 M14 optimization，转入 Release 工作。**M14 不标 COMPLETE**（避免暗示优化任务全部执行）。
+- 历史启动记录（2026-08-17）：正式启动 M14。**无预设性能目标**（FPS/Frame Time/GC/CPU/Draw Call/Memory 门槛均未定义，仅记录真实 Baseline，不将经验值写成验收标准）。
 
-## M14.1 — Performance Baseline — IN PROGRESS (2026-08-17)
-- **范围**：Unity Profiler / CPU / Main Thread / Frame Time / GC Alloc / Physics·Physics2D / Rendering / UI（重点 GameplayHUD.Update·TMP）/ ParticleSystem / Instantiate·Destroy（重点 VFXManager）/ ObjectPool（Enemy·PulseProjectile·BoomerangProjectile·Pickup）/ EventBus / W10 Boss / 基础稳定性。**只建基线，不优化，不修改生产代码**。
+## M14.1 — Performance Baseline — ATTEMPTED / NO USABLE BASELINE (2026-08-18)
+- **最终结论（2026-08-18）**：Profiler baseline 曾尝试，但未得到可用于继续优化的有效 baseline。**未执行任何优化实现**。M14.1 随 M14 一起 closed / stopped。
+- **范围（历史）**：Unity Profiler / CPU / Main Thread / Frame Time / GC Alloc / Physics·Physics2D / Rendering / UI（重点 GameplayHUD.Update·TMP）/ ParticleSystem / Instantiate·Destroy（重点 VFXManager）/ ObjectPool（Enemy·PulseProjectile·BoomerangProjectile·Pickup）/ EventBus / W10 Boss / 基础稳定性。**只建基线，不优化，不修改生产代码**。
 - **M14.1 production code changes = 0**。
-- **Acceptance Criteria**：1 建立真实 Gameplay Profiler baseline 2 覆盖正常 Gameplay 3 覆盖高密度战斗 4 覆盖 W10 Boss 5 记录 CPU/Frame Time 6 记录 GC Alloc 7 记录 Physics 8 记录 Rendering 9 记录 UI 10 记录 ParticleSystem 11 观察 Instantiate/Destroy 12 观察 ObjectPool 13 观察 EventBus 14 完成基础稳定性检查 15 不修改生产代码 16 不进行优化实现 17 不进入 M14.2。
+- **Acceptance Criteria（历史）**：1 建立真实 Gameplay Profiler baseline 2 覆盖正常 Gameplay 3 覆盖高密度战斗 4 覆盖 W10 Boss 5 记录 CPU/Frame Time 6 记录 GC Alloc 7 记录 Physics 8 记录 Rendering 9 记录 UI 10 记录 ParticleSystem 11 观察 Instantiate/Destroy 12 观察 ObjectPool 13 观察 EventBus 14 完成基础稳定性检查 15 不修改生产代码 16 不进行优化实现 17 不进入 M14.2。
 - 测试方式：优先 Windows Standalone Build（-force-d3d11），Editor Play Mode 辅助；不执行 Unity Test Runner（避免 TMP/EditorSettings/TestResults 副作用）；临时数据只写项目外部；真实 Save 不触碰。
 - 结果分类：A 已确认性能问题 / B 性能观察项 / C 稳定性问题 / D 稳定性观察项 / E 未发现问题。
+
+## M15 — Release | Windows + Web builds — COMPLETE / ACCEPTED (2026-08-18)
+- [x] **Final Art Replacement & Release preparation（commit `2dd971c`）**：Player/Chaser/Runner/Shooter/Tank/Boss/PulseProjectile/BoomerangProjectile/Ground 全部替换为正式美术（Roguelike Dungeon + preview-village + kenney）；Runner moveSpeed **6→5.5 KEEP**（RunnerData.asset）；11 个根目录文档迁移至 `Docs/`（git mv 保留历史）。
+- [x] **M15.1 Windows Release Build**：`D:\Work\UnityBuilds\VoidSurvivor\Windows\`（2026-08-18 12:58；exe+_Data+UnityPlayer.dll+Mono+D3D12+Burst 副产物；Build errors=0 / warnings=0；运行冒烟：进程稳定 / 窗口正常 / 优雅退出 / Save 零修改）。
+- [x] **M15.2 WebGL Release Build**：`D:\Work\UnityBuilds\VoidSurvivor\WebGL\`（2026-08-18 13:18–13:19；index.html + Build/*.br（Brotli）+ TemplateData；浏览器冒烟：MainMenu rendered / 0 page error / IndexedDB `/idbfs` / WebAudio / FPS 正常）。
+- [ ] **WebGL 完整 Gameplay 浏览器人工验收**：Build 内 Play/战斗/Shop 链路尚未最终人工复核（自动化点击注入受限；非 blocker，M16 阶段处理）。
+
+## M16 — GitHub Showcase | README, docs, screenshots, demo — IN PROGRESS (2026-08-18)
+- [x] **M16 Scope Precheck — COMPLETE / ACCEPTED**：Repository baseline VERIFIED（HEAD 2dd971c = main）；Docs 11/11 VERIFIED；Windows Release VERIFIED；WebGL Release VERIFIED；README NOT FOUND；Showcase Screenshots NOT FOUND；Online Demo URL NOT FOUND；Final Art MOSTLY VERIFIED；Docs 曾过期（本阶段已同步）。
+- [x] **Release / Docs State Sync（当前阶段）**：M14 STOPPED / M15 COMPLETE / M16 IN PROGRESS 状态同步至全部正式 Docs。
+- [ ] **后续任务（pending，未执行）**：
+  - GitHub baseline synchronization（本地 2dd971c 领先远端 ~10 commits，尚未 push）
+  - Showcase visual cleanup（MainMenu QuitButton 仍用 XPPickupPlaceholder；EnemyBase 默认 sprite 仍为 EnemyPlaceholder——variant 覆盖不可见）
+  - README 创建（当前 NOT FOUND）
+  - Showcase screenshots（当前无任何项目内 showcase 资产）
+  - WebGL online deployment（当前 Online Demo URL NOT FOUND）
+  - final GitHub showcase acceptance
 
 ## P9 / P10 Functional Regression Fix — COMPLETE (2026-08-17, Commit NO)
 - [x] **只读根因定位（上轮）**：P9（GameOver/Restart 后旧敌人跨 Run 残留）与 P10（GameOver→MainMenu→Play 后 Player 未恢复新 Run 状态）根因确认——P10 为真实代码 Bug（MainMenuPanel 直接 `TryChangeState(Playing)` 不经过 RunRestarter → 玩家以 HP=0/IsDead=true 进入 Playing → IsDead guard 卡死 + PlayerDied 不二次触发不结束 + WeaponController 僵尸攻击）；P9 为生命周期缺陷（GameOver 只停 wave 不清理敌人，残留敌人跨 run 存活并立即攻击）。

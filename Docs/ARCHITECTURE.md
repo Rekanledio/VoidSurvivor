@@ -27,7 +27,7 @@
 - `PlayerStats` — base values + read accessors for the 10 MVP stats (GAME_DESIGN.md). Modifiers arrive with the Roguelite milestone (M9).
 - `PlayerHealth` — CurrentHP/MaxHP/IsDead; TakeDamage (flat armor reduction from PlayerStats.Armor), Heal/FullHeal; HP clamped [0, MaxHP]; death fires once and publishes `PlayerDied`.
 - `CameraFollow` — smooth exponential orthographic follow on the Main Camera; no Cinemachine; optional bounds reserved for the real arena.
-- Visual placeholder: Assets/Art/PlayerPlaceholder.png; prefab: Assets/Prefabs/Player.prefab.
+- Visual: Assets/Art/Roguelike Dungeon - Asset Bundle (Player_Idle_Sword_Defence0_0, since M15 Release baseline 2dd971c); prefab: Assets/Prefabs/Player.prefab. (Historical placeholder: Assets/Art/PlayerPlaceholder.png.)
 - Event: `PlayerDied` added to GameEvents (M3).
 
 ## Enemy System (M4, in progress)
@@ -35,9 +35,9 @@
 - `EnemyStats` (M4.1) — MonoBehaviour read-only runtime view over an EnemyData asset; configuration assets are never mutated at runtime (mirrors PlayerStats).
 - `EnemyHealth` (M4.1) — CurrentHP/MaxHP/IsDead; TakeDamage clamps HP to [0, MaxHP]; death fires once and publishes `EnemyDied` (carries the enemy GameObject). Combat attribution (EnemyKilled) is added by M5.
 - `EnemyController` (M4.1) — common control base: caches EnemyStats/EnemyHealth/Rigidbody2D in Awake, resolves the PlayerHealth target once in Start; read-only Stats/Health/Body/Target; per-type AI (M4.2+) composes or derives from it. No AI behavior in the base.
-- Placeholder: Assets/Art/EnemyPlaceholder.png; base prefab: Assets/Prefabs/Enemies/EnemyBase.prefab.
+- Visual (since M15 Release baseline 2dd971c): Chaser=Goblin_Walk_0, Runner=Slime_Walk_1, Shooter=DungeonMaster_Walk_0, Tank=Skeleton_Walk_0 (variant overrides on EnemyBase SpriteRenderer); base prefab: Assets/Prefabs/Enemies/EnemyBase.prefab. (EnemyBase default sprite still references EnemyPlaceholder.png — structural residue, overridden by all variants, runtime-invisible.)
 - `ChaserAI` (M4.2) — pursues the player's current position at the configured MoveSpeed via Rigidbody2D.MovePosition; reuses EnemyController's resolved refs (Target/Stats/Health/Body); stops when dead. ChaserData.asset + Chaser.prefab.
-- `RunnerAI` (M4.3) — faster pursuer; same pursuit pattern as ChaserAI, speed driven by RunnerData (moveSpeed 6). RunnerData.asset + Runner.prefab.
+- `RunnerAI` (M4.3) — faster pursuer; same pursuit pattern as ChaserAI, speed driven by RunnerData (moveSpeed 5.5, final KEEP). RunnerData.asset + Runner.prefab.
 - `ShooterAI` (M4.4) — ranged attacker: approaches only outside AttackRange, stops inside it; fires a minimal `Projectile` at the player when in range and off cooldown (Time.time). ShooterData.asset (speed 2.5 / range 6 / cd 1.5 / dmg 8 / HP 25) + Shooter.prefab.
 - `Projectile` (M5.1 migration) — flies at fixed velocity, expires after lifetime, on contact routes a `DamageRequest` through CombatSystem to any `IDamageable` (source carried from the firer). No direct health coupling. Known: hits any IDamageable including other enemies (no faction filter yet — later refinement).
 - `TankAI` (M4.5) — slow, high-HP pursuer; same pursuit pattern as ChaserAI, identity from TankData (moveSpeed 2, maxHP 120). TankData.asset + Tank.prefab.
@@ -182,7 +182,7 @@ Do not introduce a new cross-system dependency without documenting the reason.
 - `PlayerStats` — base values + read accessors for the 10 MVP stats (GAME_DESIGN.md). Modifiers arrive with the Roguelite milestone (M9).
 - `PlayerHealth` — CurrentHP/MaxHP/IsDead; TakeDamage (flat armor reduction from PlayerStats.Armor), Heal/FullHeal; HP clamped [0, MaxHP]; death fires once and publishes `PlayerDied`.
 - `CameraFollow` — smooth exponential orthographic follow on the Main Camera; no Cinemachine; optional bounds reserved for the real arena.
-- Visual placeholder: Assets/Art/PlayerPlaceholder.png; prefab: Assets/Prefabs/Player.prefab.
+- Visual: Assets/Art/Roguelike Dungeon - Asset Bundle (Player_Idle_Sword_Defence0_0, since M15 Release baseline 2dd971c); prefab: Assets/Prefabs/Player.prefab. (Historical placeholder: Assets/Art/PlayerPlaceholder.png.)
 - Event: `PlayerDied` added to GameEvents (M3).
 
 ## Enemy System (M4, in progress)
@@ -190,9 +190,9 @@ Do not introduce a new cross-system dependency without documenting the reason.
 - `EnemyStats` (M4.1) — MonoBehaviour read-only runtime view over an EnemyData asset; configuration assets are never mutated at runtime (mirrors PlayerStats).
 - `EnemyHealth` (M4.1) — CurrentHP/MaxHP/IsDead; TakeDamage clamps HP to [0, MaxHP]; death fires once and publishes `EnemyDied` (carries the enemy GameObject). Combat attribution (EnemyKilled) is added by M5.
 - `EnemyController` (M4.1) — common control base: caches EnemyStats/EnemyHealth/Rigidbody2D in Awake, resolves the PlayerHealth target once in Start; read-only Stats/Health/Body/Target; per-type AI (M4.2+) composes or derives from it. No AI behavior in the base.
-- Placeholder: Assets/Art/EnemyPlaceholder.png; base prefab: Assets/Prefabs/Enemies/EnemyBase.prefab.
+- Visual (since M15 Release baseline 2dd971c): Chaser=Goblin_Walk_0, Runner=Slime_Walk_1, Shooter=DungeonMaster_Walk_0, Tank=Skeleton_Walk_0 (variant overrides on EnemyBase SpriteRenderer); base prefab: Assets/Prefabs/Enemies/EnemyBase.prefab. (EnemyBase default sprite still references EnemyPlaceholder.png — structural residue, overridden by all variants, runtime-invisible.)
 - `ChaserAI` (M4.2) — pursues the player's current position at the configured MoveSpeed via Rigidbody2D.MovePosition; reuses EnemyController's resolved refs (Target/Stats/Health/Body); stops when dead. ChaserData.asset + Chaser.prefab.
-- `RunnerAI` (M4.3) — faster pursuer; same pursuit pattern as ChaserAI, speed driven by RunnerData (moveSpeed 6). RunnerData.asset + Runner.prefab.
+- `RunnerAI` (M4.3) — faster pursuer; same pursuit pattern as ChaserAI, speed driven by RunnerData (moveSpeed 5.5, final KEEP). RunnerData.asset + Runner.prefab.
 - `ShooterAI` (M4.4) — ranged attacker: approaches only outside AttackRange, stops inside it; fires a minimal `Projectile` at the player when in range and off cooldown (Time.time). ShooterData.asset (speed 2.5 / range 6 / cd 1.5 / dmg 8 / HP 25) + Shooter.prefab.
 - `Projectile` (M5.1 migration) — flies at fixed velocity, expires after lifetime, on contact routes a `DamageRequest` through CombatSystem to any `IDamageable` (source carried from the firer). No direct health coupling. Known: hits any IDamageable including other enemies (no faction filter yet — later refinement).
 - `TankAI` (M4.5) — slow, high-HP pursuer; same pursuit pattern as ChaserAI, identity from TankData (moveSpeed 2, maxHP 120). TankData.asset + Tank.prefab.

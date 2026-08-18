@@ -3,7 +3,7 @@
 ## Project
 - Name: Void Survivor
 - Type: 2D Top-down Arena Roguelite
-- Status: In development / M1 complete
+- Status: In development / M16 IN PROGRESS
 - Target: Job-seeking portfolio + GitHub open source + Web playable + Windows build
 - Local Repository: D:\Work\UnityProject\VoidSurvivor
 - Unity Version: 6000.3.21f1 (Unity 6.3 LTS, verified 2026-08-14)
@@ -40,10 +40,13 @@
 - Web compatibility from early development
 
 ## Current Phase
-Phase 1 — Core framework development
+Phase 2 — Release & GitHub Showcase
 
 ## Current Milestone
-M14 — Optimization (Performance and stability pass) — **IN PROGRESS**（M13 — Save COMPLETE / ACCEPTED；M14.1 Performance Baseline IN PROGRESS）
+M16 — GitHub Showcase（README / docs / screenshots / demo）— **IN PROGRESS**
+- 已完成：M16 Scope Precheck = COMPLETE / ACCEPTED
+- 当前阶段：**Release / Docs State Sync**
+- 后续阶段（pending，未执行）：GitHub baseline sync / Showcase visual cleanup / README / Showcase screenshots / WebGL online deployment / final GitHub showcase acceptance
 
 ## Completed Milestones
 - M0 — Project Documentation Initialization
@@ -71,15 +74,20 @@ M14 — Optimization (Performance and stability pass) — **IN PROGRESS**（M13 
   - M9 Final Regression & Acceptance: 82/82 PASS, 0 FAILURES; M6/M7/M8 regression PASS; full M9 integration PASS; 3× independent Play/Stop 0 errors/0 warnings; temporary probe deleted; final Git clean. **M9 ACCEPTED.**
   - Shop WeaponUpgrade UI Final Layout Fix: WeaponUpgrade Name = two-line single TMP (line1 weapon name 24px, line2 upgrade+level 15px via rich text), Price 22px unchanged, independent Level row removed, normal Weapon/StatBonus cards unaffected, no overlap, Chinese UI OK.
 - M10.1 — Boss Base Framework (2026-08-17, COMPLETE — 验证/正式化): 现有 M8.3 Boss 实现已完整覆盖 M10.1 职责 — `BossData : EnemyData` (SO 静态配置) + `BossAI` (追击 + 接触伤害 via CombatSystem, IPoolable) + Boss runtime 复用 EnemyController/EnemyStats/EnemyHealth + W10 Boss spawn (SpawnBossNow) + pooled lifecycle (复用 EnemySpawner 同一 ObjectPool) + death attribution (EnemyKilled) → `BossDefeated` → `Victory` + BossSpawned/BossDefeated 事件。**无生产代码修改**（不重复实现 Boss）。M10_1BossProbe 29/29 PASS（数据/prefab/W10 缩放 725·29·2.175/死亡链各一次/State Victory/No wave11/pool reuse 干净/reused chain 1/1/1/1/回归），2× Play/Stop 0/0。M10 整体 IN PROGRESS。M10.2 — Boss Projectile Skill (2026-08-17, COMPLETE): BossAI 唯一主动技能（每 3s 向玩家当前位置发射 1 个 PulseProjectile，复用共享 ObjectPool+CombatSystem，source=Boss/damage=runtime Stats.Damage 继承 WaveMultiplier/lifetime 3s 命中一次 Release/方向锁定不追踪；Boss prefab 挂 projectilePrefab；21/22 PASS 唯一 FAIL 为 probe 订阅时序、独立验证确认 DamageApplied 正常；2× Play/Stop 0/0）。M10.3 — Boss Finalization & Regression (2026-08-17, COMPLETE): **Boss 最终参数确认 + 完整战斗验收 + 跨系统回归 + 跨 Play Session 稳定性** — 无新增 mechanic、无生产代码修改；M10_3BossFinalRegressionProbe 55/55 PASS（参数 500/20/1.5/1.5/1.0 + W10 ×1.45→725/29/2.175、技能 3s/6.0/3.0s/10.0、追击/接触/技能/方向锁定/命中/Release/冷却/死亡链各一次/Victory/No Wave11/pool reuse 干净/跨两 run 各 2 次/M6·M7·M9 回归）；3× Play/Stop 0/0；参数确认适合 MVP 最终值 No changes required。**M10 = COMPLETE / ACCEPTED。**
+- M14 — Optimization (2026-08-17→18, **STOPPED / CLOSED WITHOUT FURTHER OPTIMIZATION**): M14 Pre-Baseline Functional Regression = **COMPLETE / ACCEPTED**（P1–P6 PASS；P7 Runner KEEP；P8 Shooter KEEP；P9/P10 PASS；W10 Boss PASS；GameOver→Restart PASS；GameOver→MainMenu→Play PASS；clean play/stop 0 error / 0 warning；save untouched；commit `817851c`）。此后 Profiler baseline 曾尝试但**未得到可用于继续优化的有效 baseline**；M14.2 / M14.3 / M14.4 = **NOT EXECUTED**。项目决定停止继续 M14 optimization 并转入 Release 工作。**不写成 M14 COMPLETE**（避免暗示所有优化任务已执行）。
+- M15 — Release (2026-08-18, **COMPLETE / ACCEPTED**): Windows Release = VERIFIED（`D:\Work\UnityBuilds\VoidSurvivor\Windows\`，2026-08-18 12:58，exe+_Data+UnityPlayer.dll+Mono+D3D12；Build errors=0 / warnings=0，进程稳定/窗口正常/优雅退出）；WebGL Release Build = COMPLETE（`D:\Work\UnityBuilds\VoidSurvivor\WebGL\`，2026-08-18 13:18–13:19，index.html+Build/*.br（Brotli）+TemplateData；browser smoke validation = PASS：MainMenu rendered / 0 page error / IndexedDB=/idbfs / WebAudio）。**注意**：完整 WebGL Gameplay 浏览器人工验收尚未最终复核（非 blocker）。
+  - 前置：Final Art Replacement（Release baseline `2dd971c`）：Player=Player_Idle_Sword_Defence0_0、Ground=preview-village、Chaser=Goblin_Walk_0、Runner=Slime_Walk_1（moveSpeed **5.5** KEEP）、Shooter=DungeonMaster_Walk_0、Tank=Skeleton_Walk_0、Boss=SkeletonKing_Walk_1、PulseProjectile=Special_0、BoomerangProjectile=Axe_0。美术包：kenney_desert-shooter-pack_1.0 / Roguelike Dungeon - Asset Bundle。
+  - 已知占位残留（本轮只记录不修改）：EnemyBase.prefab 默认 sprite 仍引用 EnemyPlaceholder（Chaser/Runner/Shooter/Tank variant 均 override，运行视觉不可见）；MainMenu QuitButton 仍使用 XPPickupPlaceholder.png（可见 Showcase residue）。
 
 ## Next Milestone
-M14 — Optimization (Performance and stability pass)
+—（M16 为最终展示里程碑；以下为 M16 内部后续阶段，非独立里程碑）GitHub baseline synchronization → Showcase visual cleanup → README → Showcase screenshots → WebGL online deployment → final GitHub showcase acceptance
 
 ## Current Task
-M14.1 — Performance Baseline（IN PROGRESS；M14 — Optimization IN PROGRESS；M13 — Save COMPLETE / ACCEPTED）
+M16 — Release / Docs State Sync（M14 = STOPPED / CLOSED WITHOUT FURTHER OPTIMIZATION；M15 = COMPLETE / ACCEPTED；M13 = Save COMPLETE / ACCEPTED）
 
 ## Latest Commit
-817851c fix: M14 pre-baseline functional regression（43ef935 docs: update latest commit to M13.4 acceptance）
+Latest Verified Release Baseline: 2dd971c feat: replace placeholder assets and prepare release（2026-08-18）
+（历史参考：817851c fix: M14 pre-baseline functional regression 是 M14 回归修复 commit，不是 Release baseline；817851c 之后 2dd971c 已合并美术替换与 Release 准备）
 
 ## Important Decisions
 - Do not add special differentiation mechanics for MVP.

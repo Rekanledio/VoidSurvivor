@@ -16,6 +16,11 @@
 | M11 | UI | Complete game flow UI | Completed |
 | M12 | Audio/VFX | Basic presentation feedback | Completed |
 | M13 | Save | Local persistence | Completed |
-| M14 | Optimization | Performance and stability pass | In Progress (2026-08-17) |
-| M15 | Release | Windows + Web builds | Pending |
-| M16 | GitHub Showcase | README, docs, screenshots, demo | Pending |
+| M14 | Optimization | Performance and stability pass | Stopped / Closed without further optimization (2026-08-18) |
+| M15 | Release | Windows + Web builds | Completed / Accepted (2026-08-18) |
+| M16 | GitHub Showcase | README, docs, screenshots, demo | In Progress (2026-08-18) |
+
+## Notes
+- **M14** — Pre-baseline functional regression accepted (`817851c`); Profiler baseline attempt did not produce a usable baseline; M14.2 / M14.3 / M14.4 NOT EXECUTED; optimization work closed/stopped, project moved to Release. Not marked COMPLETE (would imply all optimization tasks ran).
+- **M15** — Windows Release COMPLETE (verified build at `D:\Work\UnityBuilds\VoidSurvivor\Windows\`, 2026-08-18 12:58); WebGL Release Build COMPLETE (`D:\Work\UnityBuilds\VoidSurvivor\WebGL\`, Brotli, 2026-08-18 13:18–13:19; browser smoke validation PASS; full browser gameplay acceptance still to be manually rechecked).
+- **M16** — Scope Precheck COMPLETE / ACCEPTED (2026-08-18); current stage: Release / Docs State Sync; next stages: GitHub sync / visual cleanup / README / screenshots / Web demo deployment / final showcase acceptance.
