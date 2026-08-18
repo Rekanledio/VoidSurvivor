@@ -23,10 +23,11 @@
 - [x] **Release / Docs State Sync（当前阶段）**：M14 STOPPED / M15 COMPLETE / M16 IN PROGRESS 状态同步至全部正式 Docs。
 - [x] **GitHub baseline synchronization — COMPLETE / ACCEPTED（2026-08-18）**：fetch 核验 FF 关系（origin/main=4cef748 为本地 HEAD ancestor）→ 正常 push（无 force）→ GitHub main 与本地 main 同步。Release baseline 保持 `2dd971c`。
 - [x] **M16 README — COMPLETE / ACCEPTED（2026-08-18）**：基于正式 Docs + 已验证双平台 Build + 用户提供的 `Screenshots/` 5 张正式截图（Main Menu / Gameplay / Boss / Shop / Game Over）创建根目录 `README.md`（中文专业 + GitHub 求职/Portfolio 风格）。无 TODO/fake URL/placeholder；hero=Normal_Gameplay；Screenshots table 排布；Roguelike 资产 license 报告为 NEEDS MANUAL CONFIRMATION（仓库内无 license 文件）。
+- [x] **M16 Screenshot Showcase Review / Packaging — COMPLETE / ACCEPTED（2026-08-18）**：5 张截图逐张审核通过（Main Menu 可读整洁 / Gameplay 含 Player+Enemy+Combat+HUD / Boss 明显区别于常规波次 / Shop 展示 progression / GameOver 流程终点）；覆盖矩阵：Main Menu·Gameplay·Combat·HUD·Boss·Shop·GameOver = STRONG，Wave Progression = ADEQUATE，Level Up·Victory = MISSING（可选未来补充，非 blocker）。README 展示调整：移除 Gallery 中重复的 Normal_Gameplay（hero 独占），顺序改为 MainMenu→Boss→Shop→GameOver（identity→escalation→progression→flow）；PNG 全程 byte-identical（md5 前后一致）。**NO ADDITIONAL SCREENSHOTS REQUIRED FOR M16 SHOWCASE**。
 - [ ] **后续任务（pending，未执行）**：
-  - Screenshot Showcase Review / Packaging（核对 README 中截图与最终 Showcase 一致性；不重新截图）
+  - WebGL Online Demo / Deployment（当前阶段；Online Demo URL pending）
+  - Full browser gameplay acceptance（outstanding）
   - Showcase visual cleanup（MainMenu QuitButton 仍用 XPPickupPlaceholder；EnemyBase 默认 sprite 仍为 EnemyPlaceholder——variant 覆盖不可见）
-  - WebGL online deployment（Online Demo URL pending）
   - final GitHub showcase acceptance
 
 ## P9 / P10 Functional Regression Fix — COMPLETE (2026-08-17, Commit NO)

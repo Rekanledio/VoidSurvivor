@@ -42,19 +42,12 @@ Combat is automatic for weapons — the player focuses on positioning, kiting, a
 
 <table>
   <tr>
-    <td><img src="Screenshots/Normal_Gameplay.png" alt="In-arena combat during Wave 2, showing player auto-attacking multiple enemy types"/></td>
+    <td><img src="Screenshots/Main_Menu.png" alt="Main Menu — 虚空幸存者 title, start and quit buttons"/></td>
     <td><img src="Screenshots/Boss.png" alt="Wave 10 boss encounter with full HUD"/></td>
   </tr>
   <tr>
     <td><img src="Screenshots/Shop.png" alt="Shop panel between waves — weapons, weapon upgrades, and permanent stat bonuses"/></td>
     <td><img src="Screenshots/Game_Over.png" alt="Game Over screen with restart and return-to-menu options"/></td>
-  </tr>
-</table>
-
-<table>
-  <tr>
-    <td><img src="Screenshots/Main_Menu.png" alt="Main Menu — 虚空幸存者 title, start and quit buttons"/></td>
-    <td></td>
   </tr>
 </table>
 

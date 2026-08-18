@@ -1,13 +1,13 @@
 # Void Survivor — Save Context
 
 ## Last Updated
-2026-08-18（M16 — GitHub Showcase IN PROGRESS；当前阶段 Screenshot Showcase Review / Packaging）
+2026-08-18（M16 — GitHub Showcase IN PROGRESS；当前阶段 WebGL Online Demo / Deployment）
 
 ## Current Phase
 Phase 2 — Release & GitHub Showcase
 
 ## Current Milestone
-M16 — GitHub Showcase — **IN PROGRESS**（M16 Scope Precheck = COMPLETE / ACCEPTED；GitHub baseline synchronization = COMPLETE / ACCEPTED；M16 README = COMPLETE / ACCEPTED；当前阶段 = Screenshot Showcase Review / Packaging；M14 = STOPPED / CLOSED WITHOUT FURTHER OPTIMIZATION；M15 = COMPLETE / ACCEPTED；M13 = Save COMPLETE / ACCEPTED）
+M16 — GitHub Showcase — **IN PROGRESS**（M16 Scope Precheck = COMPLETE / ACCEPTED；GitHub baseline synchronization = COMPLETE / ACCEPTED；M16 README = COMPLETE / ACCEPTED；Screenshot Showcase Review / Packaging = COMPLETE / ACCEPTED；当前阶段 = WebGL Online Demo / Deployment；M14 = STOPPED / CLOSED WITHOUT FURTHER OPTIMIZATION；M15 = COMPLETE / ACCEPTED；M13 = Save COMPLETE / ACCEPTED）
 
 ## Release / M14-M16 State（2026-08-18）
 - **Release Baseline**：`2dd971c`（feat: replace placeholder assets and prepare release）。GitHub baseline synchronization = **COMPLETE / ACCEPTED**（2026-08-18 正常 FF push，无 force；GitHub main 已与本地 main 同步）。
@@ -15,7 +15,7 @@ M16 — GitHub Showcase — **IN PROGRESS**（M16 Scope Precheck = COMPLETE / AC
 - **M15**：Windows Release COMPLETE（`D:\Work\UnityBuilds\VoidSurvivor\Windows\`，2026-08-18）；WebGL Release Build COMPLETE（`D:\Work\UnityBuilds\VoidSurvivor\WebGL\`，Brotli，browser smoke PASS；完整浏览器 Gameplay 人工验收待复核）。
 - **Runner**：moveSpeed = **5.5**（RunnerData.asset），最终 KEEP。
 - **Final Art**：Player/Ground/Chaser/Runner/Shooter/Tank/Boss/弹丸全部替换为正式美术（Release baseline `2dd971c`）。
-- **M16 产出状态**：README = 已创建（`README.md`，中文专业风格）；Showcase screenshots = 已提供（`Screenshots/` 5 张正式截图：Main Menu / Gameplay / Boss / Shop / Game Over）；Online demo = 未部署；GitHub baseline sync = COMPLETE（main 已同步）。
+- **M16 产出状态**：README = 已创建（`README.md`，中文专业风格，COMPLETE / ACCEPTED）；Showcase screenshots = 已提供 + ACCEPTED（`Screenshots/` 5 张正式截图：Main Menu / Gameplay / Boss / Shop / Game Over；hero=Normal_Gameplay；Review / Packaging COMPLETE）；Online demo = 未部署（pending）；GitHub baseline sync = COMPLETE（main 已同步）。
 
 ## Completed (overview)
 - M0: concept, MVP scope, delivery strategy, documentation strategy.
@@ -313,7 +313,7 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - Commit `12f17e4`. Normal Weapon / StatBonus cards visually unchanged.
 
 ## Next Step
-M16 — Screenshot Showcase Review / Packaging（IN PROGRESS；M16 README COMPLETE / ACCEPTED；GitHub baseline synchronization COMPLETE / ACCEPTED；M15 — Release COMPLETE / ACCEPTED；M14 — STOPPED / CLOSED WITHOUT FURTHER OPTIMIZATION；M13 COMPLETE / ACCEPTED）。后续：Showcase visual cleanup / Web demo deployment / final showcase acceptance（pending）。
+M16 — WebGL Online Demo / Deployment（IN PROGRESS；Screenshot Showcase Review / Packaging COMPLETE / ACCEPTED；M16 README COMPLETE / ACCEPTED；GitHub baseline synchronization COMPLETE / ACCEPTED；M15 — Release COMPLETE / ACCEPTED；M14 — STOPPED / CLOSED WITHOUT FURTHER OPTIMIZATION；M13 COMPLETE / ACCEPTED）。后续：Full browser gameplay acceptance / Showcase visual cleanup / final showcase acceptance（pending）。
 
 ## M10.1 — Boss Base Framework (2026-08-17)
 - 现有 M8.3 Boss 实现已完整覆盖 M10.1 职责（BossData/BossAI/W10 流程/事件/pool），M10.1 不修改任何生产代码，仅正式验证。

@@ -1143,3 +1143,11 @@ M10 — Boss (per milestone list).
 - Source code license：仓库根目录无 `LICENSE` 文件 → README 报告"all rights reserved until explicit license is added"。
 - 5 截图引用全部真实存在；所有图片均 `Screenshots/*.png` 相对路径（无 `D:/Work/`、无 file://）。
 - M16 Docs 同步：PROJECT_CONTEXT 当前阶段 → Screenshot Showcase Review / Packaging；TASKS README → COMPLETE；SAVE_CONTEXT README/screenshots → 已提供；MILESTONES 补充 README 完成。
+
+### M16 Screenshot Showcase Review / Packaging — COMPLETE / ACCEPTED (2026-08-18)
+- 5 张 Showcase 截图逐张审核：Main_Menu（标题+入口可读整洁）/ Normal_Gameplay（Player+Enemy+Combat+HUD 全展示，仍为最佳 Hero）/ Boss（W10 明显区别于常规波次）/ Shop（progression 系统可读）/ Game_Over（流程终点）——全部为真实 Showcase 非诊断图。
+- 覆盖矩阵：Main Menu·Gameplay·Combat·HUD·Boss·Shop·GameOver = STRONG；Wave Progression = ADEQUATE（Wave2+Wave10 两帧）；Level Up·Victory = MISSING（可选未来补充，非 blocker）。
+- README 展示调整（唯一内容修改）：Gallery 移除重复的 Normal_Gameplay（hero 独占），顺序 MainMenu→Boss→Shop→GameOver（identity→escalation→progression→flow）；README +1/-8。
+- PNG byte-identical 验证：5 张 md5 前后完全一致（0a44799e / dc8e7c70 / e5cb47f5 / 15aa932c / f325457b）。
+- 结论：**NO ADDITIONAL SCREENSHOTS REQUIRED FOR M16 SHOWCASE**。Screenshot set ACCEPTED。
+- 下一阶段：WebGL Online Demo / Deployment（Online Demo URL pending；Full browser gameplay acceptance outstanding）。
