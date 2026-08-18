@@ -21,8 +21,8 @@
 ## M16 — GitHub Showcase | README, docs, screenshots, demo — IN PROGRESS (2026-08-18)
 - [x] **M16 Scope Precheck — COMPLETE / ACCEPTED**：Repository baseline VERIFIED（HEAD 2dd971c = main）；Docs 11/11 VERIFIED；Windows Release VERIFIED；WebGL Release VERIFIED；README NOT FOUND；Showcase Screenshots NOT FOUND；Online Demo URL NOT FOUND；Final Art MOSTLY VERIFIED；Docs 曾过期（本阶段已同步）。
 - [x] **Release / Docs State Sync（当前阶段）**：M14 STOPPED / M15 COMPLETE / M16 IN PROGRESS 状态同步至全部正式 Docs。
+- [x] **GitHub baseline synchronization — COMPLETE / ACCEPTED（2026-08-18）**：fetch 核验 FF 关系（origin/main=4cef748 为本地 HEAD ancestor）→ 正常 push（无 force）→ GitHub main 与本地 main 同步。Release baseline 保持 `2dd971c`。
 - [ ] **后续任务（pending，未执行）**：
-  - GitHub baseline synchronization（本地 2dd971c 领先远端 ~10 commits，尚未 push）
   - Showcase visual cleanup（MainMenu QuitButton 仍用 XPPickupPlaceholder；EnemyBase 默认 sprite 仍为 EnemyPlaceholder——variant 覆盖不可见）
   - README 创建（当前 NOT FOUND）
   - Showcase screenshots（当前无任何项目内 showcase 资产）

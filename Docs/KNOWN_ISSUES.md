@@ -1,19 +1,16 @@
 # Void Survivor — Known Issues
 
 ## Current
-1. GitHub remote main still behind local Release baseline.
-   - Impact: Local Release baseline `2dd971c` is ~10 commits ahead of GitHub origin/main (`4cef748`); remote does not yet contain M13.1–M15 Release work.
-   - Status: Open. Plan: GitHub baseline synchronization in M16 (push after docs sync accepted).
-2. Online Demo URL not yet available.
+1. Online Demo URL not yet available.
    - Impact: Web playable (first-class deliverable) not reachable via URL yet; only local WebGL build exists.
    - Status: Open. Plan: WebGL online deployment in M16.
-3. MainMenu QuitButton still uses XPPickupPlaceholder.png.
+2. MainMenu QuitButton still uses XPPickupPlaceholder.png.
    - Impact: Visible showcase residue (screenshots would reveal the placeholder).
    - Status: Open (M16 visual cleanup). Recorded only; not fixed this round.
-4. EnemyBase.prefab default sprite still references EnemyPlaceholder.
+3. EnemyBase.prefab default sprite still references EnemyPlaceholder.
    - Impact: Structurally present, but Chaser/Runner/Shooter/Tank variants all override it — runtime visuals unaffected.
    - Status: Open (low priority, structural residue). Recorded only.
-5. Full WebGL gameplay browser acceptance not yet fully rechecked.
+4. Full WebGL gameplay browser acceptance not yet fully rechecked.
    - Impact: Build-in Play/combat/Shop flow verified in Editor only; WebGL browser interaction (automated click injection unreliable) still needs a final manual pass.
    - Status: Open (M16). Not a Gameplay blocker.
 
@@ -27,6 +24,7 @@
 - InputActionReference not persisted in scene/prefab (would break movement after reopening the project) → Fixed by switching PlayerController to a serializable InputActionAsset reference.
 - Small movement-range perception / apparent pull-back → Root-caused as a visual-reference issue: SC_Main was an empty scene, so camera-follow movement was invisible. Fixed by adding a ground reference (GroundPlaceholder grid); player world coordinates were never actually returning to the center (verified by in-assembly runtime probe).
 - GitHub remote repository URL not configured → Resolved: origin configured to https://github.com/Rekanledio/VoidSurvivor.git (M16 precheck verified; remote main exists at 4cef748).
+- GitHub remote main still behind local Release baseline → **Resolved (2026-08-18)**: GitHub baseline synchronization completed — local main fast-forwarded to GitHub origin/main (no force push); GitHub main now synchronized with the local M16 branch.
 - Web build has not yet been tested → Resolved: WebGL Release Build verified (M15.2, 2026-08-18) — Brotli output, browser smoke validation PASS (MainMenu rendered / 0 page error / IndexedDB /idbfs / WebAudio). Full browser gameplay acceptance remains an open current item (see Current #5).
 
 ## Observations (no action needed now)

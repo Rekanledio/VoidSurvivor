@@ -23,4 +23,4 @@
 ## Notes
 - **M14** — Pre-baseline functional regression accepted (`817851c`); Profiler baseline attempt did not produce a usable baseline; M14.2 / M14.3 / M14.4 NOT EXECUTED; optimization work closed/stopped, project moved to Release. Not marked COMPLETE (would imply all optimization tasks ran).
 - **M15** — Windows Release COMPLETE (verified build at `D:\Work\UnityBuilds\VoidSurvivor\Windows\`, 2026-08-18 12:58); WebGL Release Build COMPLETE (`D:\Work\UnityBuilds\VoidSurvivor\WebGL\`, Brotli, 2026-08-18 13:18–13:19; browser smoke validation PASS; full browser gameplay acceptance still to be manually rechecked).
-- **M16** — Scope Precheck COMPLETE / ACCEPTED (2026-08-18); current stage: Release / Docs State Sync; next stages: GitHub sync / visual cleanup / README / screenshots / Web demo deployment / final showcase acceptance.
+- **M16** — Scope Precheck COMPLETE / ACCEPTED (2026-08-18); Release / Docs State Sync COMPLETE / ACCEPTED; GitHub baseline synchronization COMPLETE / ACCEPTED (2026-08-18, fast-forward push, no force); current stage: Showcase Visual Cleanup; next stages: README / screenshots / Web demo deployment / final showcase acceptance.

@@ -1126,3 +1126,11 @@ M10 — Boss (per milestone list).
 ### M16 Release / Docs State Sync — IN PROGRESS (2026-08-18)
 - 当前阶段：将正式 Docs 同步至已验证的真实仓库状态（M14 STOPPED / M15 COMPLETE / M16 IN PROGRESS / Release baseline 2dd971c / Runner 5.5 KEEP / WebGL smoke PASS）。
 - 后续（pending，未执行）：GitHub sync / visual showcase cleanup / README / screenshots / Web demo deployment / final showcase acceptance。
+
+### M16 GitHub Baseline Synchronization — COMPLETE / ACCEPTED (2026-08-18)
+- fetched origin（`git fetch origin --prune`；远端 main 实查仍为 `4cef748`）。
+- 安全核验：`git merge-base --is-ancestor origin/main HEAD` exit=0 → 4cef748 为本地 HEAD ancestor → 可正常 Fast-Forward；`--left-right` 无 `<` 侧（无 divergence）。
+- 第一次 push：`git push origin main:main`（`4cef748..db55988`，**无 force**）→ GitHub main 与本地 main 同步（ls-remote 确认 db55988）。
+- 恢复 upstream tracking（`git push -u origin main`；本地 origin/main ref 因环境未落盘，仅 tracking 显示异常，不影响 push）。
+- 无代码/资产/Build 改动；Release baseline 保持 `2dd971c`（Release baseline 与 repository HEAD 是两个概念）。
+- 下一阶段：Showcase visual cleanup（不在此阶段开始）。

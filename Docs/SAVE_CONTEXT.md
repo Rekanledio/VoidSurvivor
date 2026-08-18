@@ -10,12 +10,12 @@ Phase 2 — Release & GitHub Showcase
 M16 — GitHub Showcase — **IN PROGRESS**（M16 Scope Precheck = COMPLETE / ACCEPTED；当前阶段 = Release / Docs State Sync；M14 = STOPPED / CLOSED WITHOUT FURTHER OPTIMIZATION；M15 = COMPLETE / ACCEPTED；M13 = Save COMPLETE / ACCEPTED）
 
 ## Release / M14-M16 State（2026-08-18）
-- **Release Baseline**：`2dd971c`（feat: replace placeholder assets and prepare release）。本地 main 领先 GitHub origin/main（`4cef748`）约 10 commits，**尚未 push**。
+- **Release Baseline**：`2dd971c`（feat: replace placeholder assets and prepare release）。GitHub baseline synchronization = **COMPLETE / ACCEPTED**（2026-08-18 正常 FF push，无 force；GitHub main 已与本地 main 同步）。
 - **M14**：Pre-Baseline Functional Regression COMPLETE / ACCEPTED（commit `817851c`）；Profiler baseline 尝试后无可用的优化 baseline；M14.2/3/4 NOT EXECUTED；**STOPPED / CLOSED WITHOUT FURTHER OPTIMIZATION**。
 - **M15**：Windows Release COMPLETE（`D:\Work\UnityBuilds\VoidSurvivor\Windows\`，2026-08-18）；WebGL Release Build COMPLETE（`D:\Work\UnityBuilds\VoidSurvivor\WebGL\`，Brotli，browser smoke PASS；完整浏览器 Gameplay 人工验收待复核）。
 - **Runner**：moveSpeed = **5.5**（RunnerData.asset），最终 KEEP。
 - **Final Art**：Player/Ground/Chaser/Runner/Shooter/Tank/Boss/弹丸全部替换为正式美术（Release baseline `2dd971c`）。
-- **M16 产出状态**：README = 未创建；Showcase screenshots = 未创建；Online demo = 未部署；GitHub local release ahead of remote（未同步）。
+- **M16 产出状态**：README = 未创建；Showcase screenshots = 未创建；Online demo = 未部署；GitHub baseline sync = COMPLETE（main 已同步）。
 
 ## Completed (overview)
 - M0: concept, MVP scope, delivery strategy, documentation strategy.
@@ -92,7 +92,7 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - Test Web builds early.
 
 ## Known Issues
-- GitHub remote repository URL not yet configured (local-only Git for now). → **Resolved (M16)**: origin configured to https://github.com/Rekanledio/VoidSurvivor.git; remote main exists (4cef748); local Release baseline 2dd971c is ~10 commits ahead (push pending in M16).
+- GitHub remote repository URL not yet configured (local-only Git for now). → **Resolved (M16)**: origin configured to https://github.com/Rekanledio/VoidSurvivor.git; GitHub baseline synchronization COMPLETE (2026-08-18, fast-forward push, no force).
 - Web build not yet tested. → **Resolved (M15.2)**: WebGL Release Build verified (Brotli, browser smoke PASS). Full browser gameplay acceptance pending (see KNOWN_ISSUES.md Current #5).
 - "Referenced script (Unknown) missing" console pairs appear transiently during script recompile cycles; stable states are clean. See KNOWN_ISSUES.md.
 
@@ -313,7 +313,7 @@ M4 — Enemy System: enemy base framework, 4 enemy types with simple AI (Chaser/
 - Commit `12f17e4`. Normal Weapon / StatBonus cards visually unchanged.
 
 ## Next Step
-M16 — Release / Docs State Sync（IN PROGRESS；M16 Scope Precheck COMPLETE / ACCEPTED；M15 — Release COMPLETE / ACCEPTED；M14 — STOPPED / CLOSED WITHOUT FURTHER OPTIMIZATION；M13 COMPLETE / ACCEPTED）。后续：GitHub sync / README / screenshots / Web demo deployment / final showcase acceptance（pending）。
+M16 — Showcase Visual Cleanup（IN PROGRESS；GitHub baseline synchronization COMPLETE / ACCEPTED；M15 — Release COMPLETE / ACCEPTED；M14 — STOPPED / CLOSED WITHOUT FURTHER OPTIMIZATION；M13 COMPLETE / ACCEPTED）。后续：README / screenshots / Web demo deployment / final showcase acceptance（pending）。
 
 ## M10.1 — Boss Base Framework (2026-08-17)
 - 现有 M8.3 Boss 实现已完整覆盖 M10.1 职责（BossData/BossAI/W10 流程/事件/pool），M10.1 不修改任何生产代码，仅正式验证。
